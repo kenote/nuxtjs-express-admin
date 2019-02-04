@@ -1,5 +1,8 @@
 <template>
+<div>
   <h1>Hello world</h1>
+  <el-button>默认按钮</el-button>
+</div>
 </template>
 
 <script lang="ts">

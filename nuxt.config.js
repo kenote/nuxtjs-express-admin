@@ -13,6 +13,10 @@ module.exports = {
     '~/modules/typescript'
   ],
   css: [
+    'element-ui/lib/theme-chalk/index.css',
     '~/assets/scss/common.scss'
-  ]
+  ],
+  plugins: [
+    { src: '~/plugins/element-ui', ssr: true }
+  ],
 }
