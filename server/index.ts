@@ -8,8 +8,10 @@ import * as compress from 'compression'
 import * as cookieParser from 'cookie-parser'
 import * as session from 'express-session'
 import * as connectRedis from 'connect-redis'
+import * as errorhandler from 'errorhandler'
 
 import config from './config'
+import nuxt from './nuxt'
 
 const { Host, Port, session_secret, redis } = config
 const app: express.Express = express()
@@ -41,6 +43,26 @@ app.use(session({
   saveUninitialized: true
 }))
 
+// Renderer Nuxt
+nuxt(app)
+
+// 404 Not Found.
+app.use('*', (req: express.Request, res: express.Response): void => {
+  return res.status(404).render('error', { message: 'This page could not be found' })
+})
+
+// 500 Error
+if (process.env.NODE_ENV === 'development') {
+  app.use(errorhandler)
+}
+else {
+  app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction): void => {
+    console.error('server 500 error: ', err)
+    return res.status(500).render('error', { message: 'This page could internal server error' })
+  })
+}
+
+// Starting Server
 const server: http.Server = http.createServer(app)
 server.listen(Port, Host, (err: Error): void => {
   if (err) throw err
