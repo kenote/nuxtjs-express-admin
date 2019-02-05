@@ -12,6 +12,7 @@ import * as errorhandler from 'errorhandler'
 
 import config from './config'
 import nuxt from './nuxt'
+import restful from './middlewares/restful'
 
 const { Host, Port, session_secret, redis } = config
 const app: express.Express = express()
@@ -42,6 +43,9 @@ app.use(session({
   resave: true,
   saveUninitialized: true
 }))
+
+//  自定义 Restful 中间件
+app.use(restful.hendler())
 
 // Renderer Nuxt
 nuxt(app)
