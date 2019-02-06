@@ -9,10 +9,12 @@ import * as cookieParser from 'cookie-parser'
 import * as session from 'express-session'
 import * as connectRedis from 'connect-redis'
 import * as errorhandler from 'errorhandler'
+import * as passport from 'passport'
 
 import config from './config'
 import nuxt from './nuxt'
 import restful from './middlewares/restful'
+import { startegy } from './middlewares/auth'
 
 const { Host, Port, session_secret, redis } = config
 const app: express.Express = express()
@@ -43,6 +45,17 @@ app.use(session({
   resave: true,
   saveUninitialized: true
 }))
+
+// Passport
+passport.use(startegy)
+app.use(passport.initialize())
+app.use(passport.session())
+passport.serializeUser((user, done) => 
+  done(null, user)
+)
+passport.deserializeUser((user, done) => 
+  done(null, user)
+)
 
 //  自定义 Restful 中间件
 app.use(restful.hendler())
