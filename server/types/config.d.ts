@@ -1,4 +1,5 @@
 import * as connectRedis from 'connect-redis'
+import { mongoSetting } from 'kenote-mongoose-helper'
 
 export interface Config {
   Host?: string
@@ -6,4 +7,6 @@ export interface Config {
 
   session_secret: string
   redis: connectRedis.RedisStoreOptions
+
+  mongo: mongoSetting
 }

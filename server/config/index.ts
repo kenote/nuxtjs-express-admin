@@ -10,6 +10,10 @@ const project: Config = {
     host: '127.0.0.1',
     port: 6379,
     db: 0
+  },
+
+  mongo: {
+    uris: 'mongodb://localhost:27017/kenote_nuxtjs_admin',
   }
 }
 
