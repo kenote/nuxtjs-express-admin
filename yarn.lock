@@ -979,6 +979,18 @@
     "@types/express-serve-static-core" "*"
     "@types/serve-static" "*"
 
+"@types/fs-extra@^5.0.4":
+  version "5.0.4"
+  resolved "http://registry.npm.taobao.org/@types/fs-extra/download/@types/fs-extra-5.0.4.tgz#b971134d162cc0497d221adde3dbb67502225599"
+  integrity sha1-uXETTRYswEl9Ihrd49u2dQIiVZk=
+  dependencies:
+    "@types/node" "*"
+
+"@types/ini@^1.3.30":
+  version "1.3.30"
+  resolved "http://registry.npm.taobao.org/@types/ini/download/@types/ini-1.3.30.tgz#d1485459c9fad84e937414b832a2adb649eab379"
+  integrity sha1-0UhUWcn62E6TdBS4MqKttknqs3k=
+
 "@types/jsonwebtoken@*", "@types/jsonwebtoken@^8.3.0":
   version "8.3.0"
   resolved "http://registry.npm.taobao.org/@types/jsonwebtoken/download/@types/jsonwebtoken-8.3.0.tgz#1fe79489df97b49273401ac3c8019cbf1dae4578"
