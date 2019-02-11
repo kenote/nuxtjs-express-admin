@@ -1,6 +1,6 @@
-import * as mongoose from 'mongoose'
+import { Schema, model } from 'mongoose'
 
-const schema: mongoose.Schema = new mongoose.Schema({
+const schema: Schema = new Schema({
   id: {
     type: Number,
     default: 0,
@@ -18,16 +18,10 @@ const schema: mongoose.Schema = new mongoose.Schema({
     type: String,
     default: ''
   },
-  team: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'team'
-    }
-  ],
   store: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'store'
   }
 })
 
-export default mongoose.model('group', schema)
+export default model('group', schema)

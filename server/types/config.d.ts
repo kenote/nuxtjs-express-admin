@@ -10,3 +10,7 @@ export interface Config {
 
   mongo: mongoSetting
 }
+
+export interface Register {
+  invitation: boolean
+}

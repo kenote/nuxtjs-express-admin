@@ -10,16 +10,10 @@ import { pick } from 'lodash'
 (<mongoose.Mongoose>mongoose).Promise = Bluebird
 const Model: mongoose.Model<mongoose.Document, {}> = <mongoose.Model<mongoose.Document, {}>> __Models.groupModel
 const options: QueryOptions = {
-  populate: [
-    {
-      path: 'store',
-      select: ['upload_type', 'download_type']
-    },
-    {
-      path: 'team',
-      select: ['name', 'description']
-    }
-  ],
+  populate: {
+    path: 'store',
+    select: ['upload_type', 'download_type']
+  },
   seqModel: __Models.seqModel
 }
 

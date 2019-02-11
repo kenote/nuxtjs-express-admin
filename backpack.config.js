@@ -3,7 +3,8 @@ module.exports = {
   webpack: (config, options, webpack) => {
     
     config.entry = {
-      index: './server/index.ts'
+      index: './server/index.ts',
+      task: './server/task.ts'
     }
 
     config.resolve = {

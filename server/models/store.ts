@@ -1,6 +1,6 @@
-import * as mongoose from 'mongoose'
+import { Schema, model } from 'mongoose'
 
-const schema: mongoose.Schema = new mongoose.Schema({
+const schema: Schema = new Schema({
   id: {
     type: Number,
     default: 0,
@@ -16,4 +16,4 @@ const schema: mongoose.Schema = new mongoose.Schema({
   }
 })
 
-export default mongoose.model('store', schema)
+export default model('store', schema)
