@@ -17,6 +17,20 @@ module.exports = {
     '~/assets/scss/common.scss'
   ],
   plugins: [
+    '~/plugins/component',
     { src: '~/plugins/element-ui', ssr: true }
   ],
+  loading: {
+    color: 'rgb(238, 92, 73, .8)', 
+    height: '3px'
+  },
+  router: {
+    extendRoutes (routes, resolve) {
+      routes.push({
+        name: 'custom',
+        path: '*',
+        component: resolve(__dirname, 'components/error-page.vue')
+      })
+    }
+  }
 }

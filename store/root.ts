@@ -1,6 +1,7 @@
 import { GetterTree, ActionContext, ActionTree, MutationTree } from 'vuex'
 import { RootState } from 'store'
 import { IRequest } from '~/server/types/resuful'
+import * as setting from './modules/setting'
 
 export const types = {}
 
@@ -20,7 +21,8 @@ interface HTTPServer {
 
 export const actions: Actions<State, RootState> = {
   async nuxtServerInit({ commit }, { req }) {
-    console.log(req.__register)
+    console.log(req.__register, req.path)
+    commit(`${setting.name}/${setting.types.REGISTER}`, req.__register)
   }
 }
 

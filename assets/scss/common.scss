@@ -1,0 +1,28 @@
+
+
+
+
+
+.page-enter-active, .page-leave-active {
+  transition: opacity .5s
+}
+.page-enter, .page-leave-active {
+  opacity: 0
+}
+
+.page-enter-active {
+  animation: bounce-in .8s;
+}
+.page-leave-active {
+  animation: bounce-out .5s;
+}
+@keyframes bounce-in {
+  0% { transform: scale(0.8); opacity: 0; }
+  //50% { transform: scale(1.5) }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes bounce-out {
+  0% { transform: scale(1); opacity: 1; }
+  //50% { transform: scale(1.5) }
+  100% { transform: scale(0.8); opacity: 0; }
+}

@@ -1,5 +1,6 @@
 import Vuex from 'vuex'
 import * as root from './root'
+import * as setting from './modules/setting'
 
 // More info about store: https://vuex.vuejs.org/en/core-concepts.html
 // See https://nuxtjs.org/guide/vuex-store#classic-mode
@@ -23,7 +24,7 @@ const createStore = () => {
     mutations: root.mutations,
     actions: root.actions,
     modules: {
-      
+      [setting.name]: setting
     }
   })
 }
