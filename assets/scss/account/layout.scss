@@ -1,0 +1,94 @@
+// ------------------------------------
+// Sass Style
+// ------------------------------------
+@import './setting.sass';
+
+.layout-account {
+  height: inherit;
+  background: $layout-background-image, $layout-background-color;
+
+  header {
+    width: $header-width;
+    margin: 0 auto;
+    height: $header-height;
+    line-height: $header-height;
+    border-bottom: 1px solid $header-border-color;
+
+    .logo {
+      height: $header-logo-height;
+      padding-left: 12px;
+
+      img {
+        height: inherit;
+        vertical-align: middle;
+      }
+    }
+
+    .list {
+      float: right;
+
+      a {
+        color: $header-link-color;
+        font-size: $header-link-fontsize;
+        margin-right: 32px;
+
+        &:hover {
+          color: $header-link-hover-color;
+        }
+      }
+    }
+  }
+
+  footer {
+    position: fixed;
+    bottom: 0;
+    text-align: center;
+    width: $footer-width;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    font-size: $footer-fontsize;
+    color: $footer-color;
+    height: $footer-height;
+    background: $footer-background;
+    padding-top: 12px;
+  }
+
+  .bodyer {
+    width: $bodyer-width;
+    margin: 0 auto;
+    padding: 20px 0;
+  }
+}
+
+@media (max-width: 640px) {
+  .layout-account {
+    background: $layout-mobile-background;
+
+    header {
+      width: auto;
+      background: $header-mobile-background;
+      height: $header-mobile-height;
+      line-height: $header-mobile-height;
+      padding: 0 12px;
+
+      .logo {
+        height: $header-logo-mobile-height;
+      }
+
+      .list {
+        display: none;
+      }
+    }
+
+    footer {
+      width: $footer-mobile-width;
+      color: $footer-mobile-color;
+      background: $footer-mobile-background;
+    }
+
+    .bodyer {
+      width: auto;
+    }
+  }
+}

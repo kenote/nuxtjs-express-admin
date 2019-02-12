@@ -1,0 +1,21 @@
+// ------------------------------------
+// Sass Style
+// ------------------------------------
+@import './setting.sass';
+
+.account-page {
+  margin: 0 auto;
+  margin-top: $page-margin-top;
+  max-width: $page-max-width;
+  width: $page-width;
+  background-color: $page-background-color;
+  overflow: hidden;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+@media (max-width: 640px) {
+  .account-page {
+    margin-top: $page-mobile-margin-top;
+  }
+}
