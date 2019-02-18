@@ -12,6 +12,56 @@
   overflow: hidden;
   padding-top: 10px;
   padding-bottom: 10px;
+
+  h3 {
+    margin-top: 10px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 24px;
+    color: rgba(106,106,106,1);
+  }
+
+  form {
+    padding: 10px 34px;
+
+    .el-form-item {
+      margin-bottom: 12px;
+    }
+
+    .el-form-item__label {
+      padding: 0;
+    }
+
+    .el-input__inner {
+      border-radius: 0;
+      //border-width: 0 0 1px 0;
+    }
+
+    .el-form-item__error {
+      position: inherit;
+    }
+
+    .el-button--primary {
+      width: 100%;
+      border-radius: 0;
+      margin-top: 8px;
+      font-size: 16px;
+    }
+  }
+
+  .service-terms {
+    color: #747474;
+    font-size: 14px;
+
+    a {
+      color: #25A9E8;
+      font-weight: normal;
+    }
+
+    .ng-hide {
+      float: right;
+    }
+  }
 }
 
 @media (max-width: 640px) {

@@ -21,8 +21,9 @@ interface HTTPServer {
 
 export const actions: Actions<State, RootState> = {
   async nuxtServerInit({ commit }, { req }) {
-    console.log(req.__register, req.path)
+    //console.log(req.__rules, req.path)
     commit(`${setting.name}/${setting.types.REGISTER}`, req.__register)
+    commit(`${setting.name}/${setting.types.__RULES}`, req.__rules)
   }
 }
 
