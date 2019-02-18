@@ -5,5 +5,6 @@ export interface Models {
   teamModel      ?: mongoose.Model<mongoose.Document, {}>
   storeModel     ?: mongoose.Model<mongoose.Document, {}>
   groupModel     ?: mongoose.Model<mongoose.Document, {}>
-  exchangeModel  ?: mongoose.Model<mongoose.Document, {}>
+  ticketModel    ?: mongoose.Model<mongoose.Document, {}>
+  userModel      ?: mongoose.Model<mongoose.Document, {}>
 }

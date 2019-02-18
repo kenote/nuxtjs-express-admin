@@ -5,14 +5,16 @@ import { Models } from '../types/model'
 import teamModel from './team'
 import storeModel from './store'
 import groupModel from './group'
-import exchangeModel from './exchange'
+import ticketModel from './ticket'
+import userModel from './user'
 
 @MongoSetting(config.mongo)
 @ModelMount({
   teamModel,
   storeModel,
   groupModel,
-  exchangeModel
+  ticketModel,
+  userModel
 })
 class MyMongoDB extends MongoDB {}
 

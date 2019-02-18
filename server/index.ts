@@ -15,6 +15,7 @@ import config from './config'
 import nuxt from './nuxt'
 import restful from './middlewares/restful'
 import { startegy } from './middlewares/auth'
+import api_v1 from './api/v1'
 
 const { Host, Port, session_secret, redis } = config
 const app: express.Express = express()
@@ -59,6 +60,9 @@ passport.deserializeUser((user, done) =>
 
 //  自定义 Restful 中间件
 app.use(restful.hendler())
+
+// api_v1
+app.use('/api/v1', api_v1.handler())
 
 // Renderer Nuxt
 nuxt(app)

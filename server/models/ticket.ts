@@ -42,4 +42,4 @@ const schema: Schema = new Schema({
   }
 })
 
-export default model('exchange', schema)
+export default model('ticket', schema)

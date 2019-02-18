@@ -8,10 +8,10 @@ import { find } from 'lodash'
 import moment from 'moment'
 
 import groupProxy from '../proxys/group'
-import exchangeProxy from '../proxys/exchange'
+import ticketProxy from '../proxys/ticket'
 
 import { responseDocument as responseGroupDocument } from '../types/proxys/group'
-import { responseDocument as responseExchangeDocument } from '../types/proxys/exchange'
+import { responseDocument as responseTicketDocument } from '../types/proxys/ticket'
 import { TableHeader, TableStyle } from '../types/tty-table'
 
 inquirer.registerPrompt('datepicker', inquirerDatepicker)
@@ -92,17 +92,17 @@ export default async function invitation (): Promise<any> {
 }
 
 async function invitationList (): Promise<any> {
-  let list: Array<responseExchangeDocument | {}> = await exchangeProxy.Dao.find({ type: 'register' })
+  let list: Array<responseTicketDocument | {}> = await ticketProxy.Dao.find({ type: 'register' })
   let bodyer: any[] = toBodyer(list)
   let t3: any = Table(bodyHeader, bodyer, tableStyle)
   console.log('\n', t3.render(), '\n')
   return Promise.resolve(`查询邀请码列表完成.`)
 }
 
-function toBodyer (data: Array<responseExchangeDocument | {}>): Array<any> {
+function toBodyer (data: Array<responseTicketDocument | {}>): Array<any> {
   let dataList: Array<any> = []
   for (let item of data) {
-    let Item: responseExchangeDocument = <responseExchangeDocument> item
+    let Item: responseTicketDocument = <responseTicketDocument> item
     dataList.push([
       Item.cdkey,
       Item.name,
@@ -146,7 +146,7 @@ async function createInvitation (): Promise<any> {
         max: 9999
       }
     ])
-    let exchange = await exchangeProxy.create({
+    let ticket = await ticketProxy.create({
       name: `注册 -> ${options.group}`,
       type: 'register',
       setting: {
@@ -155,7 +155,7 @@ async function createInvitation (): Promise<any> {
       stint: options.stint,
       last_at: options.last_at
     })
-    let bodyer: any[] = toBodyer([exchange])
+    let bodyer: any[] = toBodyer([ticket])
     let t3: any = Table(bodyHeader, bodyer, tableStyle)
     console.log('\n', t3.render(), '\n')
     return Promise.resolve(`邀请码创建成功.`)

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import { errorInfo, IError } from 'kenote-express-helper'
-import { Register } from './config'
+import { Register, __Rules } from './config'
 
 export interface resufulInfo {
   data: any
@@ -23,4 +23,5 @@ export interface IResponse extends Response {
 
 export interface IRequest extends Request {
   __register: Register
+  __rules: __Rules
 }

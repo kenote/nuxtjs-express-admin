@@ -3,6 +3,9 @@ import { Middleware, MiddlewareSetting, RegisterMiddlewareMethod, IError, errorI
 import { isNumber } from 'util'
 import { __ErrorCode, ErrorInfo } from '../error'
 import { resufulInfo } from '../types/resuful'
+import * as rules from '../config/rules'
+
+
 
 @MiddlewareSetting({
   header: [
@@ -11,7 +14,9 @@ import { resufulInfo } from '../types/resuful'
     ['Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization'],
     ['X-Powered-By', 'Kenote']
   ],
-  parameter: {}
+  parameter: {
+    __rules: rules
+  }
 })
 class Restful extends Middleware {
 
@@ -20,9 +25,10 @@ class Restful extends Middleware {
     return (data: any, error?: number | IError | errorInfo, opts?: string[]): Response => {
       error = error || __ErrorCode.ERROR_STATUS_NULL
       let errorCode: number = isNumber(error) ? <number> error : <number> (<IError | errorInfo> error).code
+      let status: errorInfo = isNumber(error) ? <errorInfo> ErrorInfo(errorCode, opts, true) : <errorInfo> error
       let info: resufulInfo = { 
         data,
-        Status: <errorInfo> ErrorInfo(errorCode, opts, true)
+        Status: status
       }
       return response.json(info)
     }

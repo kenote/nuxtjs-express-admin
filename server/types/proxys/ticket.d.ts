@@ -20,3 +20,13 @@ export interface responseDocument extends mongoose.Document {
   create_at: Date
   last_at: Date
 }
+
+export interface Ticket {
+  cdkey: string
+}
+
+export interface TicketOptions {
+  name: string
+  type: string
+  key: string
+}
