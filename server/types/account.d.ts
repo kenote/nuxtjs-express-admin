@@ -31,6 +31,12 @@ declare namespace account {
     ticket    : responseTicketDocument
   }
 
+  interface CheckWarning {
+    username  : number
+    email     : number
+    mobile    : number
+  }
+
 }
 
 export = account
