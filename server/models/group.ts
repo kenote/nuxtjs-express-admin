@@ -21,6 +21,10 @@ const schema: Schema = new Schema({
   store: {
     type: Schema.Types.ObjectId,
     ref: 'store'
+  },
+  default: {
+    type: Boolean,
+    default: false
   }
 })
 

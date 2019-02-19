@@ -12,6 +12,7 @@ export interface responseDocument extends mongoose.Document {
   level: number
   description: string
   store: responseStoreDocument
+  default: boolean
 }
 
 export interface updateDocument {
@@ -19,6 +20,7 @@ export interface updateDocument {
   level?: number
   description?: string
   store?: createStoreDocument
+  default?: boolean
 }
 
 export interface editDocument {

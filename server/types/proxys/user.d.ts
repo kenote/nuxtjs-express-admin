@@ -5,6 +5,17 @@ import { responseDocument as responseTeamDocument } from './team'
 
 export interface registerDocument {
   username: string
+  password: string
+  email?: string
+  mobile?: string
+  group: ObjectId | string
+  teams?: Array<ObjectId | string>
+}
+
+export interface createDocument {
+  username: string
+  encrypt: string
+  salt: string
   email?: string
   mobile?: string
   group: ObjectId | string

@@ -23,5 +23,14 @@ export const setting: Groups = {
       upload_type: [],
       download_type: []
     }
+  },
+  ['default']: {
+    name: '普通会员',
+    level: 10,
+    description: '普通会员 ...',
+    store: { 
+      upload_type: [],
+      download_type: []
+    }
   }
 }

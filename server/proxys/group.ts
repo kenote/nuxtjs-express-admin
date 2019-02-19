@@ -33,7 +33,7 @@ class GroupProxy {
   }
 
   public async update (conditions: any, doc: updateDocument): Bluebird<mongoose.Query<any>> {
-    let query: mongoose.Query<any> = await this.Dao.updateOne(conditions, pick(doc, ['name', 'level', 'description', 'team']))
+    let query: mongoose.Query<any> = await this.Dao.updateOne(conditions, pick(doc, ['name', 'level', 'description', 'default']))
     if (doc.store) {
       let group: responseDocument = await this.Dao.findOne(conditions)
       query = await storeProxy.Dao.updateOne({ _id: group.store._id }, doc.store)

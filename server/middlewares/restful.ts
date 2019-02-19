@@ -4,7 +4,7 @@ import { isNumber } from 'util'
 import { __ErrorCode, ErrorInfo } from '../error'
 import { resufulInfo } from '../types/resuful'
 import * as rules from '../config/rules'
-
+import { loadData } from '../utils'
 
 
 @MiddlewareSetting({
@@ -15,7 +15,8 @@ import * as rules from '../config/rules'
     ['X-Powered-By', 'Kenote']
   ],
   parameter: {
-    __rules: rules
+    __rules: rules,
+    __register: loadData('data/register.ini')
   }
 })
 class Restful extends Middleware {
