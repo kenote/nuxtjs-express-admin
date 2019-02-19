@@ -3,6 +3,8 @@ import * as jwt from 'jsonwebtoken'
 import { Request } from 'express'
 import { Payload, JwtSign } from '../types/resuful'
 import config from '../config'
+import userProxy from '../proxys/user'
+import { responseDocument } from '../types/proxys/user'
 
 const { ExtractJwt, Strategy } = passportJWT
 const jwtOptions: passportJWT.StrategyOptions = {
@@ -12,7 +14,12 @@ const jwtOptions: passportJWT.StrategyOptions = {
 }
 
 const startegyVerify: passportJWT.VerifyCallbackWithRequest = async (req: Request, payload: Payload, done: passportJWT.VerifiedCallback): Promise<void> => {
-  return done(null, false)
+  try {
+    let user: responseDocument = await userProxy.Dao.findOne({ _id: payload._id })
+    return done(null, user)
+  } catch (error) {
+    return done(error, false)
+  }
 }
 
 export const startegy: passportJWT.Strategy = new Strategy(jwtOptions, startegyVerify)
@@ -24,3 +31,8 @@ export const setToken: JwtSign = (payload: Payload, iat?: number): string => jwt
   },
   <jwt.Secret> jwtOptions.secretOrKey
 )
+
+export const tokentoInfo = async (token: string): Promise<responseDocument> => {
+  let payload: Payload = <Payload> jwt.decode(token)
+  return await userProxy.Dao.findOne({ _id: payload._id })
+}

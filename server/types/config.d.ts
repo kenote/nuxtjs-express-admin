@@ -6,6 +6,9 @@ export interface Config {
   Host?: string
   Port: number
 
+  site_name: string
+  site_url: string
+
   session_secret: string
   redis: connectRedis.RedisStoreOptions
 
@@ -14,8 +17,13 @@ export interface Config {
 
 export interface Register {
   invitation: boolean
+  email_verify: emailVerify
 }
 
 export interface __Rules {
   [propsName: string]: Rule
+}
+
+export interface emailVerify {
+  timeout: number
 }

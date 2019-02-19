@@ -7,4 +7,5 @@ export interface Models {
   groupModel     ?: mongoose.Model<mongoose.Document, {}>
   ticketModel    ?: mongoose.Model<mongoose.Document, {}>
   userModel      ?: mongoose.Model<mongoose.Document, {}>
+  verifyModel    ?: mongoose.Model<mongoose.Document, {}>
 }

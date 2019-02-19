@@ -56,14 +56,7 @@ class Account {
       {
         key    : 'email',
         rules  : (<Array<Rule>> accountRules.email).concat(rules.email),
-        value  : email,
-        ignore : true
-      },
-      {
-        key    : 'mobile',
-        rules  : (<Array<Rule>> accountRules.mobile).concat(rules.mobile),
-        value  : mobile,
-        ignore : true
+        value  : email
       },
       {
         key    : 'password',
@@ -76,16 +69,7 @@ class Account {
       if (req.__register.invitation) {
         ticket = await validTicket({ cdkey: <string> invitation }, { name: '邀请码', type: 'register', key: 'cdkey' })
       }
-      let options: Options = {
-        picks: [
-          {
-            data: [ email, mobile ],
-            message: format(__ErrorMessage.ERROR_VALID_CHOOSEONE_MORE, '邮箱、手机号'),
-            code: __ErrorCode.ERROR_VALID_CHOOSEONE_MORE
-          }
-        ]
-      }
-      let document: registerDocument = await asyncFilterData(filters, options)
+      let document: registerDocument = await asyncFilterData(filters)
       if (ticket) {
         document.group = ticket.setting['group']
         if (ticket.setting['teams']) {

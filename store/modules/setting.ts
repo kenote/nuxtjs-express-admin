@@ -20,7 +20,10 @@ export const namespaced = true
 
 export const state = (): State => ({
   register: {
-    invitation: true
+    invitation: true,
+    email_verify: {
+      timeout: 0
+    }
   },
   __rules: {}
 })

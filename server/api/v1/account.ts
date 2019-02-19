@@ -5,13 +5,18 @@ import { CustomError, __ErrorCode } from '../../error'
 import accountFilter from '../../filters/api_v1/account'
 import userProxy from '../../proxys/user'
 import ticketProxy from '../../proxys/ticket'
+import verifyProxy from '../../proxys/verify'
 import { validTicket } from '../../utils/ticket'
+import mailer from '../../utils/mailer'
+import config from '../../config'
 
 import account from '../../types/account'
 import { IRequest, IResponse } from '../../types/resuful'
 import { responseDocument as responseTicketDocument } from '../../types/proxys/ticket'
 import { responseDocument as responseUserDocument } from '../../types/proxys/user'
-
+import { responseDocument as responseVerifyDocument } from '../../types/proxys/verify'
+import * as Mail from 'nodemailer/lib/mailer'
+import { MailerContext } from '../../types/mailer'
 
 export default class Account extends RouterMethods {
 
@@ -39,18 +44,30 @@ export default class Account extends RouterMethods {
    * @param username  <String> 用户名 
    * @param password  <String> 密码
    * @param email  <String> 电子邮箱
-   * @param mobile  <String> 手机号
    */
   @Router({ method: 'post', path: '/account/register' })
   @Filter(accountFilter.register)
   public async register (create: account.createDocument, req: IRequest, res: IResponse, next: NextFunction): Promise<Response | void> {
     try {
-      let user: responseUserDocument | {} = await userProxy.register(create.document)
+      let user: responseUserDocument = <responseUserDocument> await userProxy.register(create.document)
       if (req.__register.invitation) {
         let { ticket } = create
         let used: boolean = ticket.stint <= ticket.uses + 1
         await ticketProxy.Dao.updateOne({ _id: ticket._id }, { $inc: { uses: 1 }, used })
       }
+      let verify: responseVerifyDocument = <responseVerifyDocument> await verifyProxy.create({ type: 'email', user: user._id })
+      let mail: Mail.Options = {
+        from: `${config.site_name} <${mailer.__MailOptions.auth.user}>`,
+        to: `${user.username} <${user.email}>`,
+        subject: `${config.site_name}邮箱验证`
+      }
+      let context: MailerContext.emailVerify = {
+        site_name: config.site_name,
+        username: user.username,
+        email_verify_url: `${config.site_url}/accounts/email/verify?token=${verify.token}&id=${verify.id}`,
+        timeout: req.__register.email_verify.timeout
+      }
+      mailer.sendMail('email_verify.mjml', mail, context)
       return res.api(omit(user, ['encrypt', 'salt']))
     } catch (error) {
       if (CustomError(error)) {
@@ -60,6 +77,10 @@ export default class Account extends RouterMethods {
     }
   }
 
+  /**
+   * 验证名称是否占用
+   * @param name  <String> 用户名 | 电子邮箱 | 手机号
+   */
   @Router({ method: 'post', path: '/account/check/:type(username|email|mobile)'})
   public async check (req: Request, res: IResponse, next: NextFunction): Promise<Response | void> {
     let { type } = req.params

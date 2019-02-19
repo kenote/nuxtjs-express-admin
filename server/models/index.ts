@@ -7,6 +7,7 @@ import storeModel from './store'
 import groupModel from './group'
 import ticketModel from './ticket'
 import userModel from './user'
+import verifyModel from './verify'
 
 @MongoSetting(config.mongo)
 @ModelMount({
@@ -14,7 +15,8 @@ import userModel from './user'
   storeModel,
   groupModel,
   ticketModel,
-  userModel
+  userModel,
+  verifyModel
 })
 class MyMongoDB extends MongoDB {}
 

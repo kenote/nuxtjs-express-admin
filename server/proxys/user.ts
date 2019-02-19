@@ -38,17 +38,9 @@ class UserProxy {
     if (username) {
       throw ErrorInfo(__ErrorCode.ERROR_VALID_USERNAME_UNIQUE)
     }
-    if (doc.email) {
-      let email: responseDocument | {} = await this.Dao.findOne({ email: doc.email })
-      if (email) {
-        throw ErrorInfo(__ErrorCode.ERROR_VALID_EMAIL_UNIQUE)
-      }
-    }
-    if (doc.mobile) {
-      let mobile: responseDocument | {} = await this.Dao.findOne({ mobile: doc.mobile })
-      if (mobile) {
-        throw ErrorInfo(__ErrorCode.ERROR_VALID_MOBILE_UNIQUE)
-      }
+    let email: responseDocument | {} = await this.Dao.findOne({ email: doc.email })
+    if (email) {
+      throw ErrorInfo(__ErrorCode.ERROR_VALID_EMAIL_UNIQUE)
     }
     let password: account.Password = bcrypt.hash(doc.password)
     let create: createDocument = {

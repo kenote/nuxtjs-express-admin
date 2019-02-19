@@ -38,6 +38,8 @@ jspm_packages/
 build/
 package-lock.json
 yarn.lock
+data/mailer.ini
+data/mailer.json
 
 # TypeScript v1 declaration files
 typings/
