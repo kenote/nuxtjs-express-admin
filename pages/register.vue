@@ -17,7 +17,7 @@
   </page>
   <page v-else-if="status === 'finished'">
     <account-register-finished 
-      email="thondery@163.com" 
+      :email="email" 
       :timeout="register.email_verify.timeout"
       />
   </page>
@@ -52,7 +52,6 @@ type Status = 'invitation' | 'submitinfo' | 'validate' | 'finished'
   mounted () {
     let { invitation } = <Register> this.register
     this.$data.status = invitation ? 'invitation' : 'submitinfo'
-    //this.$data.status = 'finished'
   }
 })
 export default class  extends Vue {
