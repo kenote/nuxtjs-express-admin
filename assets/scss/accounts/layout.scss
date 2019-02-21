@@ -1,0 +1,49 @@
+// ------------------------------------
+// Sass Style
+// ------------------------------------
+@import './setting.sass';
+
+.layout-accounts {
+  height: inherit;
+  display: flex;
+  flex-direction: column;
+
+  header {
+    background: #2389d0;
+    font-size: 18px;
+    color: #fff;
+    width: 100%;
+    height: 70px;
+    line-height: 70px;
+
+    .container {
+      max-width: 1164px;
+      margin-left: auto;
+      margin-right: auto;
+
+      .logo {
+        height: $header-logo-height;
+        padding-left: 12px;
+  
+        img {
+          height: inherit;
+          vertical-align: middle;
+        }
+      }
+
+      .list {
+        float: right;
+  
+        a {
+          color: $header-link-color;
+          font-size: $header-link-fontsize;
+          margin-right: 32px;
+  
+          &:hover {
+            color: $header-link-hover-color;
+          }
+        }
+      }
+    }
+  }
+}
