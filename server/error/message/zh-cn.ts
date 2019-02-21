@@ -35,5 +35,11 @@ export default  <MessageTypes> {
   ERROR_VALID_TICKET_TYPE          : '该%s不能应用于%s',
   ERROR_VALID_TICKET_USED          : '该%s已使用',
   ERROR_VALID_TICKET_EXPIRED       : '该%s已过期',
+
+  ERROR_VERIFY_EMAIL_TIMEOUT       : '邮箱验证超时',
+  ERROR_VERIFY_EMAIL_FAILED        : '邮箱验证失败',
+  ERROR_VERIFY_MOBILE_TIMEOUT      : '手机号验证超时',
+  ERROR_VERIFY_MOBILE_FAILED       : '手机号验证失败',
+  ERROR_VERIFY_TOKEN_VERIFIED      : '该密钥已验证',
   
 }
