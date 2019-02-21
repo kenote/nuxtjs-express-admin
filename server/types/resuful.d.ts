@@ -3,13 +3,13 @@ import { errorInfo, IError } from 'kenote-express-helper'
 import { Register, __Rules } from './config'
 
 export interface resufulInfo {
-  data: any
-  Status?: errorInfo
+  data         : any
+  Status       : errorInfo
 }
 
 export interface Payload {
-  _id: string
-  iat?: number
+  _id          : string
+  iat         ?: number
 }
 
 export interface JwtSign {
@@ -17,11 +17,21 @@ export interface JwtSign {
 }
 
 export interface IResponse extends Response {
-  api: (data: any, error?: number | IError | errorInfo, opts?: string[]) => Response
-  notfound: () => void
+  api          : (data: any, error?: number | IError | errorInfo, opts?: string[]) => Response
+  notfound     : () => void
 }
 
 export interface IRequest extends Request {
-  __register: Register
-  __rules: __Rules
+  __register   : Register
+  __rules      : __Rules
 }
+
+export interface HeaderOptions {
+  token       ?: string
+  header      ?: object
+  upload      ?: (percentage: number) => void
+  download    ?: (percentage: number) => void
+  entry       ?: string
+}
+
+export type Method = 'get' | 'post' | 'put' | 'delete'

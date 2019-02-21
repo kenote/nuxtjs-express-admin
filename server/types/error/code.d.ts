@@ -30,4 +30,10 @@ export interface CodeTypes {
   ERROR_VALID_TICKET_TYPE          : number
   ERROR_VALID_TICKET_USED          : number
   ERROR_VALID_TICKET_EXPIRED       : number
+
+  ERROR_VERIFY_EMAIL_TIMEOUT       : number,
+  ERROR_VERIFY_EMAIL_FAILED        : number,
+  ERROR_VERIFY_MOBILE_TIMEOUT      : number,
+  ERROR_VERIFY_MOBILE_FAILED       : number,
+  ERROR_VERIFY_TOKEN_VERIFIED      : number,
 }

@@ -30,4 +30,10 @@ export interface MessageTypes {
   ERROR_VALID_TICKET_TYPE          : string
   ERROR_VALID_TICKET_USED          : string
   ERROR_VALID_TICKET_EXPIRED       : string
+
+  ERROR_VERIFY_EMAIL_TIMEOUT       : string,
+  ERROR_VERIFY_EMAIL_FAILED        : string,
+  ERROR_VERIFY_MOBILE_TIMEOUT      : string,
+  ERROR_VERIFY_MOBILE_FAILED       : string,
+  ERROR_VERIFY_TOKEN_VERIFIED      : string,
 }

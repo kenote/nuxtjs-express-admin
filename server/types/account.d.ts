@@ -37,6 +37,15 @@ declare namespace account {
     mobile    : number
   }
 
+  interface VerifyWarning {
+    [propsName: string] : verifyItem
+  }
+
+}
+
+interface verifyItem {
+  timeout    : number
+  failed     : number
 }
 
 export = account

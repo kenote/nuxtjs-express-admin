@@ -3,21 +3,21 @@ import { mongoSetting } from 'kenote-mongoose-helper'
 import { Rule } from 'kenote-validate-helper'
 
 export interface Config {
-  Host?: string
-  Port: number
+  Host          ?: string
+  Port           : number
 
-  site_name: string
-  site_url: string
+  site_name      : string
+  site_url       : string
 
-  session_secret: string
-  redis: connectRedis.RedisStoreOptions
+  session_secret : string
+  redis          : connectRedis.RedisStoreOptions
 
-  mongo: mongoSetting
+  mongo          : mongoSetting
 }
 
 export interface Register {
-  invitation: boolean
-  email_verify: emailVerify
+  invitation     : boolean
+  email_verify   : emailVerify
 }
 
 export interface __Rules {
@@ -25,5 +25,5 @@ export interface __Rules {
 }
 
 export interface emailVerify {
-  timeout: number
+  timeout        : number
 }
