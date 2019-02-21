@@ -9,6 +9,8 @@ import teamProxy from '../proxys/team'
 import storeProxy from '../proxys/store'
 import groupProxy from '../proxys/group'
 import ticketProxy from '../proxys/ticket'
+import userProxy from '../proxys/user'
+import verifyProxy from '../proxys/verify'
 
 import { setting as groupSettings } from '../config/group'
 import { responseDocument } from '../types/proxys/group'
@@ -67,7 +69,9 @@ export default async function initialize (): Promise<any> {
       teamProxy.Dao.clear(),
       storeProxy.Dao.clear(),
       groupProxy.Dao.clear(),
-      ticketProxy.Dao.clear()
+      ticketProxy.Dao.clear(),
+      userProxy.Dao.clear(),
+      verifyProxy.Dao.clear()
     ])
     await createGroups()
 

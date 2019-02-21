@@ -6,7 +6,7 @@
         <el-input :placeholder="`请输入您的${name}`" v-model="values.cdkey" />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm">下一步</el-button>
+        <el-button type="primary" @click="submitForm" :loading="loading">下一步</el-button>
       </el-form-item>
       <slot></slot>
     </el-form>
@@ -47,6 +47,7 @@ export default class  extends Vue {
 
   @Prop({ default: '兑换码' }) name: string
   @Prop({ default: (value?: string) => {} }) submit: (value?: string) => void
+  @Prop({ default: false }) loading: boolean
 
   @Provide() values: Values = { cdkey: undefined }
 

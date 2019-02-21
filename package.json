@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "npm run clear && backpack dev",
     "build": "npm run clear && nuxt build && backpack build",
+    "task": " node ./build/task.js",
     "clear": "rimraf ./build ./.nuxt"
   },
   "dependencies": {

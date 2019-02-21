@@ -21,6 +21,34 @@
     color: rgba(106,106,106,1);
   }
 
+  h5 {
+    text-align: center;
+    font-size: 18px;
+    color: #747474;
+    margin: 0;
+  }
+
+  p {
+    margin: 8px 0;
+  }
+
+  .content {
+    margin: 10px 34px;
+    border-top: 1px rgba(0,0,0,0.13) solid;
+    color: #747474;
+    font-size: 14px;
+    padding: 10px 0;
+
+    a {
+      color: #25A9E8;
+      font-weight: normal;
+
+      &.el-button--primary {
+        color: #ffffff;
+      }
+    }
+  }
+
   form {
     padding: 10px 34px;
 

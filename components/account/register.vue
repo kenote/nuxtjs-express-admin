@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>注册帐号</h3>
+    <h3 style="margin-top: 30px;">注册帐号</h3>
     <el-form ref="theForm" :model="values" :rules="rules" @submit.native.prevent="submitForm">
       <el-form-item prop="username" :rules="rules.username">
         <el-input placeholder="请输入您的个人账号" v-model="values.username" />
@@ -12,7 +12,7 @@
         <el-input type="password" placeholder="设置 8 - 20 位密码" v-model="values.password" />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm">下一步</el-button>
+        <el-button type="primary" @click="submitForm" :loading="loading">注 册</el-button>
       </el-form-item>
       <slot></slot>
     </el-form>
@@ -75,6 +75,7 @@ const values: account.Register = {
 export default class  extends Vue {
 
   @Prop({ default: (value?: Values) => {} }) submit: (value?: Values) => void
+  @Prop({ default: false }) loading: boolean
 
   @Provide() values: Values = values
 
