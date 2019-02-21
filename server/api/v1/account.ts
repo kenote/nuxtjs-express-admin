@@ -64,7 +64,7 @@ export default class Account extends RouterMethods {
       let context: MailerContext.emailVerify = {
         site_name: config.site_name,
         username: user.username,
-        email_verify_url: `${config.site_url}/accounts/email/verify?token=${verify.token}&id=${verify.id}`,
+        email_verify_url: `${config.site_url}/accounts/email_verify?token=${verify.token}&id=${verify.id}`,
         timeout: req.__register.email_verify.timeout / 3600
       }
       mailer.sendMail('email_verify.mjml', mail, context)
