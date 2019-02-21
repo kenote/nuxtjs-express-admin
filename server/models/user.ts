@@ -35,6 +35,10 @@ const schema: Schema = new Schema({
   jw_token: {
     type: String
   },
+  binds: {
+    type: Array,
+    default: []
+  },
   group: {
     type: Schema.Types.ObjectId,
     ref: 'group'

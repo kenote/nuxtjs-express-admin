@@ -20,6 +20,10 @@ const schema: Schema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'user'
   },
+  approved: {
+    type: Boolean,
+    default: false
+  }
 })
 
 export default model('verify', schema)

@@ -10,7 +10,7 @@ const Model: mongoose.Model<mongoose.Document, {}> = <mongoose.Model<mongoose.Do
 const options: QueryOptions = {
   populate: {
     path: 'user',
-    select: ['id', 'username', 'email', 'mobile', 'nickname', 'avatar', 'sex', 'group', 'teams']
+    select: ['id', 'username', 'email', 'mobile', 'nickname', 'avatar', 'sex', 'group', 'teams', 'binds']
   },
   seqModel: __Models.seqModel
 }

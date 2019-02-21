@@ -31,6 +31,7 @@ export const setting: Groups = {
     store: { 
       upload_type: [],
       download_type: []
-    }
+    },
+    default: true
   }
 }

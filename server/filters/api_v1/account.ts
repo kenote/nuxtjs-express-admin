@@ -19,7 +19,8 @@ const accountRules: account.Rules = {
       required : true, 
       message  : __ErrorMessage.ERROR_VALID_USERNAME_REQUIRED, 
       code     : __ErrorCode.ERROR_VALID_USERNAME_REQUIRED 
-    }],
+    }
+  ],
   email: [
     { 
       required : true, 

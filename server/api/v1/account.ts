@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import { Router, RouterMethods, Filter } from 'kenote-express-helper'
-import { omit } from 'lodash'
+import { omit, uniq } from 'lodash'
 import { CustomError, __ErrorCode } from '../../error'
 import accountFilter from '../../filters/api_v1/account'
 import userProxy from '../../proxys/user'
@@ -65,7 +65,7 @@ export default class Account extends RouterMethods {
         site_name: config.site_name,
         username: user.username,
         email_verify_url: `${config.site_url}/accounts/email/verify?token=${verify.token}&id=${verify.id}`,
-        timeout: req.__register.email_verify.timeout
+        timeout: req.__register.email_verify.timeout / 3600
       }
       mailer.sendMail('email_verify.mjml', mail, context)
       return res.api(omit(user, ['encrypt', 'salt']))
@@ -93,6 +93,52 @@ export default class Account extends RouterMethods {
     try {
       let user: responseUserDocument = await userProxy.Dao.findOne({ [type]: name })
       return res.api(!user, user ? warnings[type] : null)
+    } catch (error) {
+      if (CustomError(error)) {
+        return res.api(null, error)
+      }
+      return next(error)
+    }
+  }
+
+  /**
+   * 校验邮箱、手机号
+   * @param token  <String> 校验密钥
+   * @param id  <Number> 校验ID
+   */
+  @Router({ method: 'post', path: '/account/verify/:type(email|mobile)' })
+  public async verify_email (req: IRequest, res: IResponse, next: NextFunction): Promise<Response | void> {
+    let { type } = req.params
+    let { token, id  } = req.body
+    let warnings: account.VerifyWarning = {
+      email: {
+        timeout : __ErrorCode.ERROR_VERIFY_EMAIL_TIMEOUT,
+        failed  : __ErrorCode.ERROR_VERIFY_EMAIL_FAILED
+      },
+      mobile: {
+        timeout : __ErrorCode.ERROR_VERIFY_MOBILE_TIMEOUT,
+        failed  : __ErrorCode.ERROR_VERIFY_MOBILE_FAILED
+      }
+    }
+    try {
+      let verify: responseVerifyDocument = <responseVerifyDocument> await verifyProxy.Dao.findOne({ type, token, id })
+      if (verify) {
+        let difftime: number = Date.now() - verify.create_at.getTime()
+        let timeout: number = req.__register.email_verify.timeout * 1000
+        if (difftime > timeout) {
+          return res.api('warning', warnings[type].timeout)
+        }
+        if (verify.approved) {
+          return res.api('warning', __ErrorCode.ERROR_VERIFY_TOKEN_VERIFIED)
+        }
+        await verifyProxy.Dao.updateOne({ _id: verify._id }, { approved: true })
+        await userProxy.Dao.updateOne({ _id: verify.user._id }, { binds: uniq(verify.user.binds.concat(type)) })
+        return res.api(verify)
+      }
+      else {
+        return res.api('error', warnings[type].failed)
+      }
+      
     } catch (error) {
       if (CustomError(error)) {
         return res.api(null, error)
