@@ -5,13 +5,41 @@
 
 .account-page {
   margin: 0 auto;
-  margin-top: $page-margin-top;
-  max-width: $page-max-width;
-  width: $page-width;
-  background-color: $page-background-color;
-  overflow: hidden;
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 80px;
+
+  .landing-activity {
+    margin: 0 auto;
+    width: 480px;
+    float: left;
+    margin-left: 100px;
+    margin-top: 130px;
+
+    .main-title {
+      font-size: 32px;
+      color: rgba(254,254,254,1);
+      text-shadow: 0px 4px 79px rgba(0, 0, 0, 0.18);
+      margin: 0;
+    }
+
+    .secondary-title {
+      font-size: 16px;
+      color: rgba(254,254,254,1);
+      text-shadow: 0px 4px 79px rgba(0, 0, 0, 0.18);
+      margin: 30px 0 0;
+    }
+  }
+
+  .landing-body {
+    margin: 0 auto;
+    margin-top: $page-margin-top;
+    max-width: $page-max-width;
+    width: $page-width;
+    background-color: $page-background-color;
+    overflow: hidden;
+    padding-top: 10px;
+    padding-bottom: 20px;
+
+  }
 
   h3 {
     margin-top: 10px;

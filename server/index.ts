@@ -10,6 +10,7 @@ import * as session from 'express-session'
 import * as connectRedis from 'connect-redis'
 import * as errorhandler from 'errorhandler'
 import * as passport from 'passport'
+import * as cors from 'cors'
 
 import config from './config'
 import nuxt from './nuxt'
@@ -62,7 +63,7 @@ passport.deserializeUser((user, done) =>
 app.use(restful.hendler())
 
 // api_v1
-app.use('/api/v1', api_v1.handler())
+app.use('/api/v1', cors(), api_v1.handler())
 
 // Renderer Nuxt
 nuxt(app)

@@ -6,7 +6,7 @@
         <el-input :placeholder="`请输入您的${name}`" v-model="values.cdkey" />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm" :loading="loading">下一步</el-button>
+        <el-button type="primary" native-type="submit" :loading="loading">下一步</el-button>
       </el-form-item>
       <slot></slot>
     </el-form>
@@ -41,7 +41,7 @@ interface Values {
       ]
     }
     return { rules }
-  },
+  }
 })
 export default class  extends Vue {
 

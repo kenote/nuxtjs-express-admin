@@ -86,6 +86,28 @@ class Account {
       return res.api(null, error)
     }
   }
+
+  public async login (req: IRequest, res: IResponse, next: NextFunction): Promise<Response | void> {
+    let { username, password } = <account.Login> req.body
+    let filters: Array<Filter> = [
+      { 
+        key    : 'username', 
+        rules  : <Array<Rule>> accountRules.username, 
+        value  : username 
+      },
+      {
+        key    : 'password',
+        rules  : <Array<Rule>> accountRules.password,
+        value  : password
+      }
+    ]
+    try {
+      let document: account.Login = await asyncFilterData(filters)
+      return next(document)
+    } catch (error) {
+      return res.api(null, error)
+    }
+  }
 }
 
 export default new Account()

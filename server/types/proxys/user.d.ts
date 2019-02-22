@@ -39,6 +39,6 @@ export interface responseDocument extends mongoose.Document {
 }
 
 export interface responseAllDocument extends responseDocument {
-  encrypt     ?: string
-  salt        ?: string
+  encrypt      : string
+  salt         : string
 }

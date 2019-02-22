@@ -9,6 +9,8 @@ import verifyProxy from '../../proxys/verify'
 import { validTicket } from '../../utils/ticket'
 import mailer from '../../utils/mailer'
 import config from '../../config'
+import { setToken } from '../../middlewares/auth'
+import * as passport from 'passport'
 
 import account from '../../types/account'
 import { IRequest, IResponse } from '../../types/resuful'
@@ -145,5 +147,36 @@ export default class Account extends RouterMethods {
       }
       return next(error)
     }
+  }
+
+  /**
+   * 帐号登录
+   * @param username 
+   * @param password 
+   */
+  @Router({ method: 'post', path: '/account/login' })
+  @Filter(accountFilter.login)
+  public async login (document: account.Login, req: IRequest, res: IResponse, next: NextFunction): Promise<Response | void> {
+    try {
+      let user: responseUserDocument = <responseUserDocument> await userProxy.login(document)
+      let token: string = setToken({ _id: user._id })
+      res.cookie('token', token)
+      await userProxy.Dao.updateOne({ _id: user._id }, { jw_token: token, sex: 1 })
+      return res.api({ ...user, jw_token: token })
+    } catch (error) {
+      if (CustomError(error)) {
+        return res.api(null, error)
+      }
+      return next(error)
+    }
+  }
+
+  /**
+   * 校验访问令牌
+   */
+  @Router({ method: 'get', path: '/account/accesstoken' })
+  @Filter( passport.authenticate('jwt', { session: false }) )
+  public async accessToken (req: Request, res: IResponse, next: NextFunction): Promise<Response> {
+    return res.api(req.user)
   }
 }

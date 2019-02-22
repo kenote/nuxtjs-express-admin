@@ -1,6 +1,6 @@
 import { Response } from 'express'
 import { Middleware, MiddlewareSetting, RegisterMiddlewareMethod, IError, errorInfo } from 'kenote-express-helper'
-import { isNumber } from 'util'
+import { isNumber, isError } from 'util'
 import { __ErrorCode, ErrorInfo } from '../error'
 import { resufulInfo } from '../types/resuful'
 import * as rules from '../config/rules'
@@ -27,6 +27,9 @@ class Restful extends Middleware {
       error = error || __ErrorCode.ERROR_STATUS_NULL
       let errorCode: number = isNumber(error) ? <number> error : <number> (<IError | errorInfo> error).code
       let status: errorInfo = isNumber(error) ? <errorInfo> ErrorInfo(errorCode, opts, true) : <errorInfo> error
+      if (isError(error)) {
+        status = { code: <number> error.code, message: error.message }
+      }
       let info: resufulInfo = { 
         data,
         Status: status

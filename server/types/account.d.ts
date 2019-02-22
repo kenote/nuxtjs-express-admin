@@ -2,6 +2,7 @@
 import { Rule } from 'kenote-validate-helper'
 import { registerDocument } from './proxys/user'
 import { responseDocument as responseTicketDocument } from './proxys/ticket'
+import { password } from '../config/rules';
 
 declare namespace account {
 
@@ -11,6 +12,11 @@ declare namespace account {
     mobile      ?: string
     password    ?: string
     invitation  ?: string
+  }
+
+  interface Login {
+    username    ?: string
+    password    ?: string
   }
 
   interface Rules {

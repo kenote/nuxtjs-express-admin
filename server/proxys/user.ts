@@ -2,11 +2,11 @@ import * as Bluebird from 'bluebird'
 import * as mongoose from 'mongoose' 
 import { MongooseDao, MongooseDaoSetting, QueryOptions } from 'kenote-mongoose-helper'
 import __Models from '../models'
-import { registerDocument, responseDocument, createDocument } from '../types/proxys/user'
+import { registerDocument, responseDocument, createDocument, responseAllDocument } from '../types/proxys/user'
 import { __ErrorCode, ErrorInfo } from '../error'
 import { bcrypt } from '../utils'
 import account from '../types/account'
-import { omit } from 'lodash'
+import { omit, pick } from 'lodash'
 
 (<mongoose.Mongoose>mongoose).Promise = Bluebird
 const Model: mongoose.Model<mongoose.Document, {}> = <mongoose.Model<mongoose.Document, {}>> __Models.userModel
@@ -50,6 +50,25 @@ class UserProxy {
     }
     let user: responseDocument | {} = await this.Dao.insert(create)
     return user
+  }
+
+  public async login (doc: account.Login): Bluebird<responseDocument | {}> {
+    let conditions: any = {
+      $or: [
+        { username  : doc.username },
+        { email     : doc.username },
+        { mobile    : doc.username }
+      ]
+    }
+    let user: responseAllDocument = await this.Dao.findOne(conditions)
+    if (!user) {
+      throw ErrorInfo(__ErrorCode.ERROR_LOGINVALID_FAIL)
+    }
+    let valide: boolean = bcrypt.compare(<string> doc.password, user.encrypt, user.salt)
+    if (!valide) {
+      throw ErrorInfo(__ErrorCode.ERROR_LOGINVALID_FAIL)
+    }
+    return pick(user, ['_id', 'id', 'username', 'email', 'mobile', 'nickname', 'avatar', 'sex', 'binds', 'group', 'teams', 'create_at', 'update_at'])
   }
 
 }

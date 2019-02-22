@@ -1,6 +1,7 @@
 import * as passportJWT from 'passport-jwt'
 import * as jwt from 'jsonwebtoken'
 import { Request } from 'express'
+import { pick } from 'lodash'
 import { Payload, JwtSign } from '../types/resuful'
 import config from '../config'
 import userProxy from '../proxys/user'
@@ -16,7 +17,7 @@ const jwtOptions: passportJWT.StrategyOptions = {
 const startegyVerify: passportJWT.VerifyCallbackWithRequest = async (req: Request, payload: Payload, done: passportJWT.VerifiedCallback): Promise<void> => {
   try {
     let user: responseDocument = await userProxy.Dao.findOne({ _id: payload._id })
-    return done(null, user)
+    return done(null, pick(user, ['_id', 'id', 'username', 'email', 'mobile', 'nickname', 'avatar', 'sex', 'binds', 'group', 'teams', 'create_at', 'update_at']))
   } catch (error) {
     return done(error, false)
   }

@@ -1,22 +1,22 @@
 <template>
   <page v-if="status === 'invitation'">
-    <account-ticket name="邀请码" :submit="handleInvitation" v-loading="loading" :loading="loading">
+    <account-ticket class="landing-body" name="邀请码" :submit="handleInvitation" v-loading="loading" :loading="loading">
       <p class="service-terms">
         系统已经关闭的注册入口，您必须拥有邀请码才能注册
       </p>
     </account-ticket>
   </page>
   <page v-else-if="status === 'submitinfo'">
-    <account-register :submit="handleRegister" v-loading="loading" :loading="loading">
+    <account-register class="landing-body" :submit="handleRegister" v-loading="loading" :loading="loading" :unique="handleUnique">
       <p class="service-terms">
         请您仔细阅读并同意遵守
         <a href="javascript:;">《服务条款》</a>
-        <a href="javascript:;" class="ng-hide">立即登录</a>
+        <nuxt-link to="/login" class="ng-hide">立即登录</nuxt-link>
       </p>
     </account-register>
   </page>
   <page v-else-if="status === 'finished'">
-    <account-register-finished 
+    <account-register-finished class="landing-body"
       :email="email" 
       :timeout="register.email_verify.timeout"
       />
@@ -102,6 +102,15 @@ export default class  extends Vue {
         this.$message.warning(error.message)
       }
     }, 300)
+  }
+
+  async handleUnique (type: 'username' | 'email', value: string): Promise<boolean | undefined> {
+    try {
+      let result: resufulInfo = await http.post(`/account/check/${type}`, { name: value })
+      return <boolean> result.data
+    } catch (error) {
+      this.$message.warning(error.message)
+    }
   }
 
 }
