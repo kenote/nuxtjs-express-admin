@@ -40,6 +40,8 @@ package-lock.json
 yarn.lock
 data/mailer.ini
 data/mailer.json
+data/config.ini
+data/config.json
 
 # TypeScript v1 declaration files
 typings/

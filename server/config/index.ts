@@ -1,4 +1,5 @@
-
+import * as connectRedis from 'connect-redis'
+import { loadData } from '../utils'
 import { Config } from '../types/config'
 
 const project: Config = {
@@ -17,7 +18,17 @@ const project: Config = {
 
   mongo: {
     uris: 'mongodb://localhost:27017/kenote_nuxtjs_admin',
-  }
+  },
+  ...loadData('data/config.default.ini'),
+  ...loadData('data/config.ini')
 }
 
+project.Port = Number(project.Port)
+parseRedis(project.redis)
+
 export default project
+
+function parseRedis (setting: connectRedis.RedisStoreOptions): void {
+  setting.port = Number(setting.port || 6379)
+  setting.db = Number(setting.db || 0)
+}

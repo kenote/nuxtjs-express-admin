@@ -5,7 +5,9 @@ import * as setting from './modules/setting'
 import * as auth from './modules/auth'
 
 import http, { resufulInfo } from '~/utils/http'
+import { getChannelId } from '~/utils/channel'
 import { HeaderOptions } from '~/server/types/resuful'
+import channel from '~/server/types/channel'
 
 export const types = {}
 
@@ -27,6 +29,10 @@ export const actions: Actions<State, RootState> = {
   async nuxtServerInit({ commit }, { req }) {
     commit(`${setting.name}/${setting.types.REGISTER}`, req.__register)
     commit(`${setting.name}/${setting.types.__RULES}`, req.__rules)
+    commit(`${setting.name}/${setting.types.CHANNELS}`, req.__channels)
+    let channelId: number = getChannelId(req.__channels, req.path)
+    commit(`${setting.name}/${setting.types.SELECTCHANNEL}`, channelId || req.__selected.channels)
+    //console.log(JSON.stringify(req.__channels, null, 2), channelId)
     if (req.cookies['token']) {
       let site_url: string = req.protocol + '://' + req.headers.host
       let opttions: HeaderOptions = {

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { errorInfo, IError } from 'kenote-express-helper'
 import { Register, __Rules } from './config'
+import channel from './channel'
 
 export interface resufulInfo {
   data         : any
@@ -24,6 +25,12 @@ export interface IResponse extends Response {
 export interface IRequest extends Request {
   __register   : Register
   __rules      : __Rules
+  __channels   : Array<channel.NavMenus>
+  __selected   : Selected
+}
+
+export interface Selected {
+  channels     : number
 }
 
 export interface HeaderOptions {

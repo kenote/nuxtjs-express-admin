@@ -1,0 +1,17 @@
+{
+  "id": 1,
+  "name": "我的帐户",
+  "default": "/account/baseinfo",
+  "navs": [
+    {
+      "index": "1-1",
+      "name": "帐户管理",
+      "children": [
+        {
+          "index": "/account/baseinfo",
+          "name": "基本资料"
+        }
+      ]
+    }
+  ]
+}
