@@ -12,6 +12,7 @@ export interface MessageTypes {
   ERROR_UPLOAD_NOT_FILE            : string
 
   ERROR_LOGINVALID_FAIL            : string
+  ERROR_FINDUSER_NOTEXIST          : string
 
   ERROR_VALID_USERNAME_REQUIRED    : string
   ERROR_VALID_USERNAME_FORMAT      : string
@@ -31,9 +32,13 @@ export interface MessageTypes {
   ERROR_VALID_TICKET_USED          : string
   ERROR_VALID_TICKET_EXPIRED       : string
 
-  ERROR_VERIFY_EMAIL_TIMEOUT       : string,
-  ERROR_VERIFY_EMAIL_FAILED        : string,
-  ERROR_VERIFY_MOBILE_TIMEOUT      : string,
-  ERROR_VERIFY_MOBILE_FAILED       : string,
-  ERROR_VERIFY_TOKEN_VERIFIED      : string,
+  ERROR_VERIFY_EMAIL_TIMEOUT       : string
+  ERROR_VERIFY_EMAIL_FAILED        : string
+  ERROR_VERIFY_MOBILE_TIMEOUT      : string
+  ERROR_VERIFY_MOBILE_FAILED       : string
+  ERROR_VERIFY_TOKEN_VERIFIED      : string
+  ERROR_SEND_MAILPHONE_STEP        : string
+  ERROR_VERIFY_CODE_REQUIRED       : string
+  ERROR_VERIFY_CODE_TIMEOUT        : string
+  ERROR_VERIFY_CODE_FAILED         : string
 }

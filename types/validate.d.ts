@@ -9,6 +9,8 @@ export interface Rule {
   trigger       ?: 'blur' | 'change' | Array<'blur' | 'change'>
   type          ?: 'string' | 'number' | 'boolean' | 'method' | 'regexp' | 'integer' | 'float' | 'array' | 'object' | 'enum' | 'data' | 'url' | 'hex' | 'email'
   validator     ?: Validator | PromiseValidtor
+  min           ?: number
+  max           ?: number
 }
 
 type Validator = (rule: any, value: any, done: (message?: string) => any) => (message?: string) => any

@@ -29,7 +29,7 @@ class VerifyProxy {
     if (doc.type === 'email') {
       token = uuid.v4().replace(/\-/g, '')
     }
-    if (doc.type === 'mobile') {
+    if (doc.type === 'mobile' || doc.type === 'code') {
       token = Math.random().toFixed(6).replace(/^(0\.)/i, '')
     }
     let verify: responseDocument | {} = await this.Dao.insert({ ...doc, token })

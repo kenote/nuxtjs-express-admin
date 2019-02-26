@@ -19,12 +19,19 @@ declare namespace account {
     password    ?: string
   }
 
+  interface ResetPwd {
+    code        ?: string
+    password    ?: string
+    name        ?: string
+  }
+
   interface Rules {
     username    ?: Array<Rule>
     email       ?: Array<Rule>
     mobile      ?: Array<Rule>
     password    ?: Array<Rule>
     invitation  ?: Array<Rule>
+    code        ?: Array<Rule>
   }
 
   interface Password {

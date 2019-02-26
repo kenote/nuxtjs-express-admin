@@ -77,6 +77,24 @@
     }
   }
 
+  .codeSent-info {
+    margin-bottom: 20px;
+    padding: 15px 0;
+    text-align: center;
+    border: 1px solid #d1dbe5;
+    border-radius: 4px;
+    background-color: #fff;
+    overflow: hidden;
+
+    p {
+      color: #747474;
+
+      a {
+        color: #00aff8;
+      }
+    }
+  }
+
   form {
     padding: 10px 34px;
 
@@ -123,5 +141,14 @@
 @media (max-width: 640px) {
   .account-page {
     margin-top: $page-mobile-margin-top;
+    padding-top: 0;
+
+    .landing-activity {
+      display: none;
+    }
+
+    .landing-body {
+      margin-top: 0;
+    }
   }
 }

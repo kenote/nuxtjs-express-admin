@@ -12,6 +12,7 @@ export interface CodeTypes {
   ERROR_UPLOAD_NOT_FILE            : number
 
   ERROR_LOGINVALID_FAIL            : number
+  ERROR_FINDUSER_NOTEXIST          : number
 
   ERROR_VALID_USERNAME_REQUIRED    : number
   ERROR_VALID_USERNAME_FORMAT      : number
@@ -31,9 +32,13 @@ export interface CodeTypes {
   ERROR_VALID_TICKET_USED          : number
   ERROR_VALID_TICKET_EXPIRED       : number
 
-  ERROR_VERIFY_EMAIL_TIMEOUT       : number,
-  ERROR_VERIFY_EMAIL_FAILED        : number,
-  ERROR_VERIFY_MOBILE_TIMEOUT      : number,
-  ERROR_VERIFY_MOBILE_FAILED       : number,
-  ERROR_VERIFY_TOKEN_VERIFIED      : number,
+  ERROR_VERIFY_EMAIL_TIMEOUT       : number
+  ERROR_VERIFY_EMAIL_FAILED        : number
+  ERROR_VERIFY_MOBILE_TIMEOUT      : number
+  ERROR_VERIFY_MOBILE_FAILED       : number
+  ERROR_VERIFY_TOKEN_VERIFIED      : number
+  ERROR_SEND_MAILPHONE_STEP        : number
+  ERROR_VERIFY_CODE_REQUIRED       : number
+  ERROR_VERIFY_CODE_TIMEOUT        : number
+  ERROR_VERIFY_CODE_FAILED         : number
 }

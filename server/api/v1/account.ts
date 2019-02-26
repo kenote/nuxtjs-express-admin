@@ -19,6 +19,7 @@ import { responseDocument as responseUserDocument } from '../../types/proxys/use
 import { responseDocument as responseVerifyDocument } from '../../types/proxys/verify'
 import * as Mail from 'nodemailer/lib/mailer'
 import { MailerContext } from '../../types/mailer'
+import * as mongoose from 'mongoose'
 
 export default class Account extends RouterMethods {
 
@@ -126,7 +127,7 @@ export default class Account extends RouterMethods {
       let verify: responseVerifyDocument = <responseVerifyDocument> await verifyProxy.Dao.findOne({ type, token, id })
       if (verify) {
         let difftime: number = Date.now() - verify.create_at.getTime()
-        let timeout: number = req.__register.email_verify.timeout * 1000
+        let timeout: number = Number(req.__register.email_verify.timeout) * 1000
         if (difftime > timeout) {
           return res.api('warning', warnings[type].timeout)
         }
@@ -151,8 +152,8 @@ export default class Account extends RouterMethods {
 
   /**
    * 帐号登录
-   * @param username 
-   * @param password 
+   * @param username  <String> 用户名 | 电子邮箱 | 手机号
+   * @param password  <String> 登录密码
    */
   @Router({ method: 'post', path: '/account/login' })
   @Filter(accountFilter.login)
@@ -178,5 +179,86 @@ export default class Account extends RouterMethods {
   @Filter( passport.authenticate('jwt', { session: false }) )
   public async accessToken (req: Request, res: IResponse, next: NextFunction): Promise<Response> {
     return res.api(req.user)
+  }
+
+  /**
+   * 发送验证码
+   * @param name  <String> 电子邮箱 | 手机号
+   */
+  @Router({ method: 'put', path: '/account/resetpwd/code/:type(email|mobile)' })
+  public async resetpwdCode (req: IRequest, res: IResponse, next: NextFunction): Promise<Response | void> {
+    let { type } = req.params
+    let { name } = req.body
+    try {
+      let user: responseUserDocument = await userProxy.Dao.findOne({ [type]: name })
+      if (!user) {
+        return res.api(null, __ErrorCode.ERROR_FINDUSER_NOTEXIST)
+      }
+      let verify: responseVerifyDocument = await verifyProxy.Dao.findOne({ type: 'code', user: user._id })
+      if (verify) {
+        let difftime: number = Date.now() - verify.create_at.getTime()
+        let timeout: number = Number(req.__register.mailphone_step) * 1000
+        if (difftime < timeout) {
+          return res.api(null, __ErrorCode.ERROR_SEND_MAILPHONE_STEP)
+        }
+        await verifyProxy.Dao.remove({ _id: verify._id })
+      }
+      verify = <responseVerifyDocument> await verifyProxy.create({ type: 'code', user: user._id })
+      if (type === 'email') {
+        let mail: Mail.Options = {
+          from: `${config.site_name} <${mailer.__MailOptions.auth.user}>`,
+          to: `${user.username} <${user.email}>`,
+          subject: `${config.site_name}密码重置校验`
+        }
+        let context: MailerContext.resetPass = {
+          site_name: config.site_name,
+          username: user.username,
+          code: verify.token,
+          timeout: req.__register.lost_pass.timeout / 60
+        }
+        mailer.sendMail('reset_pass.mjml', mail, context)
+      }
+      return res.api({ result: true })
+    } catch (error) {
+      if (CustomError(error)) {
+        return res.api(null, error)
+      }
+      return next(error)
+    }
+  }
+
+  /**
+   * 重置密码
+   * @param code  <String> 验证码
+   * @param password  <String> 新密码
+   * @param name  <String> 电子邮箱 | 手机号
+   */
+  @Router({ method: 'post', path: '/account/resetpwd/:type(email|mobile)' })
+  @Filter(accountFilter.resetpwd)
+  public async resetpwd (document: account.ResetPwd, req: IRequest, res: IResponse, next: NextFunction): Promise<Response | void> {
+    let { type } = req.params
+    let { code, name } = document
+    try {
+      let user: responseUserDocument = await userProxy.Dao.findOne({ [type]: name })
+      if (!user) {
+        return res.api(null, __ErrorCode.ERROR_FINDUSER_NOTEXIST)
+      }
+      let verify: responseVerifyDocument = await verifyProxy.Dao.findOne({ type: 'code', user: user._id, token: code })
+      if (!verify) {
+        return res.api(null, __ErrorCode.ERROR_VERIFY_CODE_FAILED)
+      }
+      let difftime: number = Date.now() - verify.create_at.getTime()
+      let timeout: number = Number(req.__register.lost_pass.timeout) * 1000
+      if (difftime > timeout) {
+        return res.api(null, __ErrorCode.ERROR_VERIFY_CODE_TIMEOUT)
+      }
+      let result: mongoose.Query<any> = await userProxy.resetPwd(document, type)
+      return res.api(result)
+    } catch (error) {
+      if (CustomError(error)) {
+        return res.api(null, error)
+      }
+      return next(error)
+    }
   }
 }

@@ -3,13 +3,13 @@ import { ObjectId } from 'bson'
 import { responseDocument as responseUserDocument } from './user'
 
 export interface createDocument {
-  type         : 'email' | 'mobile',
+  type         : 'email' | 'mobile' | 'code'
   user        ?: ObjectId | string
 }
 
 export interface responseDocument extends mongoose.Document {
   id           : number
-  type         : 'email' | 'mobile'
+  type         : 'email' | 'mobile' | 'code'
   token        : string
   create_at    : Date
   user         : responseUserDocument

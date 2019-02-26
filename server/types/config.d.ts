@@ -18,6 +18,8 @@ export interface Config {
 export interface Register {
   invitation     : boolean
   email_verify   : emailVerify
+  lost_pass      : lostPass
+  mailphone_step : number
 }
 
 export interface __Rules {
@@ -25,5 +27,9 @@ export interface __Rules {
 }
 
 export interface emailVerify {
+  timeout        : number
+}
+
+export interface lostPass {
   timeout        : number
 }

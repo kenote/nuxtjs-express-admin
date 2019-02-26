@@ -7,4 +7,11 @@ export declare namespace MailerContext {
     email_verify_url    : string
     timeout             : number
   }
+
+  interface resetPass {
+    site_name           : string
+    username            : string
+    code                : string
+    timeout             : number
+  }
 }

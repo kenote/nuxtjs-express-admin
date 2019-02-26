@@ -71,6 +71,12 @@ class UserProxy {
     return pick(user, ['_id', 'id', 'username', 'email', 'mobile', 'nickname', 'avatar', 'sex', 'binds', 'group', 'teams', 'create_at', 'update_at'])
   }
 
+  public async resetPwd (doc: account.ResetPwd, type: 'email' | 'mobile'): Bluebird<mongoose.Query<any>> {
+    let password: account.Password = bcrypt.hash(doc.password || '')
+    let result: mongoose.Query<any> = await this.Dao.updateOne({ [type]: doc.name }, { encrypt: password.hash, salt: password.salt })
+    return result
+  }
+
 }
 
 export default new UserProxy()

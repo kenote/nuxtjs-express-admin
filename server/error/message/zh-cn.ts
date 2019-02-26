@@ -17,6 +17,7 @@ export default  <MessageTypes> {
   ERROR_UPLOAD_NOT_FILE            : '请选择上传文件!',
 
   ERROR_LOGINVALID_FAIL            : '用户名密码错误',
+  ERROR_FINDUSER_NOTEXIST          : '用户不存在',
 
   ERROR_VALID_USERNAME_REQUIRED    : '用户名不能为空',
   ERROR_VALID_USERNAME_FORMAT      : '用户名格式错误',
@@ -41,5 +42,9 @@ export default  <MessageTypes> {
   ERROR_VERIFY_MOBILE_TIMEOUT      : '手机号验证超时',
   ERROR_VERIFY_MOBILE_FAILED       : '手机号验证失败',
   ERROR_VERIFY_TOKEN_VERIFIED      : '该密钥已验证',
+  ERROR_SEND_MAILPHONE_STEP        : '请不要连续发送',
+  ERROR_VERIFY_CODE_REQUIRED       : '验证码不能为空',
+  ERROR_VERIFY_CODE_TIMEOUT        : '验证码超时',
+  ERROR_VERIFY_CODE_FAILED         : '验证码错误',
   
 }

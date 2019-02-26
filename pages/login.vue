@@ -7,7 +7,7 @@
     </div>
     <account-login class="landing-body" :submit="handleLogin" v-loading="loading" :loading="loading">
       <p class="service-terms">
-        <a href="javascript:;">忘记密码</a>
+        <nuxt-link to="/lostpass">忘记密码</nuxt-link>
         <nuxt-link to="/register" class="ng-hide">立即注册</nuxt-link>
       </p>
     </account-login>

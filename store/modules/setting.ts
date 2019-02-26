@@ -23,7 +23,11 @@ export const state = (): State => ({
     invitation: true,
     email_verify: {
       timeout: 0
-    }
+    },
+    lost_pass: {
+      timeout: 0
+    },
+    mailphone_step: 60
   },
   __rules: {}
 })
@@ -46,5 +50,13 @@ export const mutations: MutationTree<State> = {
   },
   [types.__RULES] (state: State, __rules: __Rules) {
     state.__rules = clone(__rules)
+  }
+}
+
+
+
+const data = {
+  user: {
+    username: 'dkkd'
   }
 }

@@ -41,6 +41,13 @@ const accountRules: account.Rules = {
       message  : __ErrorMessage.ERROR_VALID_PASSWORD_REQUIRED, 
       code     : __ErrorCode.ERROR_VALID_PASSWORD_REQUIRED 
     }
+  ],
+  code: [
+    {
+      required : true, 
+      message  : __ErrorMessage.ERROR_VERIFY_CODE_REQUIRED,
+      code     : __ErrorCode.ERROR_VERIFY_CODE_REQUIRED
+    }
   ]
 }
 
@@ -103,6 +110,43 @@ class Account {
     ]
     try {
       let document: account.Login = await asyncFilterData(filters)
+      return next(document)
+    } catch (error) {
+      return res.api(null, error)
+    }
+  }
+
+  public async resetpwd (req: IRequest, res: IResponse, next: NextFunction): Promise<Response | void> {
+    let { type } = req.params
+    let { code, password, name } = req.body
+    let filters: Array<Filter> = [
+      {
+        key    : 'code',
+        rules  : <Array<Rule>> accountRules.code,
+        value  : code
+      },
+      {
+        key    : 'password',
+        rules  : (<Array<Rule>> accountRules.password).concat(rules.password),
+        value  : password
+      }
+    ]
+    if (type === 'email') {
+      filters.push({
+        key    : 'name',
+        rules  : (<Array<Rule>> accountRules.email).concat(rules.email),
+        value  : name
+      })
+    }
+    if (type === 'mobile') {
+      filters.push({
+        key    : 'name',
+        rules  : (<Array<Rule>> accountRules.mobile).concat(rules.mobile),
+        value  : name
+      })
+    }
+    try {
+      let document: account.ResetPwd = await asyncFilterData(filters)
       return next(document)
     } catch (error) {
       return res.api(null, error)
