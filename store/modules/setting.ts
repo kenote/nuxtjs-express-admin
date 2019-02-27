@@ -56,7 +56,7 @@ export const state = (): State => ({
 })
 
 export const getters: GetterTree<State, RootState> = {
-  selectChannel: state => {
+  selectedChannel: state => {
     let p: channel.NavMenus | undefined = state.channels.find( o => o.id === state.selected.channel)
     return p ? p : <channel.NavMenus> { id: 0, name: '控制台', navs: [], default: '/' }
   }
