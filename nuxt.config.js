@@ -14,6 +14,7 @@ module.exports = {
   ],
   css: [
     'element-ui/lib/theme-chalk/index.css',
+    '~/assets/iconfont/iconfont.css',
     '~/assets/scss/common.scss'
   ],
   plugins: [
