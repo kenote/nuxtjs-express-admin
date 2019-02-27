@@ -32,7 +32,7 @@ export const actions: Actions<State, RootState> = {
     commit(`${setting.name}/${setting.types.CHANNELS}`, req.__channels)
     let channelId: number = getChannelId(req.__channels, req.path)
     commit(`${setting.name}/${setting.types.SELECTCHANNEL}`, channelId || req.__selected.channels)
-    //console.log(JSON.stringify(req.__channels, null, 2), channelId)
+    commit(`${setting.name}/${setting.types.FLAGES}`, req.__flags)
     if (req.cookies['token']) {
       let site_url: string = req.protocol + '://' + req.headers.host
       let opttions: HeaderOptions = {

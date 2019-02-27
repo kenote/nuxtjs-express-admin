@@ -44,7 +44,7 @@ export default class  extends Vue {
 
 <style lang="scss">
 .__nuxt-error-page {
-  padding: 1rem;
+  padding: 0;
   background: #F7F8FB;
   color: #47494E;
   text-align: center;
@@ -57,11 +57,8 @@ export default class  extends Vue {
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  position: static;
+  height: 100%;
 
   .error {
     max-width: 450px;

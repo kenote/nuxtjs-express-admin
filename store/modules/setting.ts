@@ -14,6 +14,7 @@ export const types = {
   SELECT: 'SELECT',
   SELECTCHANNEL: 'SELECTCHANNEL',
   LOADING: 'LOADING',
+  FLAGES: 'FLAGES',
 }
 
 export interface State {
@@ -22,6 +23,7 @@ export interface State {
   channels: Array<channel.NavMenus>
   selected: Selected
   loading: Loading
+  flags: channel.Flags
 }
 
 export interface Selected {
@@ -52,7 +54,8 @@ export const state = (): State => ({
   },
   loading: {
     channel: false
-  }
+  },
+  flags: {}
 })
 
 export const getters: GetterTree<State, RootState> = {
@@ -95,5 +98,8 @@ export const mutations: MutationTree<State> = {
   },
   [types.LOADING](state: State, key: string): void {
     state.loading[key] = true
+  },
+  [types.FLAGES](state: State, flags: channel.Flags): void {
+    state.flags = flags
   },
 }

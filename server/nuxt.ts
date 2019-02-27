@@ -3,7 +3,7 @@ import { Express, NextFunction } from 'express'
 import nuxtConfig from '../nuxt.config'
 import { IRequest, IResponse } from './types/resuful'
 import { loadData } from './utils'
-import channels from './types/channel'
+import channel from './types/channel'
 
 const dev: boolean = process.env.NODE_ENV !== 'production'
 const nuxt: any = new Nuxt({ ...nuxtConfig, dev })
@@ -20,10 +20,11 @@ export default (app: Express): void => {
 async function nuxtHandler (req: IRequest, res: IResponse, next: NextFunction): Promise<any> {
   let isPage: boolean = !/^(\/\_nuxt|\/__webpack_hmr)|(\.ico|\.png)$/.test(req.path)
   if (isPage) {
-    req.__channels = <Array<channels.NavMenus>> loadData('data/channels', 'array')
+    req.__channels = <Array<channel.NavMenus>> loadData('data/channels', 'array')
     req.__selected = {
       channels: req.path === '/' ? 0 : 1
     }
+    req.__flags = <channel.Flags> loadData('data/flags')
   }
   return next()
 }

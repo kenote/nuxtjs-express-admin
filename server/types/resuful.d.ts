@@ -27,6 +27,7 @@ export interface IRequest extends Request {
   __rules      : __Rules
   __channels   : Array<channel.NavMenus>
   __selected   : Selected
+  __flags      : channel.Flags
 }
 
 export interface Selected {

@@ -11,7 +11,32 @@
       
     </console-header>
     <div class="bodyer">
-
+      <div class="sidebar-nav" v-bind:style="collapse ? 'flex: 0 0 65px' : 'flex: 0 0 260px'" >
+        <div style="height: calc(100% - 24px);overflow-y:auto;" v-loading="loading.channel">
+          <template v-for="(channel, index) in channels" >
+            <el-collapse-transition :key="index" v-if="channel.id === selectedChannel.id">
+              <console-sidebar
+                v-if="!loading.channel"
+                class="auth-sider-menu"
+                :sidebar="channel.navs" 
+                :defaultActive="$route.path"
+                backgroundColor="#444c54"
+                textColor="#fff"
+                activeTextColor="#ffd04b"
+                :collapse="collapse"
+                :router="true"
+                />
+            </el-collapse-transition>
+          </template>
+        </div>
+        <div class="menu-collapsed" @click="handleCollapse">
+          <i class="iconfont" v-bind:class="collapse ? 'icon-menu-unfold' : 'icon-menu-fold'"></i>
+        </div>
+      </div>
+      <div class="console-page" >
+        <nuxt v-if="permission"></nuxt>
+        <error-page v-else :statusCode="403" message="Forbidden" />
+      </div>
     </div>
   </div>
 </template>
@@ -25,7 +50,7 @@ import * as auth from '~/store/modules/auth'
 import * as setting from '~/store/modules/setting'
 import { BindingHelpers } from 'vuex-class/lib/bindings'
 import consoleHeader from '~/components/console/header.vue'
-import consoleAuthDropdown from '~/components/console/auth-dropdown.vue'
+import consoleSidebar from '~/components/console/sidebar.vue'
 import { responseDocument as responseUserDocument } from '~/server/types/proxys/user'
 import channel from '~/server/types/channel'
 import { Dropdown } from '~/types'
@@ -70,7 +95,7 @@ const userEntrance: Array<Dropdown.MenuItem> = [
 @Component({
   components: {
     consoleHeader,
-    consoleAuthDropdown
+    consoleSidebar
   },
   async mounted () {
     await this.updateChannel(this.$route.path)
@@ -86,10 +111,13 @@ export default class  extends Vue {
   @Auth.State user: responseUserDocument
   @Setting.State loading: setting.Loading
   @Setting.State channels: Array<channel.NavMenus>
+  @Setting.State flags: channel.Flags
   @Setting.Action selectChannel: (id: number) => void
   @Setting.Getter selectedChannel: channel.NavMenus
 
   @Provide() userEntrance: Array<Dropdown.MenuItem> = userEntrance
+  @Provide() collapse: boolean = false
+  @Provide() permission: boolean = true
 
   head () {
     return {
@@ -109,14 +137,21 @@ export default class  extends Vue {
   }
 
   async updateChannel (routerPath: string): Promise<void> {
-    //
+    let level: number = this.user.group.level
+    let pageFlag: channel.FlagItem = this.flags[routerPath]
+    this.permission = !(pageFlag && pageFlag.access > level)
     let channelId: number = getChannelId(this.channels, routerPath)
     if (this.selectedChannel.id === channelId) return
     await this.selectChannel(channelId)
+    this.collapse = false
   }
 
   handleCommand (value: string): void {
     console.log(value)
+  }
+
+  handleCollapse () {
+    this.collapse = !this.collapse
   }
 }
 </script>
