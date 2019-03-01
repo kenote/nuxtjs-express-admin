@@ -121,17 +121,6 @@ export default class  extends Vue {
   @Provide() collapse: boolean = false
   @Provide() permission: boolean = true
 
-  head () {
-    return {
-      meta: [
-        {
-          name: 'viewport',
-          content: 'width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no'
-        }
-      ]
-    }
-  }
-
   handleSelectChannel (value: number): void {
     if (this.selectedChannel.id === value) return
     let channel: channel.NavMenus = <channel.NavMenus> this.channels.find( o => o.id === value )

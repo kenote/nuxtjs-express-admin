@@ -1,6 +1,7 @@
 import { ActionTree, MutationTree, GetterTree, ActionContext } from 'vuex'
 import { RootState } from 'store'
 import { clone } from 'lodash'
+import Channel from '~/utils/channel'
 
 import { Register, __Rules } from '~/server/types/config'
 import channel from '~/server/types/channel'
@@ -62,6 +63,10 @@ export const getters: GetterTree<State, RootState> = {
   selectedChannel: state => {
     let p: channel.NavMenus | undefined = state.channels.find( o => o.id === state.selected.channel)
     return p ? p : <channel.NavMenus> { id: 0, name: '控制台', navs: [], default: '/' }
+  },
+  channelStore: state => {
+    let p: channel.NavMenus = state.channels.find( channel => channel.id === state.selected.channel ) || { id: 0, name: '控制台', navs: [], default: '/' }
+    return new Channel(p)
   }
 }
 
