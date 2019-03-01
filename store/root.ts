@@ -47,7 +47,7 @@ export const actions: Actions<State, RootState> = {
         }
         console.warn(result.Status.message)
       } catch (error) {
-        console.error(error)
+        console.error((<Error>error).message)
       }
     }
   }

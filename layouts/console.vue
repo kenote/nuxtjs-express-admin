@@ -53,8 +53,10 @@ import consoleHeader from '~/components/console/header.vue'
 import consoleSidebar from '~/components/console/sidebar.vue'
 import { responseDocument as responseUserDocument } from '~/server/types/proxys/user'
 import channel from '~/server/types/channel'
-import { Dropdown } from '~/types'
+import { Dropdown, Command } from '~/types'
 import { getChannelId } from '~/utils/channel'
+import { parseCommand } from '~/utils'
+import http, { resufulInfo } from '~/utils/http'
 import '~/assets/scss/console/layout.scss'
 import '~/assets/scss/console/page.scss'
 
@@ -72,7 +74,7 @@ const userEntrance: Array<Dropdown.MenuItem> = [
   },
   {
     name: '安全设置',
-    //command: ''
+    command: 'router:/account/security'
   },
   {
     name: '我的主页',
@@ -137,6 +139,7 @@ export default class  extends Vue {
   }
 
   async updateChannel (routerPath: string): Promise<void> {
+    if (!this.user) return
     let level: number = this.user.group.level
     let pageFlag: channel.FlagItem = this.flags[routerPath]
     this.permission = !(pageFlag && pageFlag.access > level)
@@ -147,7 +150,36 @@ export default class  extends Vue {
   }
 
   handleCommand (value: string): void {
-    console.log(value)
+    let command: Command.Value | null = parseCommand(value)
+    if (!command) return
+    if (command.type === 'command') {
+      switch (command.path) {
+        case 'logout':
+          this.logout()
+          break
+        default:
+          break
+      }
+    }
+    else if (command.type === 'router') {
+      this.$router.push(command.path)
+    }
+  }
+
+  logout (): void {
+    setTimeout(async (): Promise<void> => {
+      try {
+        let result: resufulInfo = await http.get('/account/logout', null)
+        if (result.Status.code === 0) {
+          this.$store.commit(`${auth.name}/${auth.types.SET}`, null)
+          this.$router.push(`/login?url_callback=${this.$route.path}`)
+          return
+        }
+        this.$message.warning(result.Status.message || '')
+      } catch (error) {
+        this.$message.warning(error.message)
+      }
+    }, 300)
   }
 
   handleCollapse () {

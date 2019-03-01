@@ -16,3 +16,13 @@ export declare namespace Sidebar {
     children   ?: Array<MenuItem>
   }
 }
+
+export declare namespace Command {
+
+  type Type = 'command' | 'router'
+
+  interface Value {
+    type: Type
+    path: string
+  }
+}

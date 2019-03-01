@@ -11,6 +11,10 @@
         {
           "index": "/account/baseinfo",
           "name": "基本资料"
+        },
+        {
+          "index": "/account/security",
+          "name": "安全设置"
         }
       ]
     }

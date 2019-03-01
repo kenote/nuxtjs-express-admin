@@ -37,7 +37,10 @@ const rules: Rules = {
 }
 
 @Component({
-  name: 'account-login'
+  name: 'account-login',
+  mounted () {
+    this.$data.values = { username: undefined, password: undefined }
+  }
 })
 export default class  extends Vue {
 

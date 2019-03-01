@@ -261,4 +261,14 @@ export default class Account extends RouterMethods {
       return next(error)
     }
   }
+
+  /**
+   * 帐号登出
+   */
+  @Router({ method: 'get', path: '/account/logout' })
+  public logout (req: Request, res: IResponse, next: NextFunction): Response {
+    req.logout()
+    res.cookie('token', null)
+    return res.api({ result: true })
+  }
 }

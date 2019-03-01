@@ -41,7 +41,8 @@ export default class  extends Vue {
         this.loading = false
         if (result.Status.code === 0) {
           this.$store.commit(`${auth.name}/${auth.types.SET}`, result.data)
-          this.$router.push({ path: '/' })
+          let { url_callback } = this.$route.query
+          this.$router.push(<string> url_callback || '/dashboard')
           return
         }
         this.$message.warning(result.Status.message || '')
