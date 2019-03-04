@@ -24,7 +24,11 @@ import { Vue } from 'vue-property-decorator'
 import '~/assets/scss/account/layout.scss'
 import '~/assets/scss/account/page.scss'
 
-@Component
+@Component({
+  mounted () {
+    document.body.className = 'account-warpper'
+  }
+})
 export default class  extends Vue {
 
   head () {
@@ -39,3 +43,12 @@ export default class  extends Vue {
   }
 }
 </script>
+
+
+<style lang="scss">
+.account-warpper {
+  overflow-x: hidden;
+  overflow-y: auto;
+  min-height: 708px;
+}
+</style>

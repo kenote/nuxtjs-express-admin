@@ -100,6 +100,7 @@ const userEntrance: Array<Dropdown.MenuItem> = [
     consoleSidebar
   },
   async mounted () {
+    document.body.className = 'console-warpper'
     await this.updateChannel(this.$route.path)
   },
   watch: {
@@ -176,3 +177,10 @@ export default class  extends Vue {
   }
 }
 </script>
+
+<style lang="scss">
+.console-warpper {
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+</style>
