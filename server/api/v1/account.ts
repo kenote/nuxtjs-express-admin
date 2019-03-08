@@ -11,6 +11,7 @@ import mailer from '../../utils/mailer'
 import config from '../../config'
 import { setToken } from '../../middlewares/auth'
 import * as passport from 'passport'
+import alicloud from '../../utils/alicloud'
 
 import account from '../../types/account'
 import { IRequest, IResponse } from '../../types/resuful'
@@ -218,6 +219,9 @@ export default class Account extends RouterMethods {
         }
         mailer.sendMail('reset_pass.mjml', mail, context)
       }
+      if (type === 'mobile') {
+        await alicloud.SendSms(name, 'password', { code: verify.token })
+      }
       return res.api({ result: true })
     } catch (error) {
       if (CustomError(error)) {
@@ -253,6 +257,7 @@ export default class Account extends RouterMethods {
         return res.api(null, __ErrorCode.ERROR_VERIFY_CODE_TIMEOUT)
       }
       let result: mongoose.Query<any> = await userProxy.resetPwd(document, type)
+      await verifyProxy.Dao.remove({ _id: verify._id })
       return res.api(result)
     } catch (error) {
       if (CustomError(error)) {
