@@ -13,6 +13,7 @@
     "clear": "rimraf ./build ./.nuxt"
   },
   "dependencies": {
+    "@alicloud/pop-core": "^1.7.6",
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "compression": "^1.7.3",

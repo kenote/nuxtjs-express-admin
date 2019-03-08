@@ -42,6 +42,8 @@ data/mailer.ini
 data/mailer.json
 data/config.ini
 data/config.json
+data/alicloud.ini
+data/alicloud.json
 .DS_Store
 
 # TypeScript v1 declaration files
