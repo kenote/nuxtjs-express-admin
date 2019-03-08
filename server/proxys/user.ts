@@ -77,6 +77,12 @@ class UserProxy {
     return result
   }
 
+  public async setPassword (conditions: any, doc: account.setPassword): Bluebird<mongoose.Query<any>> {
+    let password: account.Password = bcrypt.hash(doc.password || '')
+    let result: mongoose.Query<any> = await this.Dao.updateOne(conditions, { encrypt: password.hash, salt: password.salt })
+    return result
+  }
+
 }
 
 export default new UserProxy()

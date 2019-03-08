@@ -84,7 +84,7 @@ export default class Account extends RouterMethods {
    * 验证名称是否占用
    * @param name  <String> 用户名 | 电子邮箱 | 手机号
    */
-  @Router({ method: 'post', path: '/account/check/:type(username|email|mobile)'})
+  @Router({ method: 'put', path: '/account/check/:type(username|email|mobile)'})
   public async check (req: Request, res: IResponse, next: NextFunction): Promise<Response | void> {
     let { type } = req.params
     let { name } = req.body

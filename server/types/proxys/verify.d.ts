@@ -14,4 +14,6 @@ export interface responseDocument extends mongoose.Document {
   create_at    : Date
   user         : responseUserDocument
   approved     : boolean
+  application  : string
+  update_at    : Date
 }

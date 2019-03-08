@@ -31,6 +31,7 @@ export declare namespace Security {
 
   type statusType = 'success' | 'warning' | 'info'
   type statusIcon = 'el-icon-success success' | 'el-icon-warning warning' | 'el-icon-info info'
+  type viewType = 'password' | 'email' | 'mobile' | 'overview'
 
   interface Overview {
     key         : string
@@ -51,5 +52,25 @@ export declare namespace Security {
     name        : string
     value      ?: string
     format     ?: (value: string) => string
+  }
+
+  interface sendCode {
+    type        : 'email' | 'mobile'
+    name       ?: string
+    verify_id  ?: string
+  }
+
+  interface verifyCode {
+    code        : string
+  }
+
+  interface setEmail {
+    email      ?: string
+    code       ?: string
+  }
+
+  interface setMobile {
+    mobile     ?: string
+    code       ?: string
   }
 }

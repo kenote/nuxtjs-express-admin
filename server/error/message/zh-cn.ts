@@ -46,5 +46,8 @@ export default  <MessageTypes> {
   ERROR_VERIFY_CODE_REQUIRED       : '验证码不能为空',
   ERROR_VERIFY_CODE_TIMEOUT        : '验证码超时',
   ERROR_VERIFY_CODE_FAILED         : '验证码错误',
+  ERROR_VERIFY_ID_REQUIRED         : '缺少身份验证',
+  ERROR_VERIFY_ID_TIMEOUT          : '身份验证超时',
+  ERROR_VERIFY_ID_FAILED           : '身份验证错误',
   
 }

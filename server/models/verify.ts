@@ -23,6 +23,13 @@ const schema: Schema = new Schema({
   approved: {
     type: Boolean,
     default: false
+  },
+  application: {
+    type: String
+  },
+  update_at: {
+    type: Date,
+    default: Date.now
   }
 })
 

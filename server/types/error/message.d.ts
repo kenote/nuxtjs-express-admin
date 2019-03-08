@@ -41,4 +41,7 @@ export interface MessageTypes {
   ERROR_VERIFY_CODE_REQUIRED       : string
   ERROR_VERIFY_CODE_TIMEOUT        : string
   ERROR_VERIFY_CODE_FAILED         : string
+  ERROR_VERIFY_ID_REQUIRED         : string
+  ERROR_VERIFY_ID_TIMEOUT          : string
+  ERROR_VERIFY_ID_FAILED           : string
 }

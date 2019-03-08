@@ -41,4 +41,7 @@ export interface CodeTypes {
   ERROR_VERIFY_CODE_REQUIRED       : number
   ERROR_VERIFY_CODE_TIMEOUT        : number
   ERROR_VERIFY_CODE_FAILED         : number
+  ERROR_VERIFY_ID_REQUIRED         : number
+  ERROR_VERIFY_ID_TIMEOUT          : number
+  ERROR_VERIFY_ID_FAILED           : number
 }

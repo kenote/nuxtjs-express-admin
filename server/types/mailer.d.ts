@@ -14,4 +14,12 @@ export declare namespace MailerContext {
     code                : string
     timeout             : number
   }
+
+  interface sendCode {
+    title               : string
+    site_name           : string
+    username            : string
+    code                : string
+    timeout             : number
+  }
 }

@@ -25,6 +25,28 @@ declare namespace account {
     name        ?: string
   }
 
+  interface sendCode {
+    name        ?: string
+    verify_id   ?: string
+  }
+
+  interface setPassword {
+    password    ?: string
+    verify_id   ?: string
+  }
+
+  interface setEmail {
+    email        : string
+    verify_id    : string
+    code         : string
+  }
+
+  interface setMobile {
+    mobile       : string
+    verify_id    : string
+    code         : string
+  }
+
   interface Rules {
     username    ?: Array<Rule>
     email       ?: Array<Rule>
@@ -32,6 +54,7 @@ declare namespace account {
     password    ?: Array<Rule>
     invitation  ?: Array<Rule>
     code        ?: Array<Rule>
+    verify_id   ?: Array<Rule>
   }
 
   interface Password {

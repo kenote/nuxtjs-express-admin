@@ -46,5 +46,8 @@ export default <CodeTypes> {
   ERROR_VERIFY_CODE_REQUIRED       : 1424,
   ERROR_VERIFY_CODE_TIMEOUT        : 1425,
   ERROR_VERIFY_CODE_FAILED         : 1426,
+  ERROR_VERIFY_ID_REQUIRED         : 1427,
+  ERROR_VERIFY_ID_TIMEOUT          : 1428,
+  ERROR_VERIFY_ID_FAILED           : 1429,
 }
 

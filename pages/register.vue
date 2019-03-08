@@ -106,7 +106,7 @@ export default class  extends Vue {
 
   async handleUnique (type: 'username' | 'email', value: string): Promise<boolean | undefined> {
     try {
-      let result: resufulInfo = await http.post(`/account/check/${type}`, { name: value })
+      let result: resufulInfo = await http.put(`/account/check/${type}`, { name: value })
       return <boolean> result.data
     } catch (error) {
       this.$message.warning(error.message)

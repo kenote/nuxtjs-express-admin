@@ -36,6 +36,13 @@ class VerifyProxy {
     return verify
   }
 
+  public async update (conditions: any, doc: any): Bluebird<mongoose.Query<any>> {
+    let token: string = Math.random().toFixed(6).replace(/^(0\.)/i, '')
+    let updateTime: Date = new Date()
+    let result: mongoose.Query<any> = await this.Dao.updateOne(conditions, { ...doc, token, updtae_at: updateTime })
+    return { ...result, token }
+  }
+
 }
 
 export default new VerifyProxy()

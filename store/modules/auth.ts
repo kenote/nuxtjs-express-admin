@@ -1,12 +1,15 @@
 import { ActionTree, MutationTree, GetterTree, ActionContext } from 'vuex'
 import { RootState } from 'store'
+import { uniq } from 'lodash'
 
 import { responseDocument } from '~/server/types/proxys/user'
 
 export const name = 'auth'
 
 export const types = {
-  SET: 'SET'
+  SET: 'SET',
+  EMAIL: 'EMAIL',
+  MOBILE: 'MOBILE'
 }
 
 export interface State {
@@ -34,8 +37,18 @@ export const actions: Actions<State, RootState> = {
 }
 
 export const mutations: MutationTree<State> = {
-  [types.SET] (state: State, user: responseDocument | null) {
+  [types.SET] (state: State, user: responseDocument | null): void {
     state.user = user
     state.token = user && user.jw_token ? user.jw_token : null
+  },
+  [types.EMAIL] (state: State, email: string): void {
+    if (!state.user) return
+    state.user.email = email
+    state.user.binds = uniq(state.user.binds.concat('email'))
+  },
+  [types.MOBILE] (state: State, mobile: string): void {
+    if (!state.user) return
+    state.user.mobile = mobile
+    state.user.binds = uniq(state.user.binds.concat('mobile'))
   }
 }
