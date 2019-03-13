@@ -6,6 +6,7 @@ import { createDocument, responseDocument, updateDocument } from '../types/proxy
 import storeProxy from './store'
 import { responseDocument as responseStoreDocument } from '../types/proxys/store'
 import { pick } from 'lodash'
+import userProxy from './user'
 
 (<mongoose.Mongoose>mongoose).Promise = Bluebird
 const Model: mongoose.Model<mongoose.Document, {}> = <mongoose.Model<mongoose.Document, {}>> __Models.groupModel
@@ -45,6 +46,9 @@ class GroupProxy {
     let group: responseDocument = await this.Dao.findOne(conditions)
     if (group && group.store) {
       await storeProxy.Dao.remove({ _id: group.store._id })
+    }
+    if (group) {
+      await userProxy.remove({ group: group._id })
     }
     let query: mongoose.Query<any> = await this.Dao.remove(conditions)
     return query

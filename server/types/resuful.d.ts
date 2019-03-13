@@ -43,3 +43,5 @@ export interface HeaderOptions {
 }
 
 export type Method = 'get' | 'post' | 'put' | 'delete'
+
+export type FlagTag = 'access' | 'save' | 'create' | 'edit' | 'remove' | 'list'

@@ -74,3 +74,12 @@ export declare namespace Security {
     code       ?: string
   }
 }
+
+export declare namespace Ucenter {
+
+  interface CreateGroup {
+    name        ?: string
+    level        : number
+    description ?: string
+  }
+}

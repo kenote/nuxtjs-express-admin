@@ -6,7 +6,7 @@
     {
       "index": "1-1",
       "name": "帐户管理",
-      "icon": "el-icon-location",
+      "icon": "iconfont icon-passport",
       "children": [
         {
           "index": "/account/baseinfo",

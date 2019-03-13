@@ -3,6 +3,8 @@ import * as fs from 'fs-extra'
 import * as ini from 'ini'
 import * as crypto from 'crypto'
 import account from '../types/account' 
+import { FlagTag } from '../types/resuful'
+import channel from '../types/channel'
 
 export const md5 = (text: string): string => crypto.createHash('md5').update(text).digest('hex')
 
@@ -58,4 +60,13 @@ export const loadData = (file: string, type: 'object' | 'array' = 'object'): {} 
     }
   }
   return data
+}
+
+export const isFlag = (level: number, key: string, tag: FlagTag = 'access'): boolean => {
+  let __flags: channel.Flags = loadData('data/flags')
+  if (__flags[key] && __flags[key][tag]) {
+    let __level: number = Number(__flags[key][tag])
+    return level >= __level
+  }
+  return true
 }

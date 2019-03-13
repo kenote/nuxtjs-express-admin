@@ -17,9 +17,10 @@ export default class Channel {
       }
       else if (nav.children) {
         menuItem = this.find(index, nav.children)
+        if (menuItem) return menuItem
       }
     }
-    return menuItem || { index: '-1', name: 'none', maps: [] }
+    return menuItem //|| { index: '-1', name: 'none', maps: [] }
   }
 
 }

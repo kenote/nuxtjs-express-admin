@@ -83,6 +83,11 @@ class UserProxy {
     return result
   }
 
+  public async remove (conditions: any): Bluebird<mongoose.Query<any>> {
+    let query: mongoose.Query<any> = await this.Dao.remove(conditions)
+    return query
+  }
+
 }
 
 export default new UserProxy()
