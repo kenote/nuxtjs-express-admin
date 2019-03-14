@@ -8,6 +8,7 @@ import { responseDocument as responseGroupDocument, createDocument as createGrou
 import { permission } from '../../middlewares/auth'
 import groupFilter from '../../filters/api_v1/group'
 import * as mongoose from 'mongoose'
+import { QueryOptions } from 'kenote-mongoose-helper'
 
 export default class Group extends RouterMethods {
 
@@ -15,16 +16,28 @@ export default class Group extends RouterMethods {
    * 用户组列表
    * @param name  <String> 名称
    */
-  @Router({ method: 'post', path: '/ucenter/group/list' })
+  @Router(
+    { method: 'post', path: '/ucenter/group/list' },
+    { method: 'post', path: '/ucenter/group/lite' }
+  )
   @Filter( passport.authenticate('jwt', { session: false }), permission('/ucenter/group', 'list') )
   public async list (req: Request, res: IResponse, next: NextFunction): Promise<Response | void> {
     let { name } = req.body
-    let conditions: any
+    let conditions: any = {}
+    let options: QueryOptions = {}
     if (name) {
-      conditions = { name: new RegExp(name) }
+      conditions = { ...conditions, name: new RegExp(name) }
+    }
+    if (req.path === '/ucenter/group/lite') {
+      options = {
+        select: ['_id', 'name', 'level'],
+        populate: { path: '' }
+      }
+      let userLevel: number = req.user.group.level
+      conditions = { ...conditions, level: { $lt: userLevel }}
     }
     try {
-      let groups: responseGroupDocument[] = <responseGroupDocument[]> await groupProxy.Dao.find(conditions)
+      let groups: responseGroupDocument[] = <responseGroupDocument[]> await groupProxy.Dao.find(conditions, options)
       return res.api(groups)
     } catch (error) {
       if (CustomError(error)) {

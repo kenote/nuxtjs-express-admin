@@ -1,3 +1,4 @@
+import { responseDocument as responseGroupDocument } from '~/server/types/proxys/group'
 
 export declare namespace Dropdown {
 
@@ -81,5 +82,11 @@ export declare namespace Ucenter {
     name        ?: string
     level        : number
     description ?: string
+  }
+
+  interface CreateTicket {
+    group       ?: string
+    stint        : number
+    last_at      : Date
   }
 }

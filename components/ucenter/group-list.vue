@@ -67,7 +67,6 @@ export default class  extends Vue {
 
   @Provide() showSubmit: boolean = false
   @Provide() search: string = ''
-  @Provide() visible2: boolean = false
 
   handleEdit (index: number, row: responseGroupDocument): void {
     this.$emit('edit', index, row)

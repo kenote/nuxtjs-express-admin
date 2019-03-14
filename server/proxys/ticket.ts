@@ -2,7 +2,7 @@ import * as Bluebird from 'bluebird'
 import * as mongoose from 'mongoose' 
 import { MongooseDao, MongooseDaoSetting, QueryOptions } from 'kenote-mongoose-helper'
 import __Models from '../models'
-import { createDocument, responseDocument } from '../types/proxys/ticket'
+import { createDocument, responseDocument, updateDocument } from '../types/proxys/ticket'
 import * as uuid from 'uuid'
 
 (<mongoose.Mongoose>mongoose).Promise = Bluebird
@@ -25,6 +25,13 @@ class ExchangeProxy {
     let cdkey: string = uuid.v4()
     let exchange: responseDocument | {} = await this.Dao.insert({ ...doc, cdkey })
     return exchange
+  }
+
+  public async update (conditions: any, doc: updateDocument): Bluebird<mongoose.Query<any>> {
+    let ticket: responseDocument = await this.Dao.findOne(conditions)
+    let used: boolean = doc.stint <= ticket.uses
+    let query: mongoose.Query<any> = await this.Dao.updateOne(conditions, { ...doc, used })
+    return query
   }
 
 }

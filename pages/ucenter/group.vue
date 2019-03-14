@@ -58,7 +58,6 @@ export default class  extends Vue {
   @Setting.Getter channelStore
 
   @Provide() list: Array<responseGroupDocument> = []
-  @Provide() search: string = ''
   @Provide() mode: 'list' | 'create' | 'edit' = 'list'
   @Provide() selected: responseGroupDocument | null = null
   @Provide() loading: boolean = false

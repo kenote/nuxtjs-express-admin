@@ -32,6 +32,11 @@ export interface MessageTypes {
   ERROR_VALID_TICKET_USED          : string
   ERROR_VALID_TICKET_EXPIRED       : string
 
+  ERROR_VALID_GROUP_REQUIRED       : string
+  ERROR_VALID_GROUP_NOTEXIST       : string
+  ERROR_VALID_DATE_REQUIRED        : string
+  ERROR_VALID_DATE_FORMAT          : string
+
   ERROR_VERIFY_EMAIL_TIMEOUT       : string
   ERROR_VERIFY_EMAIL_FAILED        : string
   ERROR_VERIFY_MOBILE_TIMEOUT      : string

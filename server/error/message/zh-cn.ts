@@ -37,6 +37,11 @@ export default  <MessageTypes> {
   ERROR_VALID_TICKET_USED          : '该%s已使用',
   ERROR_VALID_TICKET_EXPIRED       : '该%s已过期',
 
+  ERROR_VALID_GROUP_REQUIRED       : '用户组不能为空',
+  ERROR_VALID_GROUP_NOTEXIST       : '用户组不存在',
+  ERROR_VALID_DATE_REQUIRED        : '%s不能为空',
+  ERROR_VALID_DATE_FORMAT          : '%s格式错误，非日期格式',
+
   ERROR_VERIFY_EMAIL_TIMEOUT       : '邮箱验证超时',
   ERROR_VERIFY_EMAIL_FAILED        : '邮箱验证失败',
   ERROR_VERIFY_MOBILE_TIMEOUT      : '手机号验证超时',

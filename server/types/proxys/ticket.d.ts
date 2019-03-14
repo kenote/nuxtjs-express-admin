@@ -30,3 +30,13 @@ export interface TicketOptions {
   type         : string
   key          : string
 }
+
+export interface editDocument {
+  conditions   : any
+  data         : updateDocument
+}
+
+export interface updateDocument {
+  stint        : number
+  last_at      : Date
+}
