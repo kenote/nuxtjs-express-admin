@@ -1,4 +1,5 @@
 import { responseDocument as responseGroupDocument } from '~/server/types/proxys/group'
+import { FindType } from '~/server/types/proxys/user'
 
 export declare namespace Dropdown {
 
@@ -88,5 +89,22 @@ export declare namespace Ucenter {
     group       ?: string
     stint        : number
     last_at      : Date
+  }
+
+  interface FindUser {
+    create_at    : Array<Date>
+    groups       : Array<string>
+    findtype     : FindType
+    findname    ?: string
+    page        ?: number
+  }
+
+  interface EditUser {
+    username    ?: string
+    group       ?: string
+    email       ?: string
+    mobile      ?: string
+    binds        : Array<string>
+    sex          : string
   }
 }

@@ -5,6 +5,8 @@ import * as crypto from 'crypto'
 import account from '../types/account' 
 import { FlagTag } from '../types/resuful'
 import channel from '../types/channel'
+import { toInteger, isNaN } from 'lodash'
+import { PageInfo } from '../types/resuful'
 
 export const md5 = (text: string): string => crypto.createHash('md5').update(text).digest('hex')
 
@@ -69,4 +71,12 @@ export const isFlag = (level: number, key: string, tag: FlagTag = 'access'): boo
     return level >= __level
   }
   return true
+}
+
+export const toPageInfo = (page: number, size: number = 10): PageInfo => {
+  let parseVal: number = toInteger(page || 1)
+  let val: number = parseVal === NaN ? 1 : parseVal
+  let pageCode: number = isNaN(val) || val < 1 ? 1 : parseVal
+  let skipVal: number = (pageCode - 1) * size
+  return { page: pageCode, limit: size, skip: skipVal }
 }

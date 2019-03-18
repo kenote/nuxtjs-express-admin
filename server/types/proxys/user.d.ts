@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose'
+import { QueryOptions } from 'kenote-mongoose-helper'
 import { ObjectId } from 'bson'
 import { responseDocument as responseGroupDocument } from './group'
 import { responseDocument as responseTeamDocument } from './team'
@@ -41,4 +42,24 @@ export interface responseDocument extends mongoose.Document {
 export interface responseAllDocument extends responseDocument {
   encrypt      : string
   salt         : string
+}
+
+export interface findDocument {
+  conditions   : any
+  options      : QueryOptions
+}
+
+export interface listDocument {
+  data         : Array<responseDocument>
+  counts       : number
+  limit        : number
+}
+
+export type FindType = 'username' | 'email' | 'nickname' | 'mobile'
+
+export interface FindTypeNames {
+  username    ?: string
+  email       ?: string
+  nickname    ?: string
+  mobile      ?: string
 }

@@ -37,6 +37,14 @@
 
   .el-table {
     font-family: Comic Sans MS;
+
+    .cell {
+      overflow: inherit;
+    }
+  }
+
+  .el-pagination__jump .el-input__inner {
+    border-radius: 0;
   }
 
 
@@ -196,6 +204,25 @@
   .el-pagination {
     margin-top: 15px;
     text-align: right;
+    font-family: Comic Sans MS;
+  }
+
+  .search-container {
+    margin-bottom: 20px;
+    padding: 20px 15px 0;
+    background: #fbfbfb;
+    border: 1px solid #d9d9d9;
+    border-radius: 6px;
+
+    .footer {
+      border-top: 1px #e8e8e8 dashed;
+      padding: 20px 15px 0;
+      margin: 0 15px;
+
+      .el-button--primary {
+        border-radius: 0;
+      }
+    }
   }
 
   @media (max-width: 640px) {

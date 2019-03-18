@@ -54,8 +54,8 @@
         </template>
         <template slot-scope="scope">
           <div style="text-align: right; padding-right: 12px;">
-            <el-button size="small" @click="handleEdit(scope.$index, scope.row)" :disabled="scope.row.id === 1">编辑</el-button>
-            <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <el-button size="small" @click="handleEdit(scope.$index, scope.row)" :disabled="scope.row.id === 1 || isNotEdit(scope.row.setting.group)">编辑</el-button>
+            <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)" :disabled="isNotEdit(scope.row.setting.group)">删除</el-button>
           </div>
         </template>
       </el-table-column>
@@ -73,6 +73,8 @@ import { Route } from 'vue-router'
 import Component from 'nuxt-class-component'
 import { Prop, Provide, Vue } from 'vue-property-decorator'
 import { responseDocument as responseTicketDocument } from '~/server/types/proxys/ticket'
+import { responseDocument as responseGroupDocument } from '~/server/types/proxys/group'
+import { responseDocument as responseUserDocument } from '~/server/types/proxys/user'
 import moment from 'moment'
 import { map } from 'lodash'
 
@@ -83,15 +85,18 @@ import { map } from 'lodash'
     setTimeout(() => {
       this.$data.showSubmit = true
     }, 1500)
+    this.$emit('get-groups', this.handleBackGroups)
   }
 })
 export default class  extends Vue {
 
   @Prop({ default: [] }) data: Array<responseTicketDocument>
   @Prop({ default: false }) loading: boolean
+  @Prop({ default: null }) auth: responseUserDocument | null
 
   @Provide() showSubmit: boolean = false
   @Provide() search: string = ''
+  @Provide() groups: Array<responseGroupDocument> = []
   //@Provide() selected: Array<string> = []
 
   handleEdit (index: number, row: responseTicketDocument): void {
@@ -124,6 +129,14 @@ export default class  extends Vue {
   handleSelectionChange (values: Array<responseTicketDocument>): void {
     //this.selected = map(values, '_id')
     this.$emit('selectid', map(values, '_id'))
+  }
+
+  handleBackGroups (groups: Array<responseGroupDocument>): void {
+    this.groups = groups
+  }
+
+  isNotEdit (group: string): boolean {
+    return !this.groups.find( o => o._id === group)
   }
 
   isExpired (date: any): boolean {

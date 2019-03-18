@@ -13,12 +13,21 @@
       :loading="loading" 
       @get-groups="handleGetGroups"
       @goback="handleGoback" />
-    <ucenter-ticket-list v-else :data="list" @edit="handleEdit" @remove="handleRemove" :loading="loading" @getlist="handleList" @selectid="handleSelectId">
+    <ucenter-ticket-list v-else 
+      :data="list" 
+      :auth="user" 
+      @edit="handleEdit" 
+      @remove="handleRemove" 
+      :loading="loading" 
+      @getlist="handleList" 
+      @get-groups="handleGetGroups"
+      @selectid="handleSelectId" >
       <el-button type="primary" @click="handleCreate">创建邀请码</el-button>
       <el-button @click="handleRomoveSelectId">删除选中</el-button>
     </ucenter-ticket-list>
   </page>
 </template>
+
 <script lang="ts">
 import Component from 'nuxt-class-component'
 import { Provide, Vue } from 'vue-property-decorator'
@@ -34,8 +43,8 @@ import ucenterTicketCreate from '~/components/ucenter/ticket-create.vue'
 import ucenterTicketEdit from '~/components/ucenter/ticket-edit.vue'
 import { responseDocument as responseTicketDocument } from '~/server/types/proxys/ticket'
 import { responseDocument as responseGroupDocument } from '~/server/types/proxys/group'
+import { responseDocument as responseUserDocument } from '~/server/types/proxys/user'
 import { Ucenter } from '~/types'
-import { isDate } from 'lodash'
 
 const Setting: BindingHelpers = namespace(setting.name)
 const Auth: BindingHelpers = namespace(auth.name)
@@ -59,6 +68,7 @@ interface Documents {
 })
 export default class  extends Vue {
 
+  @Auth.State user: responseUserDocument | null
   @Auth.State token: string | null
   @Setting.Getter selectedChannel
   @Setting.Getter channelStore
@@ -96,7 +106,6 @@ export default class  extends Vue {
   }
 
   handleRemove (index: number, row: responseTicketDocument | string[]): void {
-    console.log(index, row)
     let url: string = `/ucenter/ticket/${(<responseTicketDocument>row)._id}`
     let data: any = {}
     if (index === -1) {
@@ -148,7 +157,6 @@ export default class  extends Vue {
   }
 
   handleSubmitCreate (values: Ucenter.CreateTicket): void {
-    console.log(values, isDate(values.last_at))
     this.loading = true
     setTimeout(async (): Promise<void> => {
       try {

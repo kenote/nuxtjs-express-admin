@@ -1,20 +1,23 @@
 <template>
-  <page ref="thePage">
+  <page>
     <console-breadcrumb :channel="selectedChannel" :store="channelStore" :route="$route" />
-    
-    <ucenter-group-create v-if="mode === 'create'" 
-      @submit="handleSubmitCreate" 
+
+    <ucenter-user-edit v-if="mode === 'edit'"
+      :data="selected"
       :loading="loading" 
-      @goback="handleGoback" />
-    <ucenter-group-edit v-else-if="mode === 'edit'" 
-      :data="selected" 
-      @submit="handleSubmitEdit" 
+      @get-groups="handleGetGroups"
+      @goback="handleGoback"
+      />
+    <ucenter-user-list v-else 
+      :list="list" 
+      :auth="user" 
       :loading="loading" 
-      @goback="handleGoback" />
-    <ucenter-group-list v-else :data="list" @edit="handleEdit" @remove="handleRemove" :loading="loading" @getlist="handleList">
-      <el-button type="primary" @click="handleCreate">创建用户组</el-button>
-    </ucenter-group-list>
-    
+      @edit="handleEdit" 
+      @getlist="handleList" 
+      @get-groups="handleGetGroups" 
+      :conditions="conditions">
+
+    </ucenter-user-list>
   </page>
 </template>
 
@@ -28,23 +31,24 @@ import { BindingHelpers } from 'vuex-class/lib/bindings'
 import consoleBreadcrumb from '~/components/console/breadcrumb.vue'
 import http, { resufulInfo } from '~/utils/http'
 import { HeaderOptions } from '~/server/types/resuful'
+import { responseDocument as responseUserDocument, listDocument as listUserDocument } from '~/server/types/proxys/user'
 import { responseDocument as responseGroupDocument } from '~/server/types/proxys/group'
-import ucenterGroupList from '~/components/ucenter/group-list.vue'
-import ucenterGroupCreate from '~/components/ucenter/group-create.vue'
-import ucenterGroupEdit from '~/components/ucenter/group-edit.vue'
+import ucenterUserList from '~/components/ucenter/user-list.vue'
+//import ucenterTeamCreate from '~/components/ucenter/team-create.vue'
+import ucenterUserEdit from '~/components/ucenter/user-edit.vue'
 import { Ucenter } from '~/types'
 
 const Setting: BindingHelpers = namespace(setting.name)
 const Auth: BindingHelpers = namespace(auth.name)
+
 
 @Component({
   layout: 'console',
   middleware: ['authenticated'],
   components: {
     consoleBreadcrumb,
-    ucenterGroupList,
-    ucenterGroupCreate,
-    ucenterGroupEdit
+    ucenterUserList,
+    ucenterUserEdit
   },
   mounted () {
     
@@ -52,24 +56,26 @@ const Auth: BindingHelpers = namespace(auth.name)
 })
 export default class  extends Vue {
 
-  //@Auth.State user: responseUserDocument
+  @Auth.State user: responseUserDocument | null
   @Auth.State token: string | null
   @Setting.Getter selectedChannel
   @Setting.Getter channelStore
 
-  @Provide() list: Array<responseGroupDocument> = []
+  @Provide() list: listUserDocument = { data: [], counts: 0, limit: 0 }
   @Provide() mode: 'list' | 'create' | 'edit' = 'list'
-  @Provide() selected: responseGroupDocument | null = null
+  @Provide() selected: responseUserDocument | null = null
   @Provide() loading: boolean = false
+  @Provide() conditions: Ucenter.FindUser | {} = {}
 
-  handleList (): void {
+  handleList (conditions: Ucenter.FindUser): void {
     this.loading = true
+    this.conditions = conditions
     setTimeout(async (): Promise<void> => {
       try {
         let options: HeaderOptions = {
           token: this.token || undefined
         }
-        let result: resufulInfo = await http.post(`/ucenter/group/list`, {}, options)
+        let result: resufulInfo = await http.post(`/ucenter/user/list`, conditions, options)
         this.loading = false
         if (result.Status.code === 0) {
           this.list = result.data
@@ -83,69 +89,19 @@ export default class  extends Vue {
     }, 800)
   }
 
-  handleEdit (index: number, row: responseGroupDocument): void {
+  handleEdit (index: number, row: responseUserDocument): void {
     this.mode = 'edit'
     this.selected = row
   }
 
-  handleRemove (index: number, row: responseGroupDocument): void {
+  handleSubmitEdit (_id: string, values: Ucenter.EditUser): void {
     this.loading = true
     setTimeout(async (): Promise<void> => {
       try {
         let options: HeaderOptions = {
           token: this.token || undefined
         }
-        let result: resufulInfo = await http.delete(`/ucenter/group/${row._id}`, {}, options)
-        this.loading = false
-        if (result.Status.code === 0) {
-          this.handleList()
-          return
-        }
-        this.$message.warning(result.Status.message || '')
-      } catch (error) {
-        this.loading = false
-        this.$message.warning(error.message)
-      }
-    }, 300)
-  }
-
-  handleGoback (): void {
-    this.mode = 'list'
-  }
-
-  handleCreate (): void {
-    this.mode = 'create'
-  }
-
-  handleSubmitCreate (values: Ucenter.CreateGroup): void {
-    this.loading = true
-    setTimeout(async (): Promise<void> => {
-      try {
-        let options: HeaderOptions = {
-          token: this.token || undefined
-        }
-        let result: resufulInfo = await http.post(`/ucenter/group/create`, values, options)
-        this.loading = false
-        if (result.Status.code === 0) {
-          this.mode = 'list'
-          return
-        }
-        this.$message.warning(result.Status.message || '')
-      } catch (error) {
-        this.loading = false
-        this.$message.warning(error.message)
-      }
-    }, 300)
-  }
-
-  handleSubmitEdit (_id: string, values: Ucenter.CreateGroup): void {
-    this.loading = true
-    setTimeout(async (): Promise<void> => {
-      try {
-        let options: HeaderOptions = {
-          token: this.token || undefined
-        }
-        let result: resufulInfo = await http.post(`/ucenter/group/edit/${_id}`, values, options)
+        let result: resufulInfo = await http.post(`/ucenter/user/edit/${_id}`, values, options)
         this.loading = false
         if (result.Status.code === 0) {
           this.mode = 'list'
@@ -160,5 +116,30 @@ export default class  extends Vue {
     }, 300)
   }
 
+  handleGoback (): void {
+    this.mode = 'list'
+  }
+
+  handleGetGroups (type: string = 'list', next: (groups: Array<responseGroupDocument>) => void): void {
+    setTimeout(async (): Promise<void> => {
+      try {
+        let options: HeaderOptions = {
+          token: this.token || undefined
+        }
+        let result: resufulInfo = await http.post(`/ucenter/group/${type}`, {}, options)
+        this.loading = false
+        if (result.Status.code === 0) {
+          next(result.data)
+          return
+        }
+        this.$message.warning(result.Status.message || '')
+      } catch (error) {
+        this.loading = false
+        this.$message.warning(error.message)
+      }
+    }, 300)
+  }
+
 }
+
 </script>

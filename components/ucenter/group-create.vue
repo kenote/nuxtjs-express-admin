@@ -1,9 +1,9 @@
 <template>
   <div class="form-container">
     <h2>创建用户组</h2>
-    <el-form ref="theForm" :model="values" @submit.native.prevent="submitForm" label-width="150px">
+    <el-form ref="theForm" :model="values" :rules="rules" @submit.native.prevent="submitForm" label-width="150px">
       <el-form-item prop="name" :rules="rules.name" label="角色名称">
-        <el-input placeholder="请输入角色名称" v-model="values.name" :rules="rules" style="width:300px;" />
+        <el-input placeholder="请输入角色名称" v-model="values.name" style="width:300px;" />
       </el-form-item>
       <el-form-item label="权 级">
         <el-input-number size="medium" v-model="values.level" :min="1001" :max="9997"></el-input-number>
