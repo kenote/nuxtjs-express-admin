@@ -36,6 +36,7 @@ export interface MessageTypes {
   ERROR_VALID_GROUP_NOTEXIST       : string
   ERROR_VALID_DATE_REQUIRED        : string
   ERROR_VALID_DATE_FORMAT          : string
+  ERROR_VALID_NAME_REQUIRED        : string
 
   ERROR_VERIFY_EMAIL_TIMEOUT       : string
   ERROR_VERIFY_EMAIL_FAILED        : string

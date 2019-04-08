@@ -6,8 +6,13 @@
         <el-input v-model="values.username" style="width:300px;" />
       </el-form-item>
       <el-form-item label="用户组/角色">
-        <el-select v-model="values.group" placeholder="请选择用户组/角色">
+        <el-select v-model="values.group" placeholder="请选择用户组/角色" :disabled="auth && auth.group.level < 9998">
           <el-option v-for="item in groups" :key="item._id" :label="`[${item.level}] ` + item.name" :value="item._id"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item v-if="values.group && groupLevel(values.group) < 9000" label="选择团队">
+         <el-select v-model="values.teams" placeholder="请选择团队" filterable multiple collapse-tags >
+          <el-option v-for="item in teams" :key="item._id" :label="item.name" :value="item._id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="性别">
@@ -40,10 +45,11 @@ import { Prop, Provide, Vue } from 'vue-property-decorator'
 import { Form as ElForm } from 'element-ui'
 import { responseDocument as responseUserDocument, listDocument as listUserDocument, FindType, FindTypeNames } from '~/server/types/proxys/user'
 import { responseDocument as responseGroupDocument } from '~/server/types/proxys/group'
+import { responseDocument as responseTeamDocument } from '~/server/types/proxys/team'
 import moment from 'moment'
 import { Ucenter } from '~/types'
 import { Rules } from '~/types/validate'
-import { pick } from 'lodash'
+import { pick, map, filter } from 'lodash'
 
 interface SexConfig {
   [propsName: number]: {
@@ -65,6 +71,7 @@ const bindConfig: any = {
 const values: Ucenter.EditUser = {
   username: undefined,
   group: undefined,
+  teams: [],
   email: undefined,
   mobile: undefined,
   binds: [],
@@ -75,11 +82,13 @@ const values: Ucenter.EditUser = {
   name: 'ucenter-user-edit',
   mounted () {
     this.$emit('get-groups', 'lite', this.handleBackGroups)
+    this.$emit('get-teams', this.handleBackTeams)
     let doc: responseUserDocument | null = this.$props.data
     if (!doc) return
     this.$data.values = {
       ...pick(doc, ['username', 'email', 'mobile', 'binds', 'sex']),
       group: doc.group._id,
+      teams: map(doc.teams, '_id'),
       sex: doc.sex.toString()
     }
   }
@@ -88,10 +97,12 @@ export default class  extends Vue {
 
   @Prop({ default: false }) loading: boolean
   @Prop({ default: null }) data: responseUserDocument | null
+  @Prop({ default: null }) auth: responseUserDocument | null
 
   @Provide() values: Ucenter.EditUser = values
   @Provide() rules: Rules
   @Provide() groups: Array<responseGroupDocument> = []
+  @Provide() teams: Array<responseTeamDocument> = []
   @Provide() sexConfig: SexConfig = sexConfig
   @Provide() bindConfig: any = bindConfig
 
@@ -113,6 +124,19 @@ export default class  extends Vue {
 
   handleBackGroups (groups: Array<responseGroupDocument>): void {
     this.groups = groups
+  }
+
+  handleBackTeams (teams: Array<responseTeamDocument>): void {
+    //this.teams = teams
+    if (!this.auth) return
+    let _teams: string[] = map(this.auth.teams, '_id')
+    this.teams = this.auth.group.level < 9000 ? filter(teams, o => _teams.indexOf(o._id) > -1) : teams
+  }
+
+  groupLevel (_id: string): number {
+    let group: responseGroupDocument | undefined = this.groups.find( o => o._id === _id)
+    if (!group) return -1
+    return group.level
   }
 
 }

@@ -5,13 +5,16 @@
     <ucenter-ticket-create v-if="mode === 'create'" 
       @submit="handleSubmitCreate" 
       :loading="loading" 
+      :auth="user"
       @get-groups="handleGetGroups"
+      @get-teams="handleGetTeams"
       @goback="handleGoback" />
     <ucenter-ticket-edit v-else-if="mode === 'edit'" 
       :data="selected" 
       @submit="handleSubmitEdit" 
       :loading="loading" 
       @get-groups="handleGetGroups"
+      @get-teams="handleGetTeams"
       @goback="handleGoback" />
     <ucenter-ticket-list v-else 
       :data="list" 
@@ -43,6 +46,7 @@ import ucenterTicketCreate from '~/components/ucenter/ticket-create.vue'
 import ucenterTicketEdit from '~/components/ucenter/ticket-edit.vue'
 import { responseDocument as responseTicketDocument } from '~/server/types/proxys/ticket'
 import { responseDocument as responseGroupDocument } from '~/server/types/proxys/group'
+import { responseDocument as responseTeamDocument } from '~/server/types/proxys/team'
 import { responseDocument as responseUserDocument } from '~/server/types/proxys/user'
 import { Ucenter } from '~/types'
 
@@ -210,6 +214,26 @@ export default class  extends Vue {
           token: this.token || undefined
         }
         let result: resufulInfo = await http.post(`/ucenter/group/lite`, {}, options)
+        this.loading = false
+        if (result.Status.code === 0) {
+          next(result.data)
+          return
+        }
+        this.$message.warning(result.Status.message || '')
+      } catch (error) {
+        this.loading = false
+        this.$message.warning(error.message)
+      }
+    }, 300)
+  }
+
+  handleGetTeams (next: (teams: Array<responseTeamDocument>) => void): void {
+    setTimeout(async (): Promise<void> => {
+      try {
+        let options: HeaderOptions = {
+          token: this.token || undefined
+        }
+        let result: resufulInfo = await http.post(`/ucenter/team/list`, {}, options)
         this.loading = false
         if (result.Status.code === 0) {
           next(result.data)

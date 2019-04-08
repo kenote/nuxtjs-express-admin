@@ -25,6 +25,7 @@
                 activeTextColor="#ffd04b"
                 :collapse="collapse"
                 :router="true"
+                :auth="user"
                 />
             </el-collapse-transition>
           </template>
@@ -59,6 +60,7 @@ import { parseCommand } from '~/utils'
 import http, { resufulInfo } from '~/utils/http'
 import '~/assets/scss/console/layout.scss'
 import '~/assets/scss/console/page.scss'
+import { map, uniq } from 'lodash'
 
 const Auth: BindingHelpers = namespace(auth.name)
 const Setting: BindingHelpers = namespace(setting.name)
@@ -130,9 +132,15 @@ export default class  extends Vue {
 
   async updateChannel (routerPath: string): Promise<void> {
     if (!this.user) return
-    let level: number = this.user.group.level
+    let { group, teams, access } = this.user
     let pageFlag: channel.FlagItem = this.flags[routerPath]
-    this.permission = !(pageFlag && pageFlag.access > level)
+    let permission: boolean
+    permission = !(pageFlag && pageFlag.access > group.level)
+    if (group.level < 9000 && permission) {
+      let _access: string[] = access.length > 0 ? access : uniq(map(teams, 'access').toString().split(','))
+      permission = _access.indexOf(routerPath) > -1
+    }
+    this.permission = permission
     let channelId: number = getChannelId(this.channels, routerPath)
     if (this.selectedChannel.id === channelId) return
     await this.selectChannel(channelId)

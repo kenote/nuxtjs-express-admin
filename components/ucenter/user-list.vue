@@ -39,7 +39,7 @@
       </el-form>
     </div>
     <el-table :data="list.data" stripe v-loading="loading">
-      <el-table-column type="selection" width="40" :selectable="(row, index) => row.group.level < auth.group.level" />
+      <el-table-column type="selection" width="40" :selectable="(row, index) => auth && row.group.level < auth.group.level" />
       <el-table-column label="ID" width="80" fixed sortable prop="id" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
@@ -74,12 +74,12 @@
       </el-table-column>
       <el-table-column label="手机号" width="120">
         <template slot-scope="scope">
-          <el-badge is-dot :type="scope.row.binds.indexOf('mobile') > -1 ? 'success' : 'warning'">
+          <el-badge :hidden="!!!scope.row.mobile" is-dot :type="scope.row.binds.indexOf('mobile') > -1 ? 'success' : 'warning'">
             <span>{{ (scope.row.mobile || '--').replace(/^(\d{3})\d+(\d{4})$/, '$1****$2') }}</span>
           </el-badge>
         </template>
       </el-table-column>
-      <el-table-column label="注册时间" width="160">
+      <el-table-column label="注册时间" width="170">
         <template slot-scope="scope">
           <span>{{ dateFormat(scope.row.create_at) }}</span>
         </template>
@@ -87,9 +87,10 @@
       <el-table-column  width="280" fixed="right">
         <template slot-scope="scope">
           <div style="text-align: right; padding-right: 12px;">
-            <el-button size="small" type="success" plain :disabled="scope.row.binds.indexOf('email') > -1">发送激活邮件</el-button>
-            <el-button size="small" @click="handleEdit(scope.$index, scope.row)" :disabled="scope.row.group.level >= auth.group.level">编辑</el-button>
-            <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)" :disabled="scope.row.group.level >= auth.group.level">删除</el-button>
+            <el-button v-if="scope.row.group.level < 7999 && scope.row.binds.indexOf('email') > -1" size="small" type="success" plain @click="handleAccess(scope.$index, scope.row)">访问权限</el-button>
+            <el-button v-else size="small" type="success" plain :disabled="scope.row.binds.indexOf('email') > -1">发送激活邮件</el-button>
+            <el-button size="small" @click="handleEdit(scope.$index, scope.row)" :disabled="auth && scope.row.group.level >= auth.group.level">编辑</el-button>
+            <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)" :disabled="auth && scope.row.group.level >= auth.group.level">删除</el-button>
           </div>
         </template>
       </el-table-column>
@@ -165,6 +166,10 @@ export default class  extends Vue {
   @Provide() values: Ucenter.FindUser = values
   //@Provide() nameType: FindType = 'username'
   @Provide() findTypeNames: FindTypeNames = findTypeNames
+
+  handleAccess (index: number, row: responseUserDocument): void {
+    this.$emit('access', index, row)
+  }
 
   handleEdit (index: number, row: responseUserDocument): void {
     this.$emit('edit', index, row)

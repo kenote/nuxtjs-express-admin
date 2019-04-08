@@ -1,7 +1,24 @@
 <template>
   <page>
     <console-breadcrumb :channel="selectedChannel" :store="channelStore" :route="$route" />
-    <transition name="el-zoom-in-top">
+    <div v-if="user && user.binds.indexOf('email') === -1" class="security-container">
+      <div class="main-content">
+        <p>您的邮箱尚未被激活，请尽快激活；</p>
+        <el-form>
+          <el-form-item>
+            <el-button v-if="times === 0" type="primary" :loading="loading" @click="handleSendEmailVerify">发送激活邮件</el-button>
+            <el-button v-else type="primary" disabled style="width: auto;">({{ times }} 秒) 发送激活邮件</el-button>
+            <el-button :loading="loading" @click="handleUpdateAuth">刷新状态</el-button>
+          </el-form-item>
+        </el-form>
+        <div class="footer">
+          <h2>激活邮箱</h2>
+          <p>1、如未收到激活邮件可点击上方发送激活邮件按钮。</p>
+          <p>2、如已经激活邮箱，请刷新本页面。</p>
+        </div>
+      </div>
+    </div>
+    <transition name="el-zoom-in-top" v-else>
       <security-password v-if="viewtype === 'password'" 
         @close="handleClose" 
         :user="user" 
@@ -341,6 +358,49 @@ export default class  extends Vue {
         timer = null
       }
     }, 1000)
+  }
+
+  handleSendEmailVerify (): void {
+    this.loading = true
+    setTimeout(async (): Promise<void> => {
+      try {
+        let options: HeaderOptions = {
+          token: this.token || undefined
+        }
+        let result: resufulInfo = await http.get(`/security/email_verify`, null, options)
+        this.loading = false
+        if (result.Status.code === 0) {
+          this.mailPhoneStep()
+          this.$message.warning('激活邮件已发送至您注册的邮箱中。')
+          return
+        }
+        this.$message.warning(result.Status.message || '')
+      } catch (error) {
+        this.loading = false
+        this.$message.warning(error.message)
+      }
+    }, 300)
+  }
+
+  handleUpdateAuth (): void {
+    this.loading = true
+    setTimeout(async (): Promise<void> => {
+      try {
+        let options: HeaderOptions = {
+          token: this.token || undefined
+        }
+        let result: resufulInfo = await http.get(`/account/accesstoken`, null, options)
+        this.loading = false
+        if (result.Status.code === 0) {
+          this.$store.commit(`${auth.name}/${auth.types.SET}`, result.data)
+          return
+        }
+        this.$message.warning(result.Status.message || '')
+      } catch (error) {
+        this.loading = false
+        this.$message.warning(error.message)
+      }
+    }, 300)
   }
 
 }

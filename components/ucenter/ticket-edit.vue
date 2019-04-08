@@ -3,8 +3,13 @@
     <h2>编辑邀请码</h2>
     <el-form ref="theForm" :model="values" :rules="rules" @submit.native.prevent="submitForm" label-width="150px">
       <el-form-item label="用户组/角色">
-        <el-select v-model="values.group" placeholder="请选择用户组/角色" disabled>
+        <el-select v-model="values.group" placeholder="请选择用户组/角色" disabled @change="handleChangeGroup">
           <el-option v-for="item in groups" :key="item._id" :label="`[${item.level}] ` + item.name" :value="item._id"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item v-if="values.group && groupLevel(values.group) < 9000" label="选择团队">
+         <el-select v-model="values.teams" placeholder="请选择团队" filterable multiple collapse-tags  disabled>
+          <el-option v-for="item in teams" :key="item._id" :label="item.name" :value="item._id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="最大使用数量">
@@ -32,12 +37,14 @@ import { Prop, Provide, Vue } from 'vue-property-decorator'
 import { Form as ElForm } from 'element-ui'
 import { responseDocument as responseTicketDocument } from '~/server/types/proxys/ticket'
 import { responseDocument as responseGroupDocument } from '~/server/types/proxys/group'
+import { responseDocument as responseTeamDocument } from '~/server/types/proxys/team'
 import { Ucenter } from '~/types'
 import { Rules } from '~/types/validate'
 import { pick } from 'lodash'
 
 const values: Ucenter.CreateTicket = {
   group: undefined,
+  teams: [],
   stint: 1,
   last_at: new Date()
 }
@@ -48,10 +55,12 @@ const rules: Rules = {}
   name: 'ucenter-ticket-edit',
   mounted () {
     this.$emit('get-groups', this.handleBackGroups)
+    this.$emit('get-teams', this.handleBackTeams)
     let doc: responseTicketDocument | null = this.$props.data
     if (!doc) return
     this.$data.values = {
       group: doc.setting['group'],
+      teams: doc.setting['teams'] || [],
       stint: doc.stint,
       last_at: doc.last_at
     }
@@ -65,6 +74,7 @@ export default class  extends Vue {
   @Provide() values: Ucenter.CreateTicket = values
   @Provide() rules: Rules = rules
   @Provide() groups: Array<responseGroupDocument> = []
+  @Provide() teams: Array<responseTeamDocument> = []
 
   submitForm (): void {
     let theForm: ElForm = <ElForm> this.$refs['theForm']
@@ -84,6 +94,23 @@ export default class  extends Vue {
 
   handleBackGroups (groups: Array<responseGroupDocument>): void {
     this.groups = groups
+  }
+
+  handleBackTeams (teams: Array<responseTeamDocument>): void {
+    this.teams = teams
+  }
+
+  handleChangeGroup (group: string): void {
+    let level: number = this.groupLevel(group)
+    if (level < 9000) {
+      this.values.teams = []
+    }
+  }
+
+  groupLevel (_id: string): number {
+    let group: responseGroupDocument | undefined = this.groups.find( o => o._id === _id)
+    if (!group) return -1
+    return group.level
   }
   
 }

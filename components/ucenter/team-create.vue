@@ -1,12 +1,9 @@
 <template>
   <div class="form-container">
-    <h2>创建用户组</h2>
+    <h2>创建团队</h2>
     <el-form ref="theForm" :model="values" :rules="rules" @submit.native.prevent="submitForm" label-width="150px">
-      <el-form-item prop="name" :rules="rules.name" label="角色名称">
-        <el-input placeholder="请输入角色名称" v-model="values.name" style="width:300px;" />
-      </el-form-item>
-      <el-form-item label="权 级">
-        <el-input-number size="medium" v-model="values.level" :min="1001" :max="9997"></el-input-number>
+      <el-form-item prop="name" :rules="rules.name" label="团队名称">
+        <el-input placeholder="请输入团队名称" v-model="values.name" style="width:300px;" />
       </el-form-item>
       <el-form-item label="描 述">
         <el-input
@@ -17,6 +14,15 @@
           resize="none"
           v-model="values.description">
         </el-input>
+      </el-form-item>
+      <el-form-item label="开放入口">
+        <el-transfer 
+          filterable
+          :filter-method="filterMethod"
+          v-model="values.platform" 
+          :titles="['可选入口', '已选入口']"
+          :data="platforms">
+        </el-transfer>
       </el-form-item>
       <el-form-item >
         <el-button type="primary" native-type="submit" :loading="loading">提 交</el-button>
@@ -32,24 +38,24 @@ import Component from 'nuxt-class-component'
 import { Prop, Provide, Vue } from 'vue-property-decorator'
 import { Form as ElForm } from 'element-ui'
 import { responseDocument as responseGroupDocument } from '~/server/types/proxys/group'
-import { Ucenter } from '~/types'
+import { Ucenter, Option } from '~/types'
 import { Rules } from '~/types/validate'
-import { clone } from 'lodash'
+import { orderBy, clone } from 'lodash'
 
-const values: Ucenter.CreateGroup = {
+const values: Ucenter.CreateTeam = {
   name: undefined,
-  level: 1001,
-  description: undefined
+  description: undefined,
+  platform: [ 1 ]
 }
 
 const rules: Rules = {
   name: [
-    { required: true, message: '请输入角色名称' },
+    { required: true, message: '请输入团队名称' },
   ]
 }
 
 @Component({
-  name: 'ucenter-group-create',
+  name: 'ucenter-team-create',
   mounted () {
     this.$data.values = clone(values)
   }
@@ -57,8 +63,9 @@ const rules: Rules = {
 export default class  extends Vue {
 
   @Prop({ default: false }) loading: boolean
+  @Prop({ default: [] }) platforms: Array<Option>
 
-  @Provide() values: Ucenter.CreateGroup = values
+  @Provide() values: Ucenter.CreateTeam = values
   @Provide() rules: Rules = rules
 
   submitForm (): void {
@@ -75,6 +82,10 @@ export default class  extends Vue {
 
   handleBack (): void {
     this.$emit('goback', null)
+  }
+
+  filterMethod (query: string, item: Option): boolean {
+    return item.label.indexOf(query) > -1
   }
   
 }

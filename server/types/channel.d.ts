@@ -14,6 +14,7 @@ declare namespace channel {
     icon       ?: string
     children   ?: Array<MenuItem>
     maps       ?: Array<MenuItem>
+    disabled   ?: boolean
   }
 
   interface Flags {

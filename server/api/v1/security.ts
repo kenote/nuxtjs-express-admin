@@ -18,6 +18,7 @@ import { MailerContext } from '../../types/mailer'
 import account from '../../types/account'
 import * as mongoose from 'mongoose'
 
+
 export default class Security extends RouterMethods {
 
   /**
@@ -227,6 +228,40 @@ export default class Security extends RouterMethods {
       let result: mongoose.Query<any> = await userProxy.Dao.updateOne({ _id: user._id }, { mobile, binds: uniq(user.binds.concat('mobile')) })
       await verifyProxy.Dao.remove({ _id: verify._id })
       return res.api(result)
+    } catch (error) {
+      if (CustomError(error)) {
+        return res.api(null, error)
+      }
+      return next(error)
+    }
+  }
+
+  /**
+   * 发送当前用户验证邮件
+   */
+  @Router({ method: 'get', path: '/security/email_verify' })
+  @Filter( passport.authenticate('jwt', { session: false }) )
+  public async emailVerify (req: IRequest, res: IResponse, next: NextFunction): Promise<Response | void> {
+    let { _id, username, email } = <responseUserDocument> req.user
+    try {
+      let verify: responseVerifyDocument = await verifyProxy.Dao.findOne({ type: 'email', user: _id })
+      if (verify) {
+        await verifyProxy.Dao.remove({ _id: verify._id })
+      }
+      verify = <responseVerifyDocument> await verifyProxy.create({ type: 'email', user: _id })
+      let mail: Mail.Options = {
+        from: `${config.site_name} <${mailer.__MailOptions.auth.user}>`,
+        to: `${username} <${email}>`,
+        subject: `${config.site_name}邮箱验证`
+      }
+      let context: MailerContext.emailVerify = {
+        site_name: config.site_name,
+        username: username,
+        email_verify_url: `${config.site_url}/accounts/email_verify?token=${verify.token}&id=${verify.id}`,
+        timeout: req.__register.email_verify.timeout / 3600
+      }
+      mailer.sendMail('email_verify.mjml', mail, context)
+      return res.api(null)
     } catch (error) {
       if (CustomError(error)) {
         return res.api(null, error)

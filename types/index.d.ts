@@ -1,6 +1,18 @@
 import { responseDocument as responseGroupDocument } from '~/server/types/proxys/group'
 import { FindType } from '~/server/types/proxys/user'
 
+export interface Option {
+  key           : number | string
+  label         : string
+  disabled      : boolean
+}
+
+export interface TreeData {
+  id            : string
+  label         : string
+  children     ?: Array<TreeData>
+}
+
 export declare namespace Dropdown {
 
   interface MenuItem {
@@ -87,6 +99,7 @@ export declare namespace Ucenter {
 
   interface CreateTicket {
     group       ?: string
+    teams        : Array<string>
     stint        : number
     last_at      : Date
   }
@@ -102,9 +115,16 @@ export declare namespace Ucenter {
   interface EditUser {
     username    ?: string
     group       ?: string
+    teams        : Array<string>
     email       ?: string
     mobile      ?: string
     binds        : Array<string>
     sex          : string
+  }
+
+  interface CreateTeam {
+    name        ?: string
+    description ?: string
+    platform     : Array<number>
   }
 }

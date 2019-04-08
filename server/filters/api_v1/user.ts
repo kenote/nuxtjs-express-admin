@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import { Rule, Filter, asyncFilterData, errorInfo, Options } from 'kenote-validate-helper'
 import { format } from 'util'
 import { IRequest, IResponse } from '../../types/resuful'
-import { responseDocument as responseGroupDocument, findDocument as findUserDocument, FindType } from '../../types/proxys/user'
+import { responseDocument as responseUserDocument, findDocument as findUserDocument, FindType } from '../../types/proxys/user'
 import { __ErrorCode, CustomError } from '../../error'
 import { toPageInfo } from '../../utils'
 import { zipObject } from 'lodash'
@@ -24,12 +24,18 @@ class User {
       let { begin, end } = zipObject(['begin', 'end'], create_at)
       conditions = { ...conditions, create_at: { $gte: begin, $lt: end } }
     }
+    let auth: responseUserDocument = req.user
+    if (auth.group.level < 9000) {
+      conditions = { ...conditions, teams: {
+        $elemMatch: { $in: auth.teams }
+      }}
+    }
     let findUser: findUserDocument = {
       conditions,
       options: { 
         limit, 
         skip,
-        select: ['_id', 'id', 'username', 'email', 'mobile', 'nickname', 'avatar', 'sex', 'binds', 'group', 'teams', 'create_at', 'update_at', 'jw_token']
+        select: ['_id', 'id', 'username', 'email', 'mobile', 'nickname', 'avatar', 'sex', 'binds', 'group', 'teams', 'access', 'create_at', 'update_at', 'jw_token']
       }
     }
     return next(findUser)

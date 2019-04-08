@@ -63,3 +63,17 @@ function findChannelId (navs: Array<channel.MenuItem>, id: number, routePath: st
   }
   return -1
 }
+
+export function accessNavs (navs: Array<channel.MenuItem>, access?: string[]): Array<channel.MenuItem> {
+  //if (!access) return navs
+  navs.forEach( nav => {
+    let { children } = nav
+    if (children) {
+      nav.children = accessNavs(children, access)
+    }
+    else {
+      nav.disabled = access && access.indexOf(nav.index) === -1
+    }
+  })
+  return navs
+}

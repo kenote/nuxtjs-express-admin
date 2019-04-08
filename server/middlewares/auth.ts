@@ -20,7 +20,7 @@ const jwtOptions: passportJWT.StrategyOptions = {
 const startegyVerify: passportJWT.VerifyCallbackWithRequest = async (req: Request, payload: Payload, done: passportJWT.VerifiedCallback): Promise<void> => {
   try {
     let user: responseDocument = await userProxy.Dao.findOne({ _id: payload._id })
-    return done(null, pick(user, ['_id', 'id', 'username', 'email', 'mobile', 'nickname', 'avatar', 'sex', 'binds', 'group', 'teams', 'create_at', 'update_at', 'jw_token']))
+    return done(null, pick(user, ['_id', 'id', 'username', 'email', 'mobile', 'nickname', 'avatar', 'sex', 'binds', 'group', 'teams', 'access', 'create_at', 'update_at', 'jw_token']))
   } catch (error) {
     return done(error, false)
   }

@@ -17,8 +17,8 @@ const options: QueryOptions = {
       select: ['id', 'name', 'level', 'description', 'store']
     },
     {
-      path: 'team',
-      select: ['id', 'name', 'description']
+      path: 'teams',
+      select: ['id', 'name', 'description', 'platform', 'access']
     }
   ],
   seqModel: __Models.seqModel

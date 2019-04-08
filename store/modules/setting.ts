@@ -1,6 +1,6 @@
 import { ActionTree, MutationTree, GetterTree, ActionContext } from 'vuex'
 import { RootState } from 'store'
-import { clone } from 'lodash'
+import { clone, orderBy } from 'lodash'
 import Channel from '~/utils/channel'
 
 import { Register, __Rules } from '~/server/types/config'
@@ -92,7 +92,7 @@ export const mutations: MutationTree<State> = {
     state.__rules = clone(__rules)
   },
   [types.CHANNELS] (state: State, channels: Array<channel.NavMenus>) {
-    state.channels = channels
+    state.channels = orderBy(channels, ['id'], ['asc'])
   },
   [types.SELECT](state: State, selected: Selected) {
     state.selected = selected

@@ -47,6 +47,10 @@ const schema: Schema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'team'
   }],
+  access: {
+    type: Array,
+    default: []
+  },
   create_at: {
     type: Date,
     default: Date.now

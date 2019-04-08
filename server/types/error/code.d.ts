@@ -36,6 +36,7 @@ export interface CodeTypes {
   ERROR_VALID_GROUP_NOTEXIST       : number
   ERROR_VALID_DATE_REQUIRED        : number
   ERROR_VALID_DATE_FORMAT          : number
+  ERROR_VALID_NAME_REQUIRED        : number
 
   ERROR_VERIFY_EMAIL_TIMEOUT       : number
   ERROR_VERIFY_EMAIL_FAILED        : number

@@ -5,10 +5,11 @@ import { __ErrorCode, __ErrorMessage, CustomError } from '../../error'
 import { validTicket } from '../../utils/ticket'
 import { createDocument as createTicketDocument, editDocument as editTicketDocument } from '../../types/proxys/ticket'
 import { responseDocument as responseGroupDocument } from '../../types/proxys/group'
-import { isDate } from 'lodash'
+import { isDate, map, filter } from 'lodash'
 import { format } from 'util'
 import { isMongoId } from 'validator'
 import groupProxy from '../../proxys/group'
+import { formatArray } from '../../utils'
 
 interface TicketRules {
   group       ?: Array<Rule>
@@ -41,7 +42,8 @@ const ticketRules: TicketRules = {
 class Ticket {
 
   public async create (req: IRequest, res: IResponse, next: NextFunction): Promise<Response | void> {
-    let { group, last_at, stint } = req.body
+    let { group, teams, last_at, stint } = req.body
+    let userLevel: number = req.user.group.level
     let filters: Array<Filter> = [
       {
         key: 'group',
@@ -60,7 +62,15 @@ class Ticket {
       if (!group) {
         return res.api(null, __ErrorCode.ERROR_VALID_GROUP_NOTEXIST)
       }
-      let body: createTicketDocument = await getTicketDocument({ ...document, stint, groupName: group.name })
+      if (userLevel <= group.level) {
+        return res.api(null, __ErrorCode.ERROR_BYLOND_LEVEL_OPERATE)
+      }
+      let _teams: string[] = formatArray(teams)
+      if (userLevel < 9000) {
+        let userTeams: string[] = map(req.user.teams, '_id').map(String)
+        _teams = filter(userTeams, o => _teams.indexOf(o) > -1)
+      }
+      let body: createTicketDocument = await getTicketDocument({ ...document, teams: _teams, stint, groupName: group.name })
       return next(body)
     } catch (error) {
       if (CustomError(error)) {
@@ -122,7 +132,7 @@ export default new Ticket()
 
 const getTicketDocument = (body: any): createTicketDocument => {
   let type: string = 'register'
-  let setting: {} = { group: body.group }
+  let setting: {} = { group: body.group, teams: body.teams }
   let name: string = `注册 -> ` + body.groupName
   let stint: number = Number(body.stint | 1)
   let last_at: Date = new Date(body.last_at)

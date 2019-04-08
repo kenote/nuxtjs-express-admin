@@ -35,6 +35,7 @@ export interface responseDocument extends mongoose.Document {
   binds        : string[]
   group        : responseGroupDocument
   teams        : Array<responseTeamDocument>
+  access       : Array<string>
   create_at    : Date
   update_at    : Date
 }
