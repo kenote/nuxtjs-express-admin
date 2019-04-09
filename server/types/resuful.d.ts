@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import { errorInfo, IError } from 'kenote-express-helper'
+import { StoreItem } from 'kenote-store-helper'
 import { Register, __Rules } from './config'
 import channel from './channel'
 
@@ -50,4 +51,14 @@ export interface PageInfo {
   page: number
   limit: number
   skip: number
+}
+
+export interface DownloadStore {
+  filePath: string
+  fileStream: Buffer
+  mimeType: string | false
+}
+
+export interface FileStores {
+  [propsName: string]: StoreItem
 }

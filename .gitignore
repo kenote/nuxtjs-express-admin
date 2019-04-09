@@ -45,6 +45,7 @@ data/config.json
 data/alicloud.ini
 data/alicloud.json
 .DS_Store
+uploadfile/
 
 # TypeScript v1 declaration files
 typings/

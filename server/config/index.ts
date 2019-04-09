@@ -8,6 +8,7 @@ const project: Config = {
 
   site_name: 'Kenote',
   site_url: 'http://localhost:4000',
+  store_root: 'uploadfile',
 
   session_secret: 'kenote_secret',
   redis: {

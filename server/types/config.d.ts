@@ -8,6 +8,7 @@ export interface Config {
 
   site_name      : string
   site_url       : string
+  store_root     : string
 
   session_secret : string
   redis          : connectRedis.RedisStoreOptions
