@@ -1,7 +1,7 @@
 import * as path from 'path'
 import * as fs from 'fs-extra'
 import mime from 'mime-types'
-import { Upload, UploadSetting, ProxyResult, parseResult, LocalProxy } from 'kenote-store-helper'
+import { Upload, UploadSetting, ProxyResult, parseResult, LocalProxy, StoreItem } from 'kenote-store-helper'
 import { __ErrorCode, ErrorInfo } from '../error'
 import { errorInfo, IError } from 'kenote-express-helper'
 import config from '../config'
@@ -47,4 +47,14 @@ export default class  extends Upload {
       })
     })
   }
+}
+
+export function formatResult (data: ProxyResult[], type: string, proxy: boolean = false): ProxyResult[] {
+  if (!proxy) return data
+  let resuful: ProxyResult[] = []
+  for(let item of data) {
+    item.url = `${config.site_url}/${config.store_root}/${type}/${item.key}`
+    resuful.push(item)
+  }
+  return resuful
 }

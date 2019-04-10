@@ -10,6 +10,7 @@ export interface MessageTypes {
   ERROR_UPLOAD_FILE_MIMETYPE       : string
   ERROR_UPLOAD_FILESIZE_LARGEMAX   : string
   ERROR_UPLOAD_NOT_FILE            : string
+  ERROR_UPLOAD_TYPE_FLAG           : string
 
   ERROR_LOGINVALID_FAIL            : string
   ERROR_FINDUSER_NOTEXIST          : string

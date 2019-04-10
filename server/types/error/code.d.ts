@@ -10,6 +10,7 @@ export interface CodeTypes {
   ERROR_UPLOAD_FILE_MIMETYPE       : number
   ERROR_UPLOAD_FILESIZE_LARGEMAX   : number
   ERROR_UPLOAD_NOT_FILE            : number
+  ERROR_UPLOAD_TYPE_FLAG           : number
 
   ERROR_LOGINVALID_FAIL            : number
   ERROR_FINDUSER_NOTEXIST          : number

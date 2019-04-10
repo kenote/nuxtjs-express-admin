@@ -30,7 +30,7 @@
     "kenote-express-helper": "^1.0.5",
     "kenote-mailer-helper": "^1.0.4",
     "kenote-mongoose-helper": "^1.0.5",
-    "kenote-store-helper": "^1.0.3",
+    "kenote-store-helper": "^1.0.4",
     "kenote-task-helper": "^1.0.2",
     "kenote-validate-helper": "^1.0.3",
     "method-override": "^3.0.0",

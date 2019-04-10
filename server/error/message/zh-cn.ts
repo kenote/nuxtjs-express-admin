@@ -15,6 +15,7 @@ export default  <MessageTypes> {
   ERROR_UPLOAD_FILE_MIMETYPE       : '上传文件类型不许可. [%s]',
   ERROR_UPLOAD_FILESIZE_LARGEMAX   : '上传文件超过最大值 %s.',
   ERROR_UPLOAD_NOT_FILE            : '请选择上传文件!',
+  ERROR_UPLOAD_TYPE_FLAG           : '您没有上传%s的权限',
 
   ERROR_LOGINVALID_FAIL            : '用户名密码错误',
   ERROR_FINDUSER_NOTEXIST          : '用户不存在',

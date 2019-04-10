@@ -14,7 +14,11 @@ const options: QueryOptions = {
   populate: [
     {
       path: 'group',
-      select: ['id', 'name', 'level', 'description', 'store']
+      select: ['id', 'name', 'level', 'description', 'store'],
+      populate: {
+        path: 'store',
+        select: ['upload_type', 'download_type']
+      }
     },
     {
       path: 'teams',
