@@ -18,6 +18,16 @@
           v-model="values.description">
         </el-input>
       </el-form-item>
+      <el-form-item label="上传权限">
+        <el-checkbox-group v-model="values.upload_type">
+          <el-checkbox v-for="(item, key) in Object.keys(stores)" :key="key" :label="item">{{ stores[item].name || item }}</el-checkbox>
+        </el-checkbox-group>
+      </el-form-item>
+      <el-form-item label="下载权限">
+        <el-checkbox-group v-model="values.download_type">
+          <el-checkbox v-for="(item, key) in Object.keys(stores)" :key="key" :label="item">{{ stores[item].name || item }}</el-checkbox>
+        </el-checkbox-group>
+      </el-form-item>
       <el-form-item >
         <el-button type="primary" native-type="submit" :loading="loading">提 交</el-button>
         <el-button type="success" @click="handleBack">返回</el-button>
@@ -34,11 +44,14 @@ import { Form as ElForm } from 'element-ui'
 import { responseDocument as responseGroupDocument } from '~/server/types/proxys/group'
 import { Ucenter } from '~/types'
 import { Rules } from '~/types/validate'
+import { FileStores } from '~/server/types/resuful'
 
 const values: Ucenter.CreateGroup = {
   name: undefined,
   level: 1001,
-  description: undefined
+  description: undefined,
+  upload_type: [],
+  download_type: []
 }
 
 const rules: Rules = {
@@ -50,12 +63,15 @@ const rules: Rules = {
 @Component({
   name: 'ucenter-group-edit',
   mounted () {
+    this.$emit('get-stores', this.handleBackStores)
     let doc: responseGroupDocument | null = this.$props.data
     if (!doc) return
     this.$data.values = {
       name: doc.name,
       level: doc.level,
-      description: doc.description
+      description: doc.description,
+      upload_type: doc.store.upload_type,
+      download_type: doc.store.download_type
     }
     if (doc.level > 9997) {
       this.$data.minLevel = doc.level
@@ -70,6 +86,7 @@ export default class  extends Vue {
 
   @Provide() values: Ucenter.CreateGroup = values
   @Provide() rules: Rules = rules
+  @Provide() stores: FileStores = {}
   @Provide() minLevel: number = 1001
   @Provide() maxLevel: number = 9997
 
@@ -87,6 +104,10 @@ export default class  extends Vue {
 
   handleBack (): void {
     this.$emit('goback', null)
+  }
+
+  handleBackStores (stores: FileStores): void {
+    this.stores = stores
   }
   
 }

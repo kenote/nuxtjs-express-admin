@@ -1,3 +1,5 @@
+import { PBSetting } from 'kenote-socket-helper'
+import { Setting } from './proto'
 
 declare namespace channel {
 
@@ -6,6 +8,12 @@ declare namespace channel {
     name        : string
     default     : string
     navs        : Array<MenuItem>
+    rstp       ?: Rstps
+    proto      ?: PBSetting
+  }
+
+  interface Rstps {
+    [propsName: string]: Setting.Server
   }
 
   interface MenuItem {

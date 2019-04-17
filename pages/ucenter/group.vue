@@ -10,6 +10,7 @@
       :data="selected" 
       @submit="handleSubmitEdit" 
       :loading="loading" 
+      @get-stores="handleGetStores"
       @goback="handleGoback" />
     <ucenter-group-list v-else :data="list" @edit="handleEdit" @remove="handleRemove" :loading="loading" @getlist="handleList">
       <el-button type="primary" @click="handleCreate">创建用户组</el-button>
@@ -27,7 +28,7 @@ import * as auth from '~/store/modules/auth'
 import { BindingHelpers } from 'vuex-class/lib/bindings'
 import consoleBreadcrumb from '~/components/console/breadcrumb.vue'
 import http, { resufulInfo } from '~/utils/http'
-import { HeaderOptions } from '~/server/types/resuful'
+import { HeaderOptions, FileStores } from '~/server/types/resuful'
 import { responseDocument as responseGroupDocument } from '~/server/types/proxys/group'
 import ucenterGroupList from '~/components/ucenter/group-list.vue'
 import ucenterGroupCreate from '~/components/ucenter/group-create.vue'
@@ -150,6 +151,26 @@ export default class  extends Vue {
         if (result.Status.code === 0) {
           this.mode = 'list'
           this.selected = null
+          return
+        }
+        this.$message.warning(result.Status.message || '')
+      } catch (error) {
+        this.loading = false
+        this.$message.warning(error.message)
+      }
+    }, 300)
+  }
+
+  handleGetStores (next: (stores: FileStores) => void): void {
+    setTimeout(async (): Promise<void> => {
+      try {
+        let options: HeaderOptions = {
+          token: this.token || undefined
+        }
+        let result: resufulInfo = await http.get(`/store/list`, {}, options)
+        this.loading = false
+        if (result.Status.code === 0) {
+          next(result.data)
           return
         }
         this.$message.warning(result.Status.message || '')

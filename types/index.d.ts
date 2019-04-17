@@ -92,9 +92,11 @@ export declare namespace Security {
 export declare namespace Ucenter {
 
   interface CreateGroup {
-    name        ?: string
-    level        : number
-    description ?: string
+    name          ?: string
+    level          : number
+    description   ?: string
+    upload_type   ?: string[]
+    download_type ?: string[]
   }
 
   interface CreateTicket {

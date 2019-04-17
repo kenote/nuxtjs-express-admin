@@ -25,4 +25,10 @@ export default class Store extends RouterMethods {
       return res.api(null, error)
     }
   }
+
+  @Router({ method: 'get', path: '/store/list' })
+  public async setting (req: Request, res: IResponse, next: NextFunction): Promise<Response | void> {
+    let fileStore: FileStores = loadData('data/stores')
+    return res.api(fileStore)
+  }
 }
