@@ -1,0 +1,18 @@
+
+files:
+  name: 系统文件
+  type: local
+  root_dir: @files
+  root_url: @files
+  max_size: 50MB
+  user_dir: u
+  mime_type:
+    - image/png
+    - image/gif
+    - image/jpeg
+    - image/svg
+    - image/svg+xml
+    - application/json
+    - application/octet-stream
+    - text/markdown
+    - application/zip

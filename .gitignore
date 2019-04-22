@@ -39,15 +39,27 @@ build/
 package-lock.json
 yarn.lock
 data/mailer.ini
+data/mailer.yml
+data/mailer.yaml
 data/mailer.json
 data/config.ini
+data/config.yml
+data/config.yaml
 data/config.json
 data/alicloud.ini
+data/alicloud.yml
+data/alicloud.yaml
 data/alicloud.json
 .DS_Store
 uploadfile/
 .svn
-channels/
+/channels/
+data/channels/*.yml
+data/channels/*.yaml
+data/channels/*.json
+!data/channels/account.yml
+!data/channels/ucenter.yml
+!data/channels/setting.yml
 
 # TypeScript v1 declaration files
 typings/

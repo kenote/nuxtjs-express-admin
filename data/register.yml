@@ -1,0 +1,10 @@
+
+
+invitation: false
+mailphone_step: 60
+
+email_verify:
+  timeout: 43200
+
+lost_pass:
+  timeout: 3600

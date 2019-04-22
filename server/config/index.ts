@@ -20,8 +20,8 @@ const project: Config = {
   mongo: {
     uris: 'mongodb://localhost:27017/kenote_nuxtjs_admin',
   },
-  ...loadData('data/config.default.ini'),
-  ...loadData('data/config.ini')
+  ...loadData('data/config.default.yml'),
+  ...loadData('data/config.yml')
 }
 
 project.Port = Number(project.Port)

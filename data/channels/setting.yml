@@ -1,0 +1,13 @@
+
+id: 3
+name: 配置中心
+default: /setting/channel
+navs:
+  - index: 3-1
+    name: 系统配置
+    icon: iconfont icon-team
+    children:
+      - index: /setting/channel
+        name: 频道管理
+      - index: /setting/ditch
+        name: 渠道管理

@@ -4,8 +4,8 @@ import { loadData } from './'
 import { alicloud, SMS } from '../types/alicloud'
 
 const config: alicloud.Config = <alicloud.Config> {
-  ...loadData('data/alicloud.default.ini'),
-  ...loadData('data/alicloud.ini')
+  ...loadData('data/alicloud.default.yml'),
+  ...loadData('data/alicloud.yml')
 }
 
 class Alicloud {

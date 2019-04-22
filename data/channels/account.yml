@@ -1,0 +1,14 @@
+
+id: 1
+name: 我的帐户
+description: 查看和管理自己的信息、活动、安全选项和隐私偏好设置
+default: /account/baseinfo
+navs:
+  - index: 1-1
+    name: 帐户管理
+    icon: iconfont icon-passport
+    children:
+      - index: /account/baseinfo
+        name: 基本资料
+      - index: /account/security
+        name: 安全设置

@@ -16,7 +16,7 @@ import { loadData } from '../utils'
   ],
   parameter: {
     __rules: rules,
-    __register: loadData('data/register.ini')
+    __register: loadData('data/register.yml')
   }
 })
 class Restful extends Middleware {

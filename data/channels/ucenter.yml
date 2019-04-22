@@ -1,0 +1,24 @@
+
+id: 2
+name: 用户中心
+description: 管理所有用户的信息，以及登录、注册等等
+default: /ucenter/ticket
+navs:
+  - index: 2-1
+    name: 帐号管理
+    icon: iconfont icon-team
+    children:
+      - index: /ucenter/group
+        name: 用户组
+      - index: /ucenter/team
+        name: 团队管理
+      - index: /ucenter/user
+        name: 用户管理
+  - index: 2-2
+    name: 注册管理
+    icon: iconfont icon-icsettingsinputco
+    children:
+      - index: /ucenter/setting
+        name: 基础配置
+      - index: /ucenter/ticket
+        name: 邀请码1

@@ -1,0 +1,14 @@
+
+mailDir: mails
+
+mailOptions:
+  host: smtp.mxhichina.com
+  port: 465
+  secure: true
+  auth:
+    user: mailer_auth_user
+    pass: mailer_auth_pass
+
+asyncRetryOptions:
+  times: 5
+  interval: 200

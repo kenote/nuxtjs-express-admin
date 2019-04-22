@@ -4,8 +4,8 @@ import * as nunjucks from 'nunjucks'
 import { loadData } from './'
 
 const setting: Setting = { 
-  ...<Setting> loadData('data/mailer.default.ini'), 
-  ...<Setting> loadData('data/mailer.ini') 
+  ...<Setting> loadData('data/mailer.default.yml'), 
+  ...<Setting> loadData('data/mailer.yml') 
 }
 parseMailer(setting)
 

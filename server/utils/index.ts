@@ -7,6 +7,8 @@ import { FlagTag } from '../types/resuful'
 import channel from '../types/channel'
 import { toInteger, isNaN, remove } from 'lodash'
 import { PageInfo } from '../types/resuful'
+import isJson from 'is-json'
+import * as ymal from 'yaml'
 
 export const md5 = (text: string): string => crypto.createHash('md5').update(text).digest('hex')
 
@@ -34,9 +36,13 @@ export const loadDataFile = (file: string): {} => {
   let isExists: boolean = fs.existsSync(filePath)
   if (!isExists) return data
   let fileStr: string = fs.readFileSync(filePath, 'utf-8')
-  try {
+  if (isJson(fileStr)) {
     data = JSON.parse(fileStr)
-  } catch (error) {
+  }
+  else if (/^\.(yaml|yml)$/.test(path.extname(filePath))) {
+    data = ymal.parse(fileStr)
+  }
+  else {
     data = ini.parse(fileStr)
   }
   return data
@@ -50,7 +56,7 @@ export const loadData = (file: string, type: 'object' | 'array' = 'object'): {} 
   let fileStat: fs.Stats = fs.statSync(filePath)
   if (fileStat.isFile()) return loadDataFile(file)
   if (fileStat.isDirectory()) {
-    let files: string[] = fs.readdirSync(filePath)
+    let files: string[] = fs.readdirSync(filePath).filter( o => /\.(json|yaml|yml|ini|inf)$/.test(o) )
     for (let item of files) {
       let itemData: {} = loadData(path.resolve(filePath, item))
       if (type === 'array') {

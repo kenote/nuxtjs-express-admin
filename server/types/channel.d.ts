@@ -4,12 +4,17 @@ import { Setting } from './proto'
 declare namespace channel {
 
   interface NavMenus {
-    id          : number
-    name        : string
-    default     : string
-    navs        : Array<MenuItem>
-    rstp       ?: Rstps
-    proto      ?: PBSetting
+    id             : number
+    name           : string
+    description   ?: string
+    default        : string
+    navs           : Array<MenuItem>
+    rstp          ?: Rstps
+    proto         ?: PBSetting
+  }
+
+  interface Options {
+    [propsName: string]: Array<{}> | {}
   }
 
   interface Rstps {
