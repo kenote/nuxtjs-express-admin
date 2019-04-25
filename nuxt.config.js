@@ -14,12 +14,20 @@ module.exports = {
   ],
   css: [
     'element-ui/lib/theme-chalk/index.css',
+    // lib css
+    'codemirror/lib/codemirror.css',
+    // merge css
+    'codemirror/addon/merge/merge.css',
+    // theme css
+    'codemirror/theme/paraiso-light.css',
+    
     '~/assets/iconfont/iconfont.css',
-    '~/assets/scss/common.scss'
+    '~/assets/scss/common.scss',
   ],
   plugins: [
+    { src: '~plugins/codemirror.js', ssr: false },
     '~/plugins/component',
-    { src: '~/plugins/element-ui', ssr: true }
+    { src: '~/plugins/element-ui', ssr: true },
   ],
   loading: {
     color: 'rgb(238, 92, 73, .8)', 

@@ -1,13 +1,20 @@
 
 id: 3
 name: 配置中心
+label: setting
 default: /setting/channel
 navs:
   - index: 3-1
     name: 系统配置
-    icon: iconfont icon-team
+    icon: iconfont icon-icons-system
     children:
       - index: /setting/channel
         name: 频道管理
+  - index: 3-2
+    name: GM 相关
+    icon: iconfont icon-gm
+    children:
       - index: /setting/ditch
         name: 渠道管理
+      - index: /setting/proto
+        name: API 接口

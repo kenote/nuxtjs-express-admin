@@ -14,7 +14,7 @@ import protoFilter from '../../filters/api_v1/proto'
 
 export default class Proto extends RouterMethods {
 
-  @Router({ method: 'post', path: '/:channel/:tag' })
+  @Router({ method: 'post', path: '/proto/:channel/:tag' })
   @Filter( protoFilter.send )
   public async send (document: protoDocument, req: Request, res: IResponse, next: NextFunction): Promise<Response | void> {
     let { channel, setting, proto, payload, rtsp_key } = document

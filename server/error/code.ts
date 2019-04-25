@@ -56,5 +56,7 @@ export default <CodeTypes> {
   ERROR_VERIFY_ID_REQUIRED         : 1460,
   ERROR_VERIFY_ID_TIMEOUT          : 1461,
   ERROR_VERIFY_ID_FAILED           : 1462,
+
+  ERROR_CHANNEL_NOTEXIST           : 1501,
 }
 

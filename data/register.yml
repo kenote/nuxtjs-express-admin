@@ -1,6 +1,6 @@
 
 
-invitation: false
+invitation: true
 mailphone_step: 60
 
 email_verify:

@@ -59,13 +59,15 @@ export const state = (): State => ({
   flags: {}
 })
 
+const defaultChannel: channel.NavMenus = { id: 0, name: '控制台', label: 'console', navs: [], default: '/' }
+
 export const getters: GetterTree<State, RootState> = {
   selectedChannel: state => {
     let p: channel.NavMenus | undefined = state.channels.find( o => o.id === state.selected.channel)
-    return p ? p : <channel.NavMenus> { id: 0, name: '控制台', navs: [], default: '/' }
+    return p ? p : defaultChannel
   },
   channelStore: state => {
-    let p: channel.NavMenus = state.channels.find( channel => channel.id === state.selected.channel ) || { id: 0, name: '控制台', navs: [], default: '/' }
+    let p: channel.NavMenus = state.channels.find( channel => channel.id === state.selected.channel ) || defaultChannel
     return new Channel(p)
   }
 }

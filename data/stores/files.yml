@@ -2,8 +2,8 @@
 files:
   name: 系统文件
   type: local
-  root_dir: @files
-  root_url: @files
+  root_dir: '@files'
+  root_url: '@files'
   max_size: 50MB
   user_dir: u
   mime_type:

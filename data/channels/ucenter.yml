@@ -1,6 +1,7 @@
 
 id: 2
 name: 用户中心
+label: ucenter
 description: 管理所有用户的信息，以及登录、注册等等
 default: /ucenter/ticket
 navs:

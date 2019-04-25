@@ -56,5 +56,7 @@ export default  <MessageTypes> {
   ERROR_VERIFY_ID_REQUIRED         : '缺少身份验证',
   ERROR_VERIFY_ID_TIMEOUT          : '身份验证超时',
   ERROR_VERIFY_ID_FAILED           : '身份验证错误',
+
+  ERROR_CHANNEL_NOTEXIST           : '没有找到相关频道',
   
 }

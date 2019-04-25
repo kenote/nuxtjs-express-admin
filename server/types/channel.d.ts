@@ -6,11 +6,13 @@ declare namespace channel {
   interface NavMenus {
     id             : number
     name           : string
+    label          : string
     description   ?: string
     default        : string
     navs           : Array<MenuItem>
     rstp          ?: Rstps
     proto         ?: PBSetting
+    options       ?: {}
   }
 
   interface Options {

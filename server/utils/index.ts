@@ -8,7 +8,7 @@ import channel from '../types/channel'
 import { toInteger, isNaN, remove } from 'lodash'
 import { PageInfo } from '../types/resuful'
 import isJson from 'is-json'
-import * as ymal from 'yaml'
+import * as ymal from 'js-yaml'
 
 export const md5 = (text: string): string => crypto.createHash('md5').update(text).digest('hex')
 
@@ -40,7 +40,7 @@ export const loadDataFile = (file: string): {} => {
     data = JSON.parse(fileStr)
   }
   else if (/^\.(yaml|yml)$/.test(path.extname(filePath))) {
-    data = ymal.parse(fileStr)
+    data = ymal.load(fileStr)
   }
   else {
     data = ini.parse(fileStr)

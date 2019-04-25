@@ -1,5 +1,6 @@
 <template>
-  <div class="layout-console">
+  <not-found v-if="selectedChannel.id === 0" />
+  <div v-else class="layout-console">
     <console-header
       :channels="channels"
       :current-channel="selectedChannel"
@@ -50,6 +51,7 @@ import { namespace } from 'vuex-class'
 import * as auth from '~/store/modules/auth'
 import * as setting from '~/store/modules/setting'
 import { BindingHelpers } from 'vuex-class/lib/bindings'
+import notFound from '~/components/error-page.vue'
 import consoleHeader from '~/components/console/header.vue'
 import consoleSidebar from '~/components/console/sidebar.vue'
 import { responseDocument as responseUserDocument } from '~/server/types/proxys/user'
@@ -98,6 +100,7 @@ const userEntrance: Array<Dropdown.MenuItem> = [
 
 @Component({
   components: {
+    notFound,
     consoleHeader,
     consoleSidebar
   },

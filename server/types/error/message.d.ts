@@ -51,4 +51,6 @@ export interface MessageTypes {
   ERROR_VERIFY_ID_REQUIRED         : string
   ERROR_VERIFY_ID_TIMEOUT          : string
   ERROR_VERIFY_ID_FAILED           : string
+
+  ERROR_CHANNEL_NOTEXIST           : string
 }

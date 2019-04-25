@@ -8,6 +8,7 @@ import groupModel from './group'
 import ticketModel from './ticket'
 import userModel from './user'
 import verifyModel from './verify'
+import ditchModel from './ditch'
 
 @MongoSetting(config.mongo)
 @ModelMount({
@@ -16,7 +17,8 @@ import verifyModel from './verify'
   groupModel,
   ticketModel,
   userModel,
-  verifyModel
+  verifyModel,
+  ditchModel
 })
 class MyMongoDB extends MongoDB {}
 
