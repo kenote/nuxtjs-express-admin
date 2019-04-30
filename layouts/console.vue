@@ -140,7 +140,7 @@ export default class  extends Vue {
     let permission: boolean
     permission = !(pageFlag && pageFlag.access > group.level)
     if (group.level < 9000 && permission) {
-      let _access: string[] = access.length > 0 ? access : uniq(map(teams, 'access').toString().split(','))
+      let _access: string[] = (access || []).length > 0 ? access : uniq(map(teams, 'access').toString().split(','))
       permission = _access.indexOf(routerPath) > -1
     }
     this.permission = permission

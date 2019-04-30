@@ -11,6 +11,7 @@ import {
   updateDocument as updateDitchDocument
 } from '../../types/proxys/ditch'
 import { responseDocument as responseTeamDocument } from '../../types/proxys/team'
+import { responseDocument as responseUserDocument } from '../../types/proxys/user'
 import channel from '../../types/channel'
 import { loadData, formatArray } from '../../utils'
 import teamProxy from '../../proxys/team'
@@ -27,7 +28,14 @@ class Ditch {
     if (!_channel) {
       return res.api(null, __ErrorCode.ERROR_CHANNEL_NOTEXIST)
     }
-    return next(_channel.label)
+    let conditions: any = {
+      channel: _channel.label
+    }
+    let user: responseUserDocument = req.user
+    if (user.group.level < 8000) {
+      conditions = { ...conditions, teams: { $elemMatch: { $in: user.teams } } }
+    }
+    return next(conditions)
   }
 
   public async create (req: IRequest, res: IResponse, next: NextFunction): Promise<Response | void> {

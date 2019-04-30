@@ -14,7 +14,7 @@ class Proto {
   public async send (req: IRequest, res: IResponse, next: NextFunction): Promise<Response | void> {
     let { channel, tag } = req.params
     let { rtsp_key } = req.headers
-    let setting: channel.NavMenus = <channel.NavMenus> loadData(`data/channels/${channel}.json`)
+    let setting: channel.NavMenus = <channel.NavMenus> loadData(`data/channels/gm-${channel}.yml`)
     if (isEmpty(setting)) {
       // 没找到 channel 配置
       return res.api('没找到 channel 配置')
@@ -23,13 +23,15 @@ class Proto {
     let protoSetting: Config = { rstps, proto: <PBSetting> setting.proto }
 
     let apis: APIS = loadData(`channels/${channel}/api`)
+    console.log(apis)
     if (isEmpty(apis) || Object.keys(apis).indexOf(tag) === -1) {
       // 没找到 api 接口
       return res.api('没找到 api 接口')
     }
-    let { proto, request } = apis[tag]
+    console.log(apis[tag])
+    let { proto, request, parse } = apis[tag]
     let payload: {} = formatPayload(req.body, request)
-    return next(<protoDocument> { channel: setting.name, setting: protoSetting, proto, payload, rtsp_key })
+    return next(<protoDocument> { channel: setting.name, setting: protoSetting, proto, parse, payload, rtsp_key })
   }
 }
 

@@ -34,9 +34,9 @@ export default class Setting extends RouterMethods {
    */
   @Router({ method: 'get', path: '/setting/ditch/list/:channel' })
   @Filter( passport.authenticate('jwt', { session: false }), permission('/setting/ditch', 'list'), ditchFilter.list )
-  public async ditchList (channel: string, req: Request, res: IResponse, next: NextFunction): Promise<Response | void> {
+  public async ditchList (conditions: any, req: Request, res: IResponse, next: NextFunction): Promise<Response | void> {
     try {
-      let ditchs: responseDitchDocument[] = <responseDitchDocument[]> await ditchProxy.Dao.find({ channel })
+      let ditchs: responseDitchDocument[] = <responseDitchDocument[]> await ditchProxy.Dao.find(conditions)
       return res.api(ditchs)
     } catch (error) {
       if (CustomError(error)) {

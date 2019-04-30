@@ -55,7 +55,7 @@ export default class  extends Vue {
     if (!this.auth) return
     let access: string[] | undefined
     if (this.auth.group.level < 9000) {
-      access = this.auth.access.length > 0 ? this.auth.access : uniq(map(this.auth.teams, 'access').toString().split(','))
+      access = (this.auth.access || []).length > 0 ? this.auth.access : uniq(map(this.auth.teams, 'access').toString().split(','))
     }
     this.navs = accessNavs(this.sidebar, access)
   }

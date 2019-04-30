@@ -23,6 +23,7 @@ export interface APIS {
 export interface API {
   proto     : Send.Proto
   request   : Send.Request
+  parse    ?: Array<Send.Parse>
 }
 
 export declare namespace Send {
@@ -37,12 +38,30 @@ export declare namespace Send {
   interface Request {
     [propsName: string]: 'date' | 'string' | 'number'
   }
+
+  interface Parse {
+    key         : string
+    separator   : string | RegExp
+    collection  : Array<CollectionItem>
+    orderBy    ?: OrderBy
+  }
+
+  interface OrderBy {
+    iteratees   : string[]
+    orders      : Array<'asc' | 'desc'>
+  }
+
+  interface CollectionItem {
+    key    : string
+    name   : string
+  }
 }
 
 export interface protoDocument {
   channel      : string
   setting      : Config
   proto        : Send.Proto
+  parse       ?: Array<Send.Parse>
   payload     ?: {}
   rtsp_key    ?: string
 }
