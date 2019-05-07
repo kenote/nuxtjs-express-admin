@@ -104,6 +104,7 @@ export default class  extends Vue {
         if (result.Status.code === 0) {
           let _ditchs: Array<responseDitchDocument> = result.data || []
           this.ditchs = _ditchs
+          this.$emit('ditchs', _ditchs)
           let ditch_group: Array<{ key: string, name: string }> = []
           for (let group of this.ditch_group) {
             _ditchs.filter( o => o.group === group.key ).length > 0 && ditch_group.push(group)

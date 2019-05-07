@@ -1,10 +1,20 @@
 <template>
   <div>
     <el-table ref="filterTable" :data="pdata" v-loading="loading" stripe>
-      <el-table-column v-for="(column, key) in columns" :key="key" :label="column.name" :prop="column.key" :fixed="column.fixed" :width="column.width" :min-width="column.minwidth || 100" align="center" >
+      <el-table-column v-for="(column, key) in columns" 
+        :key="key" 
+        :label="column.name" 
+        :prop="column.key" 
+        :fixed="column.fixed" 
+        :width="column.width" 
+        :min-width="column.minwidth || 100" 
+        :align="column.align || 'center'" >
         <template slot-scope="scope">
           <span v-if="column.format">{{ formatString(scope.row[column.key], column.format) }}</span>
-          <el-button v-else-if="/^(\{)/.test(scope.row[column.key])" size="small" type="success" plain @click="handleDialogData(column.name, scope.row[column.key])">点击查看</el-button>
+          <el-button v-else-if="/^(\{)/.test(scope.row[column.key])" 
+            size="small" 
+            type="success" plain 
+            @click="handleDialogData(column.name, scope.row[column.key])">点击查看</el-button>
           <span v-else>{{ scope.row[column.key] }}</span>
         </template>
       </el-table-column>
@@ -27,7 +37,7 @@
     <el-dialog v-if="dialog.visible" :title="dialog.title" :visible="dialog.visible" @close="handleDialogColse">
       <section class="dialog_container">
         <no-ssr placeholder="Codemirror Loading...">
-          <codemirror v-model="dialog.data"
+          <codemirror v-model="dialog.data" style="height: 300px"
                       :options="cmOption">
           </codemirror>
         </no-ssr>
@@ -46,7 +56,7 @@ import { chunk } from 'lodash'
 import 'codemirror/theme/duotone-light.css'
 
 @Component({
-  name: 'channel-result-view',
+  name: 'channel-result-table',
   mounted () {
 
   },
@@ -133,7 +143,7 @@ export default class  extends Vue {
   parseData (value: string | undefined) {
     let _value: string = (value || '').replace(/(\{|\})/g, '')
 
-    return _value.replace(/\,/g, '\n').replace(/\:/g, ': ')
+    return _value.replace(/\,/g, '\n').replace(/\:/g, ': ').replace(/\#/g, '\n\n# ')
   }
   
 }
