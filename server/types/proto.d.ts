@@ -21,17 +21,19 @@ export interface APIS {
 }
 
 export interface API {
-  proto     : Send.Proto
-  request   : Send.Request
-  parse    ?: Array<Send.Parse>
+  proto        : Send.Proto
+  request      : Send.Request
+  parse       ?: Array<Send.Parse>
+  alias       ?: Send.Alias
+  autoFields  ?: Send.AutoFields
 }
 
 export declare namespace Send {
 
   interface Proto {
     code   : number | string
-    req    : 'CS_GM_QUERY'
-    res    : 'SC_GM_QUERY'
+    req    : string
+    res    : string
     rstp  ?: string
   }
 
@@ -44,6 +46,33 @@ export declare namespace Send {
     separator   : string | RegExp
     collection  : Array<CollectionItem>
     orderBy    ?: OrderBy
+    int        ?: ParseInt
+  }
+
+  interface ParseInt {
+    key         : string
+    function    : string
+    options     : string[]
+  }
+
+  interface AutoFields {
+    [propsName: string]: AutoFieldItem
+  }
+
+  type AutoFieldItem = {
+    [propsName in 'subtract' | 'add']: Array<string | number>
+  } & {
+    reference: string
+  }
+
+  interface Alias {
+    [propsName: string]: Array<AliasItem>
+  }
+
+  interface AliasItem {
+    key         : string
+    value       : string
+    name       ?: string
   }
 
   interface OrderBy {

@@ -4,15 +4,15 @@ import { Setting } from './proto'
 declare namespace channel {
 
   interface NavMenus {
-    id             : number
-    name           : string
-    label          : string
-    description   ?: string
-    default        : string
-    navs           : Array<MenuItem>
-    rstp          ?: Rstps
-    proto         ?: PBSetting
-    options       ?: {}
+    id                 : number
+    name               : string
+    label              : string
+    description       ?: string
+    default            : string
+    navs               : Array<MenuItem>
+    rstp              ?: Rstps
+    proto             ?: PBSetting
+    options           ?: {}
   }
 
   interface Options {
@@ -24,51 +24,75 @@ declare namespace channel {
   }
 
   interface MenuItem {
-    index       : string
-    name        : string
-    icon       ?: string
-    children   ?: Array<MenuItem>
-    maps       ?: Array<MenuItem>
-    disabled   ?: boolean
-    queryer    ?: Array<Queryer>
-    api        ?: string
-    columns    ?: Array<ColumnItem>
+    index              : string
+    name               : string
+    icon              ?: string
+    children          ?: Array<MenuItem>
+    maps              ?: Array<MenuItem>
+    disabled          ?: boolean
+    queryer           ?: Array<Queryer>
+    api               ?: string
+    columns           ?: Array<ColumnItem>
+    polling           ?: string
+    cards             ?: Cards
   }
 
   interface Queryer {
-    key         : string
-    name        : string
-    type        : string
-    default    ?: string | number | Date | Array<string | number | Date | undefined>
-    required   ?: boolean
-    fetch      ?: string
-    data       ?: Array<{ key: string, name: string }>
-    options    ?: string
-    rules      ?: Array<Rule>
+    key                : string
+    name               : string
+    type               : string
+    default           ?: string | number | Date | Array<string | number | Date | undefined>
+    required          ?: boolean
+    fetch             ?: string
+    data              ?: Array<{ key: string, name: string }>
+    options           ?: string
+    rules             ?: Array<Rule>
+    cardinal_number   ?: string
+  }
+
+  interface Cards {
+    type               : 'default' | 'user-info'
+    emit              ?: CardsEmit
+  }
+
+  interface CardsEmit {
+    key                : string
+    param              : string 
   }
 
   interface Rule {
-    required   ?: boolean
-    message     : string
+    required          ?: boolean
+    message            : string
   }
 
   interface ColumnItem {
-    key         : string
-    name        : string
-    fixed      ?: boolean | 'left' | 'right'
-    width      ?: number
-    format     ?: Format
-    minwidth   ?: number
+    key                : string
+    name               : string
+    fixed             ?: boolean | 'left' | 'right'
+    width             ?: number
+    format            ?: Format
+    minwidth          ?: number
+    emit              ?: Array<EmitItem>
+  }
+
+  interface EmitItem {
+    key                : string
+    name               : string
+    api               ?: string
+    param             ?: string
+    options           ?: {
+      [propsName: string]: number | string
+    }
   }
 
   interface Format {
-    type       ?: 'string' | 'number'
-    regexp     ?: RegExp
-    substr     ?: string
-    function   ?: string
-    options    ?: any
-    suffix     ?: string
-    prefix     ?: string
+    type              ?: 'string' | 'number'
+    regexp            ?: RegExp
+    substr            ?: string
+    function          ?: string
+    options           ?: any
+    suffix            ?: string
+    prefix            ?: string
   }
 
   interface Flags {
@@ -76,7 +100,7 @@ declare namespace channel {
   }
 
   interface FlagItem {
-    access      : number
+    access             : number
   }
 
   type Selected = number
