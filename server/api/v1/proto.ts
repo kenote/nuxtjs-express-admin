@@ -3,7 +3,7 @@ import { Router, RouterMethods, Filter } from 'kenote-express-helper'
 import { IResponse } from '../../types/resuful'
 import config from '../../config'
 import { __ErrorCode, CustomError } from '../../error'
-import { loadData } from '../../utils'
+import * as utils from '../../utils'
 import * as passport from 'passport'
 import ProtoUtil from '../../utils/proto'
 import channel from '../../types/channel'
@@ -27,12 +27,15 @@ export default class Proto extends RouterMethods {
       if (parse) {
         let _result: any = {}
         for (let item of parse) {
-          let { key, collection, separator } = item
+          let { key, collection, separator, int } = item
           let data: string | string[] = result.msgbody[key]
           if (Array.isArray(data)) {
             let _data: any[] = []
             for (let values of data) {
               let value: any = zipObject(map(collection, 'key'), values.split(separator))
+              if (int && value[int.key]) {
+                value.int =  utils[int.function](value[int.key], ...int.options)
+              }
               _data.push(value)
             }
             if (item.orderBy) {

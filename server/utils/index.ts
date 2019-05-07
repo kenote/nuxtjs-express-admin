@@ -5,7 +5,7 @@ import * as crypto from 'crypto'
 import account from '../types/account' 
 import { FlagTag } from '../types/resuful'
 import channel from '../types/channel'
-import { toInteger, isNaN, remove } from 'lodash'
+import { toInteger, isNaN, remove, zipObject } from 'lodash'
 import { PageInfo } from '../types/resuful'
 import isJson from 'is-json'
 import * as ymal from 'js-yaml'
@@ -104,4 +104,31 @@ const arrayToNumber = (value: Array<string>): Array<number> => {
   let _value: Array<number> = value.map(Number)
   remove(_value, o => !o)
   return _value.sort((a, b) => a - b)
+}
+
+export const timeToInt = (time: string, tag: 'm' | 's' | 'ms' = 's'): number => {
+  let int: number = 0
+  let suffix: {} = {
+    ['m']: 1,
+    ['s']: 60,
+    ['ms']: 60000
+  }
+  let seconds: number = 0
+  if (/^([0-2]{1}\d{1})\:([0-5]{1}\d{1})$/.test(time)) {
+    let { hour, minute } = zipObject(['hour', 'minute'], time.split(':'))
+    int = Number(hour) * 60 + Number(minute)
+  }
+  else if (/^([0-2]{1}\d{1})\:([0-5]{1}\d{1})\:([0-5]{1}\d{1})$/.test(time)) {
+    let { hour, minute, second } = zipObject(['hour', 'minute', 'second'], time.split(':'))
+    int = Number(hour) * 60 + Number(minute)
+    seconds = Number(second)
+  }
+  int = int * suffix[tag]
+  if (tag === 's') {
+    int = int + seconds
+  }
+  else if (tag === 'ms') {
+    int = int + (seconds * 1000)
+  }
+  return  int
 }

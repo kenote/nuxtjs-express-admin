@@ -8,6 +8,7 @@ import channel from '../../types/channel'
 import { Setting, Config, API, APIS, protoDocument, Send } from '../../types/proto'
 import { PBSetting, PB } from 'kenote-socket-helper'
 import { isNull, isEmpty, uniq } from 'lodash'
+import * as moment from 'moment'
 
 class Proto {
 
@@ -29,15 +30,27 @@ class Proto {
       return res.api('没找到 api 接口')
     }
     console.log(apis[tag])
-    let { proto, request, parse } = apis[tag]
-    let payload: {} = formatPayload(req.body, request)
+    let { proto, request, parse, alias, autoFields } = apis[tag]
+    let payload: {} = formatPayload(req.body, request, alias)
+    if (autoFields) {
+      for (let field in autoFields) {
+        let { reference, subtract, add } = autoFields[field]
+        let fieldValue: any = payload[reference]
+        if (subtract) {
+          payload[field] = moment(fieldValue).subtract(...subtract).format('x')
+        }
+        else if (add) {
+          payload[field] = moment(fieldValue).add(...add).format('x')
+        }
+      }
+    }
     return next(<protoDocument> { channel: setting.name, setting: protoSetting, proto, parse, payload, rtsp_key })
   }
 }
 
 export default new Proto()
 
-function formatPayload (body: {}, request: Send.Request): {} {
+function formatPayload (body: {}, request: Send.Request, alias?: Send.Alias): {} {
   let payload: {} = {}
   for (let key in request) {
     if (body[key]) {
@@ -47,6 +60,13 @@ function formatPayload (body: {}, request: Send.Request): {} {
       }
       else if (request[key] === 'string') {
         value = uniq(formatArray(value, 'any')).join(',')
+        if (alias && alias[key]) {
+          let _alias: Send.AliasItem | undefined = alias[key].find( o => o.key === value )
+          if (_alias) {
+            value = _alias.value
+          }
+        }
+        value = value.replace(/^(0)$/, '')
       }
       else if (request[key] === 'number') {
         value = Number(value)
