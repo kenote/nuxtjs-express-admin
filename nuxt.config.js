@@ -27,7 +27,7 @@ module.exports = {
   plugins: [
     { src: '~plugins/codemirror.js', ssr: false },
     '~/plugins/component',
-    { src: '~/plugins/element-ui', ssr: true },
+    { src: '~/plugins/element-ui', ssr: true }
   ],
   loading: {
     color: 'rgb(238, 92, 73, .8)', 

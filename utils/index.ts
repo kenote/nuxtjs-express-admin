@@ -33,3 +33,17 @@ export const getDifferenceDate = async (begin: string, end: string | null, done:
     k += dayTime
   }
 }
+
+export const intToTime = (value: number, tag: 'm' | 's' = 'm'): string => {
+  if (tag === 'm') {
+    let minute: number = value % 60
+    let hour: number = (value - minute) / 60
+    return [hour, minute].map( o => o.toLocaleString('zh', { minimumIntegerDigits: 2 })).join(':')
+  }
+  else {
+    let second: number = value % 60
+    let minute: number = ((value - second) / 60) % 60
+    let hour: number = (value - minute*60 - second) / 60
+    return [hour, minute, second].map( o => o.toLocaleString('zh', { minimumIntegerDigits: 2 })).join(':')
+  }
+}

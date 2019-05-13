@@ -60,6 +60,11 @@ data/channels/*.json
 !data/channels/account.yml
 !data/channels/ucenter.yml
 !data/channels/setting.yml
+data/alicloud/*.yml
+data/alicloud/*.yaml
+data/alicloud/*.json
+deploy/**/*.yml
+deploy.config.js
 
 # TypeScript v1 declaration files
 typings/

@@ -10,7 +10,8 @@
     "dev": "npm run clear && backpack dev",
     "build": "npm run clear && nuxt build && backpack build",
     "task": " node ./build/task.js",
-    "clear": "rimraf ./build ./.nuxt"
+    "clear": "rimraf ./build ./.nuxt",
+    "deploy": "deploy-proxy"
   },
   "dependencies": {
     "@alicloud/pop-core": "^1.7.6",
@@ -20,6 +21,7 @@
     "connect-redis": "^3.4.0",
     "cookie-parser": "^1.4.3",
     "cors": "^2.8.5",
+    "echarts": "^4.2.1",
     "element-ui": "^2.5.4",
     "errorhandler": "^1.5.0",
     "express": "^4.16.4",
@@ -44,6 +46,7 @@
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "tty-table": "^2.7.0",
+    "v-charts": "^1.19.0",
     "validator": "^10.11.0",
     "vue-codemirror": "^4.0.6",
     "vue-property-decorator": "^7.3.0",
@@ -55,6 +58,7 @@
     "@types/connect-redis": "^0.0.8",
     "@types/cookie-parser": "^1.4.1",
     "@types/cors": "^2.8.4",
+    "@types/echarts": "^4.1.9",
     "@types/errorhandler": "^0.0.32",
     "@types/express": "^4.16.1",
     "@types/express-session": "^1.15.11",
@@ -76,6 +80,7 @@
     "@types/yaml": "^1.0.2",
     "awesome-typescript-loader": "^5.2.1",
     "backpack-core": "^0.8.3",
+    "kenote-deploy-kit": "^1.2.1",
     "node-sass": "^4.11.0",
     "sass-loader": "^7.1.0",
     "ts-loader": "^5.3.3",

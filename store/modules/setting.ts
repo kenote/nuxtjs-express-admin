@@ -46,7 +46,10 @@ export const state = (): State => ({
     lost_pass: {
       timeout: 0
     },
-    mailphone_step: 60
+    mailphone_step: 60,
+    sms: { 
+      alicound: ''
+    }
   },
   __rules: {},
   channels: [],

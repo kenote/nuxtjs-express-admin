@@ -11,13 +11,15 @@ import mailer from '../../utils/mailer'
 import config from '../../config'
 import { setToken } from '../../middlewares/auth'
 import * as passport from 'passport'
-import alicloud from '../../utils/alicloud'
+import Alicloud from '../../utils/alicloud'
+import { loadData } from '../../utils'
 
 import account from '../../types/account'
 import { IRequest, IResponse } from '../../types/resuful'
 import { responseDocument as responseTicketDocument } from '../../types/proxys/ticket'
 import { responseDocument as responseUserDocument } from '../../types/proxys/user'
 import { responseDocument as responseVerifyDocument } from '../../types/proxys/verify'
+import { alicloud } from '../../types/alicloud'
 import * as Mail from 'nodemailer/lib/mailer'
 import { MailerContext } from '../../types/mailer'
 import * as mongoose from 'mongoose'
@@ -220,7 +222,11 @@ export default class Account extends RouterMethods {
         mailer.sendMail('reset_pass.mjml', mail, context)
       }
       if (type === 'mobile') {
-        await alicloud.SendSms(name, 'password', { code: verify.token })
+        let alicloudStores: Array<alicloud.Store> = <Array<alicloud.Store>> loadData('data/alicloud', 'array')
+        let store: alicloud.Store | undefined = alicloudStores.find( o => o && o.key === req.__register.sms.alicound )
+        if (store && store.SMS) {
+          await new Alicloud(store).SendSms(name, 'password', { code: verify.token })
+        }
       }
       return res.api({ result: true })
     } catch (error) {

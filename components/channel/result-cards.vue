@@ -33,7 +33,7 @@
           </div>
           <el-form label-width="100px" label-position="left" label-suffix=" ：">
             <el-form-item v-for="(c, k) in columns" :key="k" :label="c.name">
-              <span>{{ col.data[c.key] }}</span>
+              <span>{{ col.data[0][c.key] }}</span>
             </el-form-item>
           </el-form>
         </el-card>
@@ -73,6 +73,15 @@ interface Edited {
   emit: EmitItem
 }
 
+type Data = {
+  id: string
+  title: string
+  data: Array<{}>
+} & {
+  name: string
+  value: string
+}
+
 @Component({
   name: 'channel-result-cards',
   components: {
@@ -86,7 +95,7 @@ interface Edited {
 })
 export default class  extends Vue {
 
-  @Prop({ default: [] }) data: Array<{ name: string, value: string }>
+  @Prop({ default: [] }) data: Array<Data>
   @Prop({ default: false }) loading: boolean
   @Prop({ default: [] }) columns: Array<channel.ColumnItem>
   //@Prop({ default: 'default' }) type: 'default' | 'user-info'

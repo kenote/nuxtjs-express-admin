@@ -8,16 +8,17 @@ import securityFilter from '../../filters/api_v1/security'
 import mailer from '../../utils/mailer'
 import config from '../../config'
 import { uniq } from 'lodash'
-import alicloud from '../../utils/alicloud'
+import Alicloud from '../../utils/alicloud'
+import { loadData } from '../../utils'
 
 import { IRequest, IResponse } from '../../types/resuful'
 import { responseDocument as responseUserDocument } from '../../types/proxys/user'
 import { responseDocument as responseVerifyDocument, createDocument as createVerifyDocument } from '../../types/proxys/verify'
+import { alicloud } from '../../types/alicloud'
 import * as Mail from 'nodemailer/lib/mailer'
 import { MailerContext } from '../../types/mailer'
 import account from '../../types/account'
 import * as mongoose from 'mongoose'
-
 
 export default class Security extends RouterMethods {
 
@@ -70,7 +71,11 @@ export default class Security extends RouterMethods {
         mailer.sendMail('send_code.mjml', mail, context)
       }
       if (type === 'mobile') {
-        await alicloud.SendSms(verify_id ? name : user.mobile, verify_id ? 'setinfos' : 'verifyid', { code: verify.token })
+        let alicloudStores: Array<alicloud.Store> = <Array<alicloud.Store>> loadData('data/alicloud', 'array')
+        let store: alicloud.Store | undefined = alicloudStores.find( o => o && o.key === req.__register.sms.alicound )
+        if (store && store.SMS) {
+          await new Alicloud(store).SendSms(verify_id ? name : user.mobile, verify_id ? 'setinfos' : 'verifyid', { code: verify.token })
+        }
       }
       return res.api({ result: true })
     } catch (error) {

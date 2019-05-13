@@ -21,6 +21,7 @@ export interface Register {
   email_verify   : emailVerify
   lost_pass      : lostPass
   mailphone_step : number
+  sms            : SMS
 }
 
 export interface __Rules {
@@ -33,4 +34,8 @@ export interface emailVerify {
 
 export interface lostPass {
   timeout        : number
+}
+
+export interface SMS {
+  alicound       : string
 }

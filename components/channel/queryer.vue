@@ -50,7 +50,7 @@
             @ditchs="handleGetDitchs"
             @change="handleChangeDitch">
           </ditch-picker>
-          <el-select v-else-if="item.type === 'select'" v-model="values[item.key]" :multiple="item.multiple" filterable collapse-tags style="width: 220px">
+          <el-select v-else-if="item.type === 'select'" v-model="values[item.key]" :multiple="item.multiple" filterable collapse-tags style="min-width: 230px">
             <template v-if="item.data">
               <el-option v-for="(d, i) in item.data" :key="i" :label="d.name" :value="d.key"></el-option>
             </template>
@@ -104,6 +104,9 @@ import { omit, zipObject, has } from 'lodash'
     }
     this.$data.values = values
     this.$data.rules = rules
+  },
+  mounted () {
+    this.$props.autoSubmit && this.submitForm()
   }
 })
 export default class  extends Vue {
@@ -111,6 +114,7 @@ export default class  extends Vue {
   @Prop({ default: [] }) queryer: Array<channel.Queryer>
   @Prop({ default: {} }) options: channel.Options
   @Prop({ default: null }) token: string | null
+  @Prop({ default: false }) autoSubmit: boolean
 
   @Provide() values: {} = {}
   @Provide() rules: Rules = {}

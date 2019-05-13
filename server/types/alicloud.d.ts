@@ -2,6 +2,14 @@ import RPCClient from '@alicloud/pop-core'
 
 export declare namespace alicloud {
 
+  interface Store {
+    key             : string
+    name            : string
+    description    ?: string
+    setting         : RPCClient.Config
+    SMS            ?: SMS.Config
+  }
+
   interface Config {
     setting         : RPCClient.Config
     SMS             : SMS.Config
