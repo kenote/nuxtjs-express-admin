@@ -64,7 +64,6 @@ data/alicloud/*.yml
 data/alicloud/*.yaml
 data/alicloud/*.json
 deploy/**/*.yml
-deploy.config.js
 
 # TypeScript v1 declaration files
 typings/
