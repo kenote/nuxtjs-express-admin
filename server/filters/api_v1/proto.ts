@@ -15,7 +15,7 @@ class Proto {
   public async send (req: IRequest, res: IResponse, next: NextFunction): Promise<Response | void> {
     let { channel, tag } = req.params
     let { rtsp_key } = req.headers
-    let setting: channel.NavMenus = <channel.NavMenus> loadData(`data/channels/gm-${channel}.yml`)
+    let setting: channel.NavMenus = <channel.NavMenus> loadData(`data/channels/proto-${channel}.yml`)
     if (isEmpty(setting)) {
       // 没找到 channel 配置
       return res.api('没找到 channel 配置')

@@ -1,20 +1,30 @@
+---
+# 频道 配置中心 配置 ####################################################################
+######################################################################################
 
-id: 3
-name: 配置中心
-label: setting
-default: /setting/channel
+# 频道 ID
+id            : 3
+# 频道名称
+name          : 配置中心
+# 频道标识
+label         : setting
+# 默认打开页面
+default       : /setting/channel
+# 频道导航
 navs:
-  - index: 3-1
-    name: 系统配置
-    icon: iconfont icon-icons-system
+  # 导航分栏 -- 系统配置
+  - index         : 3-1
+    name          : 系统配置
+    icon          : iconfont icon-icons-system
     children:
-      - index: /setting/channel
-        name: 频道管理
-  - index: 3-2
-    name: GM 相关
-    icon: iconfont icon-gm
+      - index         : /setting/channel
+        name          : 频道管理
+  # 导航分栏 -- GM 相关
+  - index         : 3-2
+    name          : GM 相关
+    icon          : iconfont icon-gm
     children:
-      - index: /setting/ditch
-        name: 渠道管理
-      - index: /setting/proto
-        name: API 接口
+      - index         : /setting/ditch
+        name          : 渠道管理
+      - index         : /setting/proto
+        name          : API 接口

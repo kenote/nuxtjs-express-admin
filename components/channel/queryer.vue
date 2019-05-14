@@ -153,12 +153,12 @@ export default class  extends Vue {
           _values = { ..._values, ...zipObject(['begin', 'end'], this.values['begin_end']) }
         }
         if (this.values['roleId']) {
-          let _queryer: channel.Queryer = <channel.Queryer> this.queryer.find( o => !!o.cardinal_number )
-          if (_queryer && _queryer.cardinal_number) {
+          let _queryer: channel.Queryer = <channel.Queryer> this.queryer.find( o => !!o.cardinal )
+          if (_queryer && _queryer.cardinal) {
             _values['roleId'] = this.values['roleId'].map( n => {
               let _ditch: responseDitchDocument | undefined = this.ditchs.find( o => o.label === n )
-              if (has(_ditch, `cardinal_number.${_queryer.cardinal_number}`)) {
-                return `${n}:${_ditch && _ditch.cardinal_number[_queryer.cardinal_number || '']}`
+              if (has(_ditch, `cardinal_number.${_queryer.cardinal}`)) {
+                return `${n}:${_ditch && _ditch.cardinal_number[_queryer.cardinal || '']}`
               }
               return `${n}:1`
             })

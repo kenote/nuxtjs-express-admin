@@ -47,7 +47,7 @@ declare namespace channel {
     data              ?: Array<{ key: string, name: string }>
     options           ?: string
     rules             ?: Array<Rule>
-    cardinal_number   ?: string
+    cardinal          ?: string
   }
 
   interface Cards {
