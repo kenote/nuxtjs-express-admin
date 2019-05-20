@@ -64,17 +64,20 @@ export default async function initialize (): Promise<any> {
     if (!options.runing) {
       return TaskSpinner(Promise.resolve(`Initialize Suspended.`))
     }
-    await Promise.all([
-      seqDao.clear(),
-      teamProxy.Dao.clear(),
-      storeProxy.Dao.clear(),
-      groupProxy.Dao.clear(),
-      ticketProxy.Dao.clear(),
-      userProxy.Dao.clear(),
-      verifyProxy.Dao.clear()
-    ])
+    try {
+      await Promise.all([
+        seqDao.clear(),
+        teamProxy.Dao.clear(),
+        storeProxy.Dao.clear(),
+        groupProxy.Dao.clear(),
+        ticketProxy.Dao.clear(),
+        userProxy.Dao.clear(),
+        verifyProxy.Dao.clear()
+      ])
+    } catch (error) {
+      
+    }
     await createGroups()
-
     return TaskSpinner(Promise.resolve(`Initialize Finished.`))
   } catch (error) {
     console.log(``)

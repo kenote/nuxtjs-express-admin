@@ -64,6 +64,13 @@ data/alicloud/*.yml
 data/alicloud/*.yaml
 data/alicloud/*.json
 deploy/**/*.yml
+deploy/**/*.proto
+deploy/**/*.bat
+deploy/**/*.js
+deploy/**/*.conf
+deploy/**/*.pem
+deploy/**/*.key
+
 
 # TypeScript v1 declaration files
 typings/

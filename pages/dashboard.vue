@@ -1,6 +1,6 @@
 <template>
   <page>
-    <console-breadcrumb :channel="selectedChannel" :store="channelStore" :route="$route" />
+    <!--<console-breadcrumb :channel="selectedChannel" :store="channelStore" :route="$route" />-->
   </page>
 </template>
 <script lang="ts">
@@ -14,7 +14,7 @@ import consoleBreadcrumb from '~/components/console/breadcrumb.vue'
 const Setting: BindingHelpers = namespace(setting.name)
 
 @Component({
-  layout: 'console',
+  layout: 'dashboard',
   middleware: ['authenticated'],
   components: {
     consoleBreadcrumb

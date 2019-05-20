@@ -72,6 +72,7 @@ import { responseDocument as responseTeamDocument } from '~/server/types/proxys/
 import channel from '~/server/types/channel'
 import http, { resufulInfo } from '~/utils/http'
 import { HeaderOptions } from '~/server/types/resuful'
+import { chunk } from 'lodash'
 
 const Setting: BindingHelpers = namespace(setting.name)
 const Auth: BindingHelpers = namespace(auth.name)
@@ -116,7 +117,10 @@ export default class  extends Vue {
         let result: resufulInfo = await http.get(`/setting/ditch/list/${_channel.label}`, {}, options)
         this.loading = false
         if (result.Status.code === 0) {
-          this.list = result.data
+          let chunkData: Array<Array<any>> = chunk(result.data, 10)
+          for (let item of chunkData) {
+            await this.pollingSetData(item)
+          }
           return
         }
         this.$message.warning(result.Status.message || '')
@@ -125,6 +129,22 @@ export default class  extends Vue {
         this.$message.warning(error.message)
       }
     }, 800)
+  }
+
+  async pollingSetData (data: Array<responseDitchDocument>): Promise<any> {
+    return new Promise((resolve, reject) => {
+      if (this.list.length > 0) {
+        let setData: any = setTimeout(() => {
+          this.list.push(...data)
+          clearTimeout(setData)
+          resolve(1)
+        }, 300)
+      }
+      else {
+        this.list = data
+        resolve(1)
+      }
+    })
   }
 
   handleGoback (): void {

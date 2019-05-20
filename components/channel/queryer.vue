@@ -46,6 +46,7 @@
             :fetch="item.fetch" 
             :ditch_group="options.ditch_group || []" 
             :token="token" 
+            :channel="channel"
             :value="values[item.key]" 
             @ditchs="handleGetDitchs"
             @change="handleChangeDitch">
@@ -115,6 +116,7 @@ export default class  extends Vue {
   @Prop({ default: {} }) options: channel.Options
   @Prop({ default: null }) token: string | null
   @Prop({ default: false }) autoSubmit: boolean
+  @Prop({ default: '' }) channel: string
 
   @Provide() values: {} = {}
   @Provide() rules: Rules = {}

@@ -12,6 +12,12 @@ label         : account
 description   : 查看和管理自己的信息、活动、安全选项和隐私偏好设置
 # 默认打开页面
 default       : /account/baseinfo
+# 自定义参数
+options:
+  # 用户方案类型
+  plan_type:
+    - key           : ditch
+      name          : 渠道
 # 频道导航
 navs:
   # 导航分栏 -- 帐户管理
@@ -23,3 +29,5 @@ navs:
         name          : 基本资料
       - index         : /account/security
         name          : 安全设置
+      - index         : /account/plan
+        name          : 方案管理

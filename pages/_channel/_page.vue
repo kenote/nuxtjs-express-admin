@@ -5,6 +5,7 @@
     <channel-queryer v-if="pageSetting.queryer" 
       :queryer="pageSetting.queryer" 
       :options="selectedChannel && selectedChannel.options" 
+      :channel="selectedChannel && selectedChannel.label"
       @submit="handleSubmit"
       :auto-submit="pageSetting.created && pageSetting.created === 'submit'"
       :token="token">
@@ -69,8 +70,8 @@ const Auth: BindingHelpers = namespace(auth.name)
   },
   mounted () {
     let pageSetting: channel.MenuItem = this.channelStore.find(this.$route.path)
-    this.$data.pageSetting = pageSetting
-    if (pageSetting['charts']) {
+    this.$data.pageSetting = pageSetting || {}
+    if (pageSetting && pageSetting['charts']) {
       this.$data.steps = pageSetting['charts']['step'] || [];
       this.$data.currentStep = (pageSetting.columns || [])[0]['default']['step']
     }

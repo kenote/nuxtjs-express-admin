@@ -9,4 +9,5 @@ export interface Models {
   userModel      ?: mongoose.Model<mongoose.Document, {}>
   verifyModel    ?: mongoose.Model<mongoose.Document, {}>
   ditchModel     ?: mongoose.Model<mongoose.Document, {}>
+  planModel      ?: mongoose.Model<mongoose.Document, {}>
 }

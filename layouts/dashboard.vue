@@ -1,6 +1,5 @@
 <template>
-  <not-found v-if="selectedChannel.id === 0" />
-  <div v-else class="layout-console">
+  <div class="layout-console">
     <console-header
       :channels="channels"
       :current-channel="selectedChannel"
@@ -11,35 +10,7 @@
       >
       
     </console-header>
-    <div class="bodyer">
-      <div class="sidebar-nav" v-bind:style="collapse ? 'flex: 0 0 65px' : 'flex: 0 0 260px'" >
-        <div style="height: calc(100% - 24px);overflow-y:auto;" v-loading="loading.channel">
-          <template v-for="(channel, index) in channels" >
-            <el-collapse-transition :key="index" v-if="channel.id === selectedChannel.id">
-              <console-sidebar
-                v-if="!loading.channel"
-                class="auth-sider-menu"
-                :sidebar="channel.navs" 
-                :defaultActive="$route.path"
-                backgroundColor="#444c54"
-                textColor="#fff"
-                activeTextColor="#ffd04b"
-                :collapse="collapse"
-                :router="true"
-                :auth="user"
-                />
-            </el-collapse-transition>
-          </template>
-        </div>
-        <div class="menu-collapsed" @click="handleCollapse">
-          <i class="iconfont" v-bind:class="collapse ? 'icon-menu-unfold' : 'icon-menu-fold'"></i>
-        </div>
-      </div>
-      <div class="console-page" >
-        <nuxt v-if="permission"></nuxt>
-        <error-page v-else :statusCode="403" message="Forbidden" />
-      </div>
-    </div>
+
   </div>
 </template>
 
@@ -51,18 +22,12 @@ import { namespace } from 'vuex-class'
 import * as auth from '~/store/modules/auth'
 import * as setting from '~/store/modules/setting'
 import { BindingHelpers } from 'vuex-class/lib/bindings'
-import notFound from '~/components/error-page.vue'
 import consoleHeader from '~/components/console/header.vue'
-import consoleSidebar from '~/components/console/sidebar.vue'
 import { responseDocument as responseUserDocument } from '~/server/types/proxys/user'
 import channel from '~/server/types/channel'
 import { Dropdown, Command } from '~/types'
-import { getChannelId } from '~/utils/channel'
 import { parseCommand } from '~/utils'
 import http, { resufulInfo } from '~/utils/http'
-import '~/assets/scss/console/layout.scss'
-import '~/assets/scss/console/page.scss'
-import { map, uniq } from 'lodash'
 
 const Auth: BindingHelpers = namespace(auth.name)
 const Setting: BindingHelpers = namespace(setting.name)
@@ -100,57 +65,30 @@ const userEntrance: Array<Dropdown.MenuItem> = [
 
 @Component({
   components: {
-    notFound,
-    consoleHeader,
-    consoleSidebar
+    consoleHeader
   },
   async mounted () {
-    document.body.className = 'console-warpper'
-    await this.updateChannel(this.$route.path)
+    //document.body.className = 'console-warpper'
+    //await this.updateChannel(this.$route.path)
   },
   watch: {
     async $route (route: Route): Promise<void> {
-      await this.updateChannel(route.path)
+      //await this.updateChannel(route.path)
     }
   }
 })
 export default class  extends Vue {
 
   @Auth.State user: responseUserDocument
-  @Setting.State loading: setting.Loading
   @Setting.State channels: Array<channel.NavMenus>
-  @Setting.State flags: channel.Flags
-  @Setting.Action selectChannel: (id: number) => void
   @Setting.Getter selectedChannel: channel.NavMenus
-  @Setting.Getter channelStore
 
   @Provide() userEntrance: Array<Dropdown.MenuItem> = userEntrance
-  @Provide() collapse: boolean = false
-  @Provide() permission: boolean = true
-  @Provide() pageSetting: channel.MenuItem = { index: '-1', name: '' }
 
   handleSelectChannel (value: number): void {
     if (this.selectedChannel.id === value) return
     let channel: channel.NavMenus = <channel.NavMenus> this.channels.find( o => o.id === value )
     this.$router.push(channel.default)
-  }
-
-  async updateChannel (routerPath: string): Promise<void> {
-    if (!this.user) return
-    let { group, teams, access } = this.user
-    let pageFlag: channel.FlagItem = this.flags[routerPath]
-    let permission: boolean
-    permission = !(pageFlag && pageFlag.access > group.level)
-    if (group.level < 9000 && permission) {
-      let _access: string[] = (access || []).length > 0 ? access : uniq(map(teams, 'access').toString().split(','))
-      permission = _access.indexOf(routerPath) > -1
-    }
-    this.permission = permission
-    let channelId: number = getChannelId(this.channels, routerPath)
-    if (this.selectedChannel.id === channelId) return
-    await this.selectChannel(channelId)
-    this.collapse = false
-    this.pageSetting = this.channelStore.find(routerPath)
   }
 
   handleCommand (value: string): void {
@@ -186,15 +124,6 @@ export default class  extends Vue {
     }, 300)
   }
 
-  handleCollapse () {
-    this.collapse = !this.collapse
-  }
 }
-</script>
 
-<style lang="scss">
-.console-warpper {
-  overflow-x: hidden;
-  overflow-y: hidden;
-}
-</style>
+</script>

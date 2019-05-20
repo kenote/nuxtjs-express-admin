@@ -10,6 +10,10 @@
     "dev": "npm run clear && backpack dev",
     "build": "npm run clear && nuxt build && backpack build",
     "task": " node ./build/task.js",
+    "start": "pm2 start ecosystem.config.js",
+    "restart": "pm2 restart ecosystem.config.js",
+    "stop": "pm2 stop ecosystem.config.js",
+    "delete": "pm2 delete ecosystem.config.js",
     "clear": "rimraf ./build ./.nuxt",
     "deploy": "deploy-proxy"
   },

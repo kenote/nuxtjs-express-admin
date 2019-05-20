@@ -49,7 +49,7 @@ const Auth: BindingHelpers = namespace(auth.name)
     settingChannelConfig
   },
   mounted () {
-    console.log(this.channels)
+    
   }
 })
 export default class  extends Vue {
