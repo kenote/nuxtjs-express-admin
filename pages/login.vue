@@ -1,9 +1,8 @@
 <template>
   <page>
     <div class="landing-activity">
-      <p class="main-title">又拍云 DDoS 防护，</p>
-      <p class="main-title">超稳定护航 2019 </p>
-      <p class="secondary-title">3T 带宽保障源站业务，弹性计费、限时低至 7.2 折</p>
+      <p v-for="(item, key) in main_title" :key="key" class="main-title">{{ item }}</p>
+      <p class="secondary-title">{{ secondary_title }}</p>
     </div>
     <account-login class="landing-body" :submit="handleLogin" v-loading="loading" :loading="loading">
       <p class="service-terms">
@@ -18,20 +17,40 @@
 import 'vue-router'
 import Component from 'nuxt-class-component'
 import { Provide, Vue } from 'vue-property-decorator'
+import { namespace } from 'vuex-class'
+import { BindingHelpers } from 'vuex-class/lib/bindings'
+import * as setting from '~/store/modules/setting'
+import { Register, Page } from '~/server/types/config'
 import accountLogin from '~/components/account/login.vue'
 import account from '~/server/types/account'
 import http, { resufulInfo } from '~/utils/http'
 import * as auth from '~/store/modules/auth'
 
+const Setting: BindingHelpers = namespace(setting.name)
+
 @Component({
   layout: 'account',
+  middleware: ['unauthenticated'],
   components: {
     accountLogin
   },
+  mounted () {
+    let pages: Array<Page> = this.register.pages
+
+    let page: Page | undefined = pages.find( o => o.key === 'login' )
+    if (page) {
+      this.$data.main_title = page.main_title || []
+      this.$data.secondary_title = page.secondary_title || ''
+    }
+  }
 })
 export default class  extends Vue {
 
+  @Setting.State register: Register
+
   @Provide() loading: boolean = false
+  @Provide() main_title: string[] = []
+  @Provide() secondary_title: string = ''
 
   handleLogin (values: account.Login): void {
     this.loading = true

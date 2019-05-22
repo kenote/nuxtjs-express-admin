@@ -70,6 +70,15 @@ deploy/**/*.js
 deploy/**/*.conf
 deploy/**/*.pem
 deploy/**/*.key
+deploy/**/*.ini
+deploy/**/*.md
+deploy/**/*.json
+deploy/**/*.bson
+deploy/**/*.ico
+deploy/**/*.png
+deploy/**/*.jpg
+deploy/**/*.gif
+deploy/**/*.jpeg
 
 
 # TypeScript v1 declaration files

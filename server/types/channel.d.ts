@@ -35,6 +35,11 @@ declare namespace channel {
     columns           ?: Array<ColumnItem>
     polling           ?: string
     cards             ?: Cards
+    export            ?: Export
+  }
+
+  interface Export {
+    sheetName         ?: string
   }
 
   interface Queryer {

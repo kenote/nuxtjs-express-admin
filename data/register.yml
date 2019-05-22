@@ -21,3 +21,12 @@ lost_pass:
 # 设置短信服务
 sms:
   alicound        : kenote
+
+# 注册登录页面设置
+pages:
+  - key             : index
+    main_title      : [ 不至于 后台管理，, Express + Vue + Element-UI ]
+    secondary_title : JSON Web Token (JWT) & 服务端渲染(Server Side Render)
+  - key             : login
+    main_title      : [ 不至于 后台管理，, Express + Vue + Element-UI ]
+    secondary_title : JSON Web Token (JWT) & 服务端渲染(Server Side Render)

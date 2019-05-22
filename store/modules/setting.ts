@@ -49,7 +49,8 @@ export const state = (): State => ({
     mailphone_step: 60,
     sms: { 
       alicound: ''
-    }
+    },
+    pages: []
   },
   __rules: {},
   channels: [],

@@ -2,10 +2,11 @@
   <div class="layout-account">
     <header>
       <a class="logo">
-        <img src="~/assets/images/logo.png" />
+        <img src="/logo.png" />
       </a>
       <div class="list">
-        <nuxt-link to="/login">登录</nuxt-link>
+        <nuxt-link v-if="user" to="/dashboard">控制台</nuxt-link>
+        <nuxt-link v-else to="/login">登录</nuxt-link>
         <nuxt-link to="/">首页</nuxt-link>
       </div>
     </header>
@@ -21,8 +22,17 @@
 <script lang="ts">
 import Component from 'nuxt-class-component'
 import { Vue } from 'vue-property-decorator'
+import { namespace } from 'vuex-class'
+import * as auth from '~/store/modules/auth'
+import * as setting from '~/store/modules/setting'
+import { BindingHelpers } from 'vuex-class/lib/bindings'
+import { Register } from '~/server/types/config'
+import { responseDocument as responseUserDocument } from '~/server/types/proxys/user'
 import '~/assets/scss/account/layout.scss'
 import '~/assets/scss/account/page.scss'
+
+const Auth: BindingHelpers = namespace(auth.name)
+const Setting: BindingHelpers = namespace(setting.name)
 
 @Component({
   mounted () {
@@ -31,8 +41,12 @@ import '~/assets/scss/account/page.scss'
 })
 export default class  extends Vue {
 
+  @Auth.State user: responseUserDocument
+  @Setting.State register: Register
+
   head () {
     return {
+      title: this.register.site_name,
       meta: [
         {
           name: 'viewport',

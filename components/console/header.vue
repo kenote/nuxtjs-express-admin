@@ -3,7 +3,7 @@
     <div class="header-start">
       <div class="header-link-box">
         <nuxt-link class="header-link logo" to="/">
-          <img src="~/assets/images/logo.png" />
+          <img src="/logo.png" />
         </nuxt-link>
       </div>
       <el-dropdown @command="selectChannel" placement="top-start" trigger="click" @visible-change="handleVisible">

@@ -44,6 +44,7 @@ type Status = 'invitation' | 'submitinfo' | 'validate' | 'finished'
 
 @Component({
   layout: 'account',
+  middleware: ['unauthenticated'],
   components: {
     accountTicket,
     accountRegister,

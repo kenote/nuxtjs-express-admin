@@ -1,3 +1,6 @@
+// buefy cause 'ReferenceError: HTMLElement is not defined'
+// See https://github.com/buefy/buefy/issues/712
+global.HTMLElement = typeof window === 'undefined' ? Object : window.HTMLElement
 module.exports = {
   head: {
     title: '后台管理',

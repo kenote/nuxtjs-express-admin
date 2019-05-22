@@ -22,6 +22,14 @@ export interface Register {
   lost_pass      : lostPass
   mailphone_step : number
   sms            : SMS
+  pages          : Array<Page>
+  site_name     ?: string
+}
+
+export interface Page {
+  key               : string
+  main_title        : string[]
+  secondary_title   : string
 }
 
 export interface __Rules {

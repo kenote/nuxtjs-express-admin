@@ -33,6 +33,9 @@
         inactive-text="不分页"
         >
       </el-switch>
+      <template v-if="pageSetting.export">
+        <el-button type="success" plain @click="handleExport(pageSetting.export)" style="margin-left:15px">导出Excel</el-button>
+      </template>
     </channel-result-table>
   </page>
 </template>
@@ -53,7 +56,8 @@ import channel from '~/server/types/channel'
 import http, { resufulInfo } from '~/utils/http'
 import { HeaderOptions } from '~/server/types/resuful'// pagination
 import { getDifferenceDate } from '~/utils'
-import { zipObject, concat } from 'lodash'
+import { zipObject, concat, map } from 'lodash'
+import { xlsxBlob } from '~/utils/xlsx'
 
 const Setting: BindingHelpers = namespace(setting.name)
 const Auth: BindingHelpers = namespace(auth.name)
@@ -200,6 +204,41 @@ export default class  extends Vue {
       this.loading = false
       this.$message.warning(error.message)
     }
+  }
+
+  handleExport (options: channel.Export): void {
+    let { sheetName } = options
+    let columns: Array<channel.ColumnItem> = this.pageSetting.columns || []
+    let headers: string[] = map(columns, 'name')
+    let data: Array<{}> = []
+    for (let item of this.data) {
+      let obj: {} = {}
+      let keys: string[] = Object.keys(item)
+      for (let k of keys) {
+        let c: channel.ColumnItem = <channel.ColumnItem> columns.find( o => o.key === k )
+        obj[c.name] = c.format ? this.formatString(item[k], c.format) : item[k]
+      }
+      data.push(obj)
+    }
+    let fileBlob: Blob = xlsxBlob(sheetName || 'mySheet', headers, data)
+    let link: HTMLElement | null = document.getElementById('download-blob-file')
+    if (!link) {
+      link = document.createElement('a')
+    }
+    link['href'] = window.URL.createObjectURL(fileBlob)
+    link['download'] = (sheetName || '导出Excel') + '.xlsx'
+    link.click()
+  }
+
+  formatString (value: string | number, fmt: channel.Format): string {
+    if (fmt.regexp) {
+      return String(value).replace(fmt.regexp, fmt.substr || '')
+    }
+    if (fmt.function) {
+      let _value: string | number = fmt.type === 'number' ? Number(String(value).replace(/[^0-9\.]/g, '')) : String(value)
+      return (fmt.prefix || '') + _value[fmt.function](...fmt.options) + (fmt.suffix || '')
+    }
+    return String(value)
   }
 
 }

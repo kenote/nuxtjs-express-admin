@@ -25,6 +25,7 @@ import { BindingHelpers } from 'vuex-class/lib/bindings'
 import consoleHeader from '~/components/console/header.vue'
 import { responseDocument as responseUserDocument } from '~/server/types/proxys/user'
 import channel from '~/server/types/channel'
+import { Register } from '~/server/types/config'
 import { Dropdown, Command } from '~/types'
 import { parseCommand } from '~/utils'
 import http, { resufulInfo } from '~/utils/http'
@@ -80,10 +81,17 @@ const userEntrance: Array<Dropdown.MenuItem> = [
 export default class  extends Vue {
 
   @Auth.State user: responseUserDocument
+  @Setting.State register: Register
   @Setting.State channels: Array<channel.NavMenus>
   @Setting.Getter selectedChannel: channel.NavMenus
 
   @Provide() userEntrance: Array<Dropdown.MenuItem> = userEntrance
+
+  head () {
+    return {
+      title: this.register.site_name
+    }
+  }
 
   handleSelectChannel (value: number): void {
     if (this.selectedChannel.id === value) return

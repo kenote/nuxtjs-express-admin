@@ -109,6 +109,7 @@ export default class  extends Vue {
   handleList (): void {
     let _channel: channel.NavMenus = <channel.NavMenus> this.channels.find( o => o.id === this.channel )
     this.loading = true
+    this.list = []
     setTimeout(async (): Promise<void> => {
       try {
         let options: HeaderOptions = {

@@ -59,6 +59,7 @@ interface SubmitData {
 
 @Component({
   layout: 'account',
+  middleware: ['unauthenticated'],
   components: {
     accountLostpassStart,
     accountLostpassForm

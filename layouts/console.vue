@@ -56,6 +56,7 @@ import consoleHeader from '~/components/console/header.vue'
 import consoleSidebar from '~/components/console/sidebar.vue'
 import { responseDocument as responseUserDocument } from '~/server/types/proxys/user'
 import channel from '~/server/types/channel'
+import { Register } from '~/server/types/config'
 import { Dropdown, Command } from '~/types'
 import { getChannelId } from '~/utils/channel'
 import { parseCommand } from '~/utils'
@@ -117,6 +118,7 @@ const userEntrance: Array<Dropdown.MenuItem> = [
 export default class  extends Vue {
 
   @Auth.State user: responseUserDocument
+  @Setting.State register: Register
   @Setting.State loading: setting.Loading
   @Setting.State channels: Array<channel.NavMenus>
   @Setting.State flags: channel.Flags
@@ -128,6 +130,12 @@ export default class  extends Vue {
   @Provide() collapse: boolean = false
   @Provide() permission: boolean = true
   @Provide() pageSetting: channel.MenuItem = { index: '-1', name: '' }
+
+  head () {
+    return {
+      title: this.register.site_name
+    }
+  }
 
   handleSelectChannel (value: number): void {
     if (this.selectedChannel.id === value) return
