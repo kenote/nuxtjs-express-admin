@@ -5,6 +5,7 @@
       @submit="handleSubmitCreate" 
       :channel="channels.find( o => o.id === channel )"
       :loading="loading" 
+      :ditch_group="ditch_group"
       @get-teams="handleGetTeams"
       @goback="handleGoback" />
     <setting-ditch-allot v-else-if="mode === 'allot'" 
@@ -19,6 +20,7 @@
       @submit="handleSubmitEdit" 
       :channel="channels.find( o => o.id === channel )"
       :loading="loading" 
+      :ditch_group="ditch_group"
       @get-teams="handleGetTeams"
       @goback="handleGoback" />
     <setting-ditch-cardinal v-else-if="mode === 'cardinal'" 
@@ -31,7 +33,8 @@
       <setting-ditch-list 
         :data="list" 
         :channel="channels.find( o => o.id === channel )"
-        :loading="loading" 
+        :loading="loading"
+        :ditch_group="ditch_group"
         @edit="handleEdit"
         @remove="handleRemove"
         @cardinal="handleCardinal"
@@ -89,7 +92,7 @@ const Auth: BindingHelpers = namespace(auth.name)
     settingDitchCardinal
   },
   mounted () {
-    
+    this.handleGetDitchGroups()
   }
 })
 export default class  extends Vue {
@@ -105,6 +108,7 @@ export default class  extends Vue {
   @Provide() selectIds: string[] = []
   @Provide() loading: boolean = false
   @Provide() channel: number = 1001
+  @Provide() ditch_group: Array<{ key: string, name: string }> = []
 
   handleList (): void {
     let _channel: channel.NavMenus = <channel.NavMenus> this.channels.find( o => o.id === this.channel )
@@ -328,8 +332,30 @@ export default class  extends Vue {
     }, 300)
   }
 
+  handleGetDitchGroups (): void {
+    let _channel: channel.NavMenus = <channel.NavMenus> this.channels.find( o => o.id === this.channel )
+    setTimeout(async (): Promise<void> => {
+      try {
+        let options: HeaderOptions = {
+          token: this.token || undefined
+        }
+        let result: resufulInfo = await http.get(`/channel/${_channel.label}/ditch-group`, {}, options)
+        this.loading = false
+        if (result.Status.code === 0) {
+          this.ditch_group = result.data
+          return
+        }
+        this.$message.warning(result.Status.message || '')
+      } catch (error) {
+        this.loading = false
+        this.$message.warning(error.message)
+      }
+    }, 300)
+  }
+
   handleChangeChannel (value: number): void {
     this.channel = value
+    this.handleGetDitchGroups()
     this.handleList()
   }
 

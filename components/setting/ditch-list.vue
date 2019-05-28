@@ -20,7 +20,7 @@
           <span>{{ scope.row.label }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="分组" width="120" prop="group" :filters="group.map( o => ({ text: o.name, value: o.key }))" :filter-method="filterGroup" align="center">
+      <el-table-column label="分组" width="120" prop="group" :filters="ditch_group.map( o => ({ text: o.name, value: o.key }))" :filter-method="filterGroup" align="center">
         <template slot-scope="scope">
           <span>{{ groupName(scope.row.group) }}</span>
         </template>
@@ -77,10 +77,6 @@ import channel from '~/server/types/channel'
   },
   watch: {
     channel (value: channel.NavMenus): void {
-      if (value.options) {
-        let { ditch_group } = <any> value.options
-        this.$data.group = ditch_group || []
-      }
       this.clearFilter()
       this.$data.search = ''
     }
@@ -91,10 +87,10 @@ export default class  extends Vue {
   @Prop({ default: [] }) data: Array<responseDitchDocument>
   @Prop({ default: false }) loading: boolean
   @Prop({ default: {} }) channel: channel.NavMenus
+  @Prop({ default: [] }) ditch_group: Array<{ key: string, name: string }>
 
   @Provide() showSubmit: boolean = false
   @Provide() search: string = ''
-  @Provide() group: Array<{}> = []
 
   handleEdit (index: number, row: responseDitchDocument): void {
     this.$emit('edit', index, row)
@@ -124,12 +120,11 @@ export default class  extends Vue {
   }
 
   filterGroup (value: string, row: responseDitchDocument): boolean {
-    console.log(row.group, value)
     return row.group === value
   }
 
   groupName (value: string): string {
-    let _group: any = this.group.find( o => o['key'] === value ) || {}
+    let _group: any = this.ditch_group.find( o => o['key'] === value ) || {}
     return _group['name'] || '--'
   }
 

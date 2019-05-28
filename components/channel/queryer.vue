@@ -23,6 +23,9 @@
             <template v-else-if="item.options">
               <el-checkbox v-for="(d, i) in options[item.options] || []" :key="i" :label="d.key">{{ d.name }}</el-checkbox>
             </template>
+            <template v-else-if="item.fetch">
+              <el-checkbox v-for="(d, i) in fetchData[item.key] || []" :key="i" :label="d.key">{{ d.name }}</el-checkbox>
+            </template>
           </el-checkbox-group>
           <el-radio-group v-else-if="/^(radio)/.test(item.type)" v-model="values[item.key]" size="small">
             <template v-if="item.data">
@@ -41,10 +44,17 @@
                 <el-radio v-for="(d, i) in options[item.options] || []" :key="i" :label="d.key">{{ d.name }}</el-radio>
               </template>
             </template>
+            <template v-else-if="item.fetch">
+              <template v-if="item.type === 'radio-button'">
+                <el-radio-button v-for="(d, i) in fetchData[item.key] || []" :key="i" :label="d.key">{{ d.name }}</el-radio-button>
+              </template>
+              <template v-else>
+                <el-radio v-for="(d, i) in fetchData[item.key] || []" :key="i" :label="d.key">{{ d.name }}</el-radio>
+              </template>
+            </template>
           </el-radio-group>
           <ditch-picker v-else-if="item.type === 'ditch-picker'" 
             :fetch="item.fetch" 
-            :ditch_group="options.ditch_group || []" 
             :token="token" 
             :channel="channel"
             :value="values[item.key]" 
@@ -57,6 +67,9 @@
             </template>
             <template v-else-if="item.options">
               <el-option v-for="(d, i) in options[item.options] || []" :key="i" :label="d.name" :value="d.key"></el-option>
+            </template>
+            <template v-else-if="item.fetch">
+              <el-option v-for="(d, i) in fetchData[item.key] || []" :key="i" :label="d.name" :value="d.key"></el-option>
             </template>
           </el-select>
           <el-input v-else :placeholder="item.placeholder" v-model="values[item.key]" size="small" style="width: 220px" />
@@ -80,23 +93,29 @@ import channel from '~/server/types/channel'
 import { responseDocument as responseDitchDocument } from '~/server/types/proxys/ditch'
 import ditchPicker from './ditch-picker.vue'
 import { omit, zipObject, has } from 'lodash'
+import http, { resufulInfo } from '~/utils/http'
+import { HeaderOptions } from '~/server/types/resuful'
+import { formatDefaultValue } from '~/utils'
 
 @Component({
   name: 'channel-queryer',
   components: {
     ditchPicker
   },
-  created () {
+  async created () {
     let values: {} = {}
     let rules: Rules = {}
     let queryer: Array<channel.Queryer> = this.$props.queryer
     for (let item of queryer) {
+      if (['radio-button', 'checkbox', 'radio', 'select'].indexOf(item.type) > -1 && item.fetch) {
+        await this.handleFetchData(item)
+      }
       if (['range-picker', 'checkbox', 'ditch-picker'].indexOf(item.type) > -1) {
-        let _default = (<Array<any>>item.default || []).map(o => o === 'now' ? new Date() : o)
+        let _default = (<Array<any>>item.default || []).map( o => formatDefaultValue(o) )
         values[item.key] = _default
       }
       else {
-        let _default = item.default === 'now' ? new Date() : item.default
+        let _default = formatDefaultValue(item.default)
         values[item.key] = _default || undefined
       }
       if (item.rules && item.type !== 'ditch-picker') {
@@ -106,7 +125,7 @@ import { omit, zipObject, has } from 'lodash'
     this.$data.values = values
     this.$data.rules = rules
   },
-  mounted () {
+  async mounted () {
     this.$props.autoSubmit && this.submitForm()
   }
 })
@@ -122,6 +141,25 @@ export default class  extends Vue {
   @Provide() rules: Rules = {}
   @Provide() loading: boolean = false
   @Provide() ditchs: Array<responseDitchDocument> = []
+  @Provide() fetchData: { [propsName: string]: Array<{ key: string, name: string }> } = {}
+
+  async handleFetchData (item: channel.Queryer): Promise<void> {
+    try {
+      let options: HeaderOptions = {
+        token: this.token || undefined
+      }
+      let result: resufulInfo = await http.get(item.fetch || '', {}, options)
+      this.loading = false
+      if (result.Status.code === 0) {
+        this.fetchData[item.key] = result.data
+        return
+      }
+      this.$message.warning(result.Status.message || '')
+    } catch (error) {
+      this.loading = false
+      this.$message.warning(error.message)
+    }
+  }
 
   handleChangeDitch (values: string[]): void {
     let obj: {} | undefined = this.queryer.find( o => o['type'] === 'ditch-picker')
@@ -139,6 +177,7 @@ export default class  extends Vue {
     let theForm: ElForm = <ElForm> this.$refs['theForm']
     theForm.validate((valid: any): void | false => {
       if (valid) {
+        console.log(this.values)
         let obj: channel.Queryer | undefined = this.queryer.find( o => o['type'] === 'ditch-picker')
         if (obj && obj.required) {
           let _key: string = obj.key

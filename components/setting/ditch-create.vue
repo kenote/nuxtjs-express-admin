@@ -15,7 +15,7 @@
       </el-form-item>
       <el-form-item prop="group" :rules="rules.group" label="划分组">
          <el-select v-model="values.group" placeholder="请选择组" filterable collapse-tags  style="width:300px;">
-          <el-option v-for="item in group" :key="item.key" :label="item.name" :value="item.key"></el-option>
+          <el-option v-for="item in ditch_group" :key="item.key" :label="item.name" :value="item.key"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item >
@@ -70,21 +70,17 @@ const rules: Rules = {
   mounted () {
     this.$emit('get-teams', this.handleBackTeams)
     this.$data.values = clone(values)
-    if (this.$props.channel.options) {
-      let { ditch_group } = this.$props.channel.options
-      this.$data.group = ditch_group || []
-    }
   }
 })
 export default class  extends Vue {
 
   @Prop({ default: false }) loading: boolean
   @Prop({ default: {} }) channel: channel.NavMenus
+  @Prop({ default: [] }) ditch_group: Array<{ key: string, name: string }>
 
   @Provide() values: updateDitchDocument = values
   @Provide() rules: Rules = rules
   @Provide() teams: Array<responseTeamDocument> = []
-  @Provide() group: Array<{}> = []
 
   submitForm (): void {
     let theForm: ElForm = <ElForm> this.$refs['theForm']

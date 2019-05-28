@@ -130,3 +130,22 @@ export declare namespace Ucenter {
     platform     : Array<number>
   }
 }
+
+export declare namespace Execl {
+
+  interface Options {
+    header        : string[]
+    data          : any[]
+    sheetName    ?: string
+    bookType     ?: 'xlsx' | 'xlsm' | 'xlsb' | 'biff8' | 'csv' | 'txt' | 'html'
+    filename     ?: string
+  }
+
+  interface FileType {
+    key           : 'xlsx' | 'xlsm' | 'xlsb' | 'biff8' | 'csv' | 'txt' | 'html'
+    name          : string
+    suffix        : '.xlsx' | '.xlsm' | '.xlsb' | '.xls' | '.csv' | '.txt' | '.html'
+  }
+
+  type BookType = 'xlsx' | 'xlsm' | 'xlsb' | 'biff8' | 'csv' | 'txt' | 'html'
+} 

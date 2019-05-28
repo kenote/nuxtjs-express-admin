@@ -1,52 +1,47 @@
 import xlsx, { WorkBook, WritingOptions } from 'xlsx'
+import { Execl } from '~/types'
+import * as FileSaver from 'file-saver'
 
-const formatHeaders = (headers: string []): {} => {
-  return headers
-    // 为 headers 添加对应的单元格位置
-    .map( (v, i) => Object.assign( {}, { v: v, position: String.fromCharCode(65+i) + 1 } ) )
-    // 转换成 worksheet 需要的结构
-    .reduce( (prev, next) => Object.assign( {}, prev, { [next.position]: { v: next.v } } ), {} )
+// 'xlsx' | 'xlsm' | 'xlsb' | 'biff8' | 'csv' | 'txt' | 'html'
+ export const fileTypes: Execl.FileType[] = [
+  { key: 'xlsx', name: 'Excel 工作簿(.xlsx)', suffix: '.xlsx' },
+  { key: 'xlsm', name: 'Excel 宏工作簿(.xlsm)', suffix: '.xlsm' },
+  { key: 'xlsb', name: 'Excel 二进制工作簿(.xlsb)', suffix: '.xlsb' },
+  { key: 'biff8', name: 'Excel 97-2004 工作簿(.xls)', suffix: '.xls' },
+  { key: 'csv', name: 'CVS UTF-8(.cvs)', suffix: '.csv' },
+  { key: 'txt', name: 'UTF-16 Unicode 文本(.txt)', suffix: '.txt' },
+  { key: 'html', name: 'HTML 文档(.html)', suffix: '.html' },
+]
+
+function s2ab (s: any): any {
+  if (typeof ArrayBuffer !== 'undefined') {  
+    let buf = new ArrayBuffer(s.length);  
+    var view = new Uint8Array(buf);  
+    for (var i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;  
+    return buf;  
+  } else {  
+      let buf = new Array(s.length);  
+      for (var i = 0; i != s.length; ++i) buf[i] = s.charCodeAt(i) & 0xFF;  
+      return buf;  
+  }
 }
-
-const formatData = (data: Array<{}>, headers: string[]): {} => {
-  return data
-    // 匹配 headers 的位置，生成对应的单元格数据
-    .map( (v, i) => headers.map( (k, j) => Object.assign( {}, { v: v[k], position: String.fromCharCode(65+j) + (i+2) } ) ) )
-    // 对刚才的结果进行降维处理（二维数组变成一维数组）
-    .reduce( (prev, next) => prev.concat(next) )
-    // 转换成 worksheet 需要的结构
-    .reduce( (prev, next) => Object.assign( {}, prev, { [next.position]: { v: next.v } } ), {} )
-}
-
-const getWorkbook = (sheetName: string, headers: {}, data: {}): WorkBook => {
-  // 合并 headers 和 data
-  let output: {} = Object.assign({}, headers, data)
-  // 获取所有单元格的位置
-  let outputPos: string[] = Object.keys(output)
-  // 计算出范围
-  var ref: string = outputPos[0] + ':' + outputPos[outputPos.length - 1]
+// sheetName: string, headers: string[], data: Array<{}>
+export const xlsxBlob = (options: Execl.Options): any => {
+  let { header, data, sheetName, bookType, filename } = options
+  sheetName = sheetName || 'mySheet'
+  bookType = bookType || 'xlsx'
   let workbook: WorkBook = {
     SheetNames: [ sheetName ],
     Sheets: {
-      [sheetName]: Object.assign({}, output, { '!ref': ref })
-    }
+      [sheetName]: xlsx.utils.json_to_sheet(data, { header })
+    },
+    Props: {}
   }
-  return workbook
-}
-
-function s2ab (wbout: any): ArrayBuffer {
-  let buf: ArrayBuffer = new ArrayBuffer(wbout.length)
-  let view: Uint8Array = new Uint8Array(buf)
-  for (let i = 0; i != wbout.length; ++i) view[i] = wbout.charCodeAt(i) & 0xFF;
-  return buf
-}
-
-export const xlsxBlob = (sheetName: string, headers: string[], data: Array<{}>): Blob => {
-  let _headers: {} = formatHeaders(headers)
-  let _data: {} = formatData(data, headers)
-  let workbook: WorkBook = getWorkbook(sheetName, _headers, _data)
-  let wopts: WritingOptions = { bookType:'xlsx', bookSST: false, type:'binary' }
+  let wopts: xlsx.WritingOptions = { bookType, bookSST: false, type: 'binary' }
   let wbout: any = xlsx.write(workbook, wopts)
-  let blob: Blob = new Blob([s2ab(wbout)], { type: '' })
-  return blob
+  let blob: Blob = new Blob([s2ab(wbout)], { type: 'application/octet-stream' })
+  let fileType: Execl.FileType = fileTypes.find( o => o.key === bookType ) || fileTypes[0]
+  filename = filename || 'export-file'
+  FileSaver.saveAs(blob, `${filename}${fileType.suffix}`)
+  //return blob
 }

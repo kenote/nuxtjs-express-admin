@@ -2,7 +2,22 @@
   <page ref="thePage">
     <console-breadcrumb :channel="selectedChannel" :store="channelStore" :route="$route" />
     
-    <channel-queryer v-if="pageSetting.queryer" 
+    <template v-if="pageSetting.querySelect">
+      <el-tabs type="card" v-model="$data.label" @tab-click="handleSelectQueryer">
+        <el-tab-pane v-for="item in pageSetting.querySelect.options" :key="item.key" :label="item.name" :name="item.key">
+          <channel-queryer
+            :key="item.key"
+            :queryer="item.queryer" 
+            :options="selectedChannel && selectedChannel.options" 
+            :channel="selectedChannel && selectedChannel.label"
+            @submit="handleSubmit"
+            :auto-submit="pageSetting.created && pageSetting.created === 'submit'"
+            :token="token">
+          </channel-queryer>
+        </el-tab-pane>
+      </el-tabs>
+    </template>
+    <channel-queryer v-else-if="pageSetting.queryer" 
       :queryer="pageSetting.queryer" 
       :options="selectedChannel && selectedChannel.options" 
       :channel="selectedChannel && selectedChannel.label"
@@ -25,24 +40,33 @@
         <el-option v-for="(item, key) in steps" :key="key" :label="item.name" :value="item.key"></el-option>
       </el-select>
     </channel-result-charts>
-    <channel-result-table v-else :data="data" :columns="pageSetting.columns || []" :loading="loading" :pagination="pagination">
+    <channel-result-table v-else :data="data" :columns="pageSetting.columns || []" :loading="loading" :pagination="pagination" :search-options="pageSetting.search">
       <el-switch
         v-model="pagination"
         style="margin-top: 10px"
         active-text="分页"
         inactive-text="不分页"
+        :disabled="polling"
         >
       </el-switch>
-      <template v-if="pageSetting.export">
-        <el-button type="success" plain @click="handleExport(pageSetting.export)" style="margin-left:15px">导出Excel</el-button>
+      <template v-if="pageSetting.export && !polling">
+        <el-dropdown @command="handleCommandExport" style="margin-left:15px" >
+          <el-button type="primary">
+            导出文件到<i class="el-icon-arrow-down el-icon--right"></i>
+          </el-button>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item v-for="item in fileTypes" :key="item.key" :command="item.key">{{ item.name }}</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
       </template>
+      <span v-if="polling" style="margin-left:15px">轮询请求中 ...</span>
     </channel-result-table>
   </page>
 </template>
 
 <script lang="ts">
 import Component from 'nuxt-class-component'
-import { Provide, Vue } from 'vue-property-decorator'
+import { Provide, Vue, Watch } from 'vue-property-decorator'
 import { namespace } from 'vuex-class'
 import * as setting from '~/store/modules/setting'
 import * as auth from '~/store/modules/auth'
@@ -57,7 +81,8 @@ import http, { resufulInfo } from '~/utils/http'
 import { HeaderOptions } from '~/server/types/resuful'// pagination
 import { getDifferenceDate } from '~/utils'
 import { zipObject, concat, map } from 'lodash'
-import { xlsxBlob } from '~/utils/xlsx'
+import { xlsxBlob, fileTypes } from '~/utils/xlsx'
+import { Execl } from '~/types'
 
 const Setting: BindingHelpers = namespace(setting.name)
 const Auth: BindingHelpers = namespace(auth.name)
@@ -79,6 +104,11 @@ const Auth: BindingHelpers = namespace(auth.name)
       this.$data.steps = pageSetting['charts']['step'] || [];
       this.$data.currentStep = (pageSetting.columns || [])[0]['default']['step']
     }
+    // querySelect
+    if (pageSetting.querySelect) {
+      let { default: label } = <channel.QuerySelect> pageSetting.querySelect
+      this.$data.label = label
+    }
   }
 })
 export default class  extends Vue {
@@ -93,25 +123,43 @@ export default class  extends Vue {
   @Provide() pagination: boolean = true
   @Provide() steps: Array<{}> = []
   @Provide() currentStep: number = 0
+  @Provide() label: string | undefined = undefined
+  @Provide() fileTypes: Execl.FileType[] = fileTypes
+  @Provide() polling: boolean = false
+
+  handleSelectQueryer (value: string): void {
+    this.label = value
+  }
 
   handleChangeStep (value: number): void {
     this.currentStep = value
   }
 
   async handleSubmit (values: any): Promise<void> {
-    let { queryer, polling } = this.pageSetting
+    let { polling, querySelect } = this.pageSetting
+    let queryer: Array<channel.Queryer> | undefined = this.pageSetting.queryer
+    if (querySelect) {
+      let { options } = <channel.QuerySelect> querySelect
+      let querySelectOption: channel.QuerySelectOption | undefined = options.find( o => o.key === this.$data.label )
+      if (querySelectOption) {
+        queryer = querySelectOption.queryer
+      }
+    }
     let multipleBegin: channel.Queryer | undefined = queryer && queryer.find( o => o.key === 'begin' && o.type === 'range-picker')
     if (multipleBegin) {
       let { begin, end } = zipObject(['begin', 'end'], values['begin'])
       console.log('轮询开始...')
       this.data = []
+      this.polling = true
       await getDifferenceDate(<string> begin, <string> end, this.pollingTimeRequest.bind(this, values))
       console.log('轮询结束!!!')
+      this.polling = false
       return
     }
     else if (!!polling) {
       console.log('轮询开始...')
       this.data = []
+      this.polling = true
       let _data: Array<any> = []
       let { options } = this.selectedChannel
       for (let item of values[polling].sort()) {
@@ -142,6 +190,7 @@ export default class  extends Vue {
         this.data = _data
       }
       console.log('轮询结束!!!')
+      this.polling = false
       return
     }
     this.loading = true
@@ -206,28 +255,31 @@ export default class  extends Vue {
     }
   }
 
-  handleExport (options: channel.Export): void {
+  handleCommandExport (command: Execl.BookType): void {
+    if (!this.pageSetting.export) return
+    this.handleExport(this.pageSetting.export, command)
+  }
+
+  async handleExport (options: channel.Export, bookType: Execl.BookType = 'xlsx'): Promise<void> {
     let { sheetName } = options
     let columns: Array<channel.ColumnItem> = this.pageSetting.columns || []
-    let headers: string[] = map(columns, 'name')
+    let header: string[] = map(columns, 'name')
     let data: Array<{}> = []
+    console.log(new Date(), 'start')
     for (let item of this.data) {
       let obj: {} = {}
       let keys: string[] = Object.keys(item)
       for (let k of keys) {
         let c: channel.ColumnItem = <channel.ColumnItem> columns.find( o => o.key === k )
         obj[c.name] = c.format ? this.formatString(item[k], c.format) : item[k]
+        if (c.format && c.format.type === 'number') {
+          obj[c.name] = Number(obj[c.name])
+        }
       }
       data.push(obj)
     }
-    let fileBlob: Blob = xlsxBlob(sheetName || 'mySheet', headers, data)
-    let link: HTMLElement | null = document.getElementById('download-blob-file')
-    if (!link) {
-      link = document.createElement('a')
-    }
-    link['href'] = window.URL.createObjectURL(fileBlob)
-    link['download'] = (sheetName || '导出Excel') + '.xlsx'
-    link.click()
+    xlsxBlob({ sheetName: sheetName || 'mySheet', header, data, filename: sheetName || '导出Excel', bookType })
+    console.log(new Date(), 'end')
   }
 
   formatString (value: string | number, fmt: channel.Format): string {
@@ -243,3 +295,22 @@ export default class  extends Vue {
 
 }
 </script>
+
+<style lang="scss" scoped>
+.page-polling {
+    position: fixed;
+    right: 60px;
+    top: 100px;
+    min-width: 150px;
+    height: 60px;
+    background-color: #444c54;
+    border-radius: 6px;
+    opacity: .7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #f7f7f8;
+    font-size: 18px;
+    z-index: 9999
+}
+</style>

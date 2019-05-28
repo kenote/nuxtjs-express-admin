@@ -42,6 +42,13 @@ const Setting: BindingHelpers = namespace(setting.name)
 
 type Status = 'invitation' | 'submitinfo' | 'validate' | 'finished'
 
+declare module 'vue/types/options' {
+  interface ComponentOptions<V extends Vue> {
+    layout?: string | Function,
+    middleware?: string | string[]
+  }
+}
+
 @Component({
   layout: 'account',
   middleware: ['unauthenticated'],

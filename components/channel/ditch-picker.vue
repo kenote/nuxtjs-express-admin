@@ -54,6 +54,9 @@ import * as yaml from 'js-yaml'
 
 @Component({
   name: 'ditch-picker',
+  created () {
+    this.handleGetDitchGroups()
+  },
   mounted () {
     if (this.$props.fetch) {
       this.handleGetDitchs()
@@ -75,13 +78,13 @@ import * as yaml from 'js-yaml'
 export default class  extends Vue {
 
   @Prop({ default: undefined }) fetch: string
-  @Prop({ default: [] }) ditch_group: Array<{ key: string, name: string }>
   @Prop({ default: null }) token: string | null
   @Prop({ default: () => [] }) value: string[]
   @Prop({ default: '' }) channel: string
 
   @Provide() ditchs: Array<responseDitchDocument> = []
   @Provide() values: string[] = []
+  @Provide() ditch_group: Array<{ key: string, name: string }> = []
   @Provide() i_ditch_group: Array<{ key: string, name: string }> = []
 
   @Provide() activeGroup: string = ''
@@ -157,6 +160,26 @@ export default class  extends Vue {
     }
     this.isIndeterminateAll = false
     this.$emit('change', this.values)
+  }
+
+  handleGetDitchGroups (): void {
+    setTimeout(async (): Promise<void> => {
+      try {
+        let options: HeaderOptions = {
+          token: this.token || undefined
+        }
+        let result: resufulInfo = await http.get(`/channel/${this.channel}/ditch-group`, {}, options)
+        this.loading = false
+        if (result.Status.code === 0) {
+          this.ditch_group = result.data
+          return
+        }
+        this.$message.warning(result.Status.message || '')
+      } catch (error) {
+        this.loading = false
+        this.$message.warning(error.message)
+      }
+    }, 300)
   }
 
   handleGetDitchs (): void {

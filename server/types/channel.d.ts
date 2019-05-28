@@ -13,6 +13,12 @@ declare namespace channel {
     rstp              ?: Rstps
     proto             ?: PBSetting
     options           ?: {}
+    settings          ?: Array<Setting>
+  }
+
+  interface Setting {
+    key                : string
+    name               : string
   }
 
   interface Options {
@@ -34,8 +40,26 @@ declare namespace channel {
     api               ?: string
     columns           ?: Array<ColumnItem>
     polling           ?: string
+    timeout           ?: number
     cards             ?: Cards
     export            ?: Export
+    querySelect       ?: QuerySelect
+    search            ?: Search
+  }
+
+  interface Search {
+    field              : string
+  }
+
+  interface QuerySelect {
+    default            : string
+    options            : Array<QuerySelectOption>
+  }
+
+  interface QuerySelectOption {
+    key                : string
+    name               : string
+    queryer            : Array<Queryer>
   }
 
   interface Export {

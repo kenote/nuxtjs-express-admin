@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-table ref="filterTable" :data="pdata" v-loading="loading" stripe>
+    <el-table ref="filterTable" :data="pdata && pdata.filter(doc => !search || doc[searchOptions && searchOptions.field].toLowerCase().includes(search.toLowerCase()))" v-loading="loading" stripe>
       <el-table-column v-for="(column, key) in columns" 
         :key="key" 
         :label="column.name" 
@@ -9,6 +9,14 @@
         :width="column.width" 
         :min-width="column.minwidth || 100" 
         :align="column.align || 'center'" >
+        <template slot="header" slot-scope="scope">
+          <el-input v-if="column.key === (searchOptions && searchOptions.field) && !pagination"
+            :key="scope.$index"
+            v-model="search"
+            size="small"
+            :placeholder="`输入${column.name}搜索`"/>
+          <span v-else>{{ column.name }}</span>
+        </template>
         <template slot-scope="scope">
           <span v-if="column.format">{{ formatString(scope.row[column.key], column.format) }}</span>
           <el-button v-else-if="/^(\{)/.test(scope.row[column.key])" 
@@ -58,7 +66,7 @@ import 'codemirror/theme/duotone-light.css'
 @Component({
   name: 'channel-result-table',
   mounted () {
-
+    
   },
 
 })
@@ -69,12 +77,14 @@ export default class  extends Vue {
   @Prop({ default: [] }) columns: Array<channel.ColumnItem>
   @Prop({ default: 10 }) pagesize: number
   @Prop({ default: true }) pagination: boolean
+  @Prop({ default: undefined }) searchOptions: channel.Search
 
   @Provide() current: number = 1
   @Provide() total: number = 0
   @Provide() pdata: Array<{}> = []
   @Provide() showSubmit: boolean = false
   @Provide() dialog: { title?: string, data?: string, visible: boolean } = { visible: false }
+  @Provide() search: string = ''
 
   @Provide() cmOption: any = {
     tabSize: 4,
@@ -109,6 +119,7 @@ export default class  extends Vue {
   @Watch('pagination')
   onPaginationChange (val: boolean): void {
     this.current = 1
+    if (val) this.search = ''
     this.handleCurrentChange(1)
   }
 
